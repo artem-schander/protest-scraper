@@ -49,8 +49,7 @@ interface ScrapeResult {
 
 // Constants
 const HEADERS = {
-  "User-Agent":
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/127.0 Safari/537.36",
+  "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/127.0 Safari/537.36",
   "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
 };
 
@@ -157,9 +156,10 @@ export async function parseBerlin(): Promise<ProtestEvent[]> {
     // Parse date and times
     const startDate = parseGermanDate(`${datumTxt} ${vonTxt}`);
     const endDate = parseGermanDate(`${datumTxt} ${bisTxt}`);
+    if (!startDate && !endDate) return;
 
     // Build location string from postal code and place
-    const location = [plz, ort].filter(Boolean).join(" ") || null;
+    const location = [`${plz} Berlin`.trim(), ort].filter(Boolean).join(", ") || null;
 
     // Try to extract attendee count from theme/title
     const attendees = parseAttendees(thema || "");
@@ -199,20 +199,28 @@ async function parseDresden(): Promise<ProtestEvent[]> {
     for (const v of data.Versammlungen) {
       const dateTxt = v.Datum || "";
       const timeTxt = v.Zeit || "";
-      const dateTimeStr = timeTxt ? `${dateTxt} ${timeTxt}` : dateTxt;
+      const startDateString = timeTxt ? `${dateTxt} ${timeTxt.slice(0, 5)}` : dateTxt;
+      const endDateString = timeTxt ? `${dateTxt} ${timeTxt.slice(8, 13)}` : dateTxt;
 
-      const d = parseGermanDate(dateTimeStr);
-      if (!d) continue;
+      const startDate = parseGermanDate(startDateString);
+      const endDate = parseGermanDate(endDateString);
+      if (!startDate && !endDate) continue;
 
-      const attendees = parseAttendees(v.Thema || "");
+      let attendees: number|null = parseInt(v.Teilnehmer);
+      if (!attendees) attendees = parseAttendees(v.Thema || "");
+      
+      let location = "Dresden";
+      if (v.Ort || v.Startpunkt || null) {
+        location += ", " + (v.Ort || v.Startpunkt || null);
+      }
 
       events.push({
         source: "Dresden City",
         city: "Dresden",
         title: v.Thema || "Versammlung",
-        start: d.toISOString(),
-        end: null,
-        location: v.Ort || v.Startpunkt || null,
+        start: startDate?.toISOString() ?? null,
+        end: endDate?.toISOString() ?? null,
+        location,
         url: "https://www.dresden.de/de/rathaus/dienstleistungen/versammlungsuebersicht.php",
         attendees,
       });
