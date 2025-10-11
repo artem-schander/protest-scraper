@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+yarn-error.log
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# Output files
+*.csv
+*.json
+*.ics
+protests.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
