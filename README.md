@@ -1,6 +1,6 @@
 # 🪧 Protest Service API
 
-**A collaborative open-source service to collect and share upcoming protests and demonstrations across Germany.**
+**A collaborative open-source service to collect and share upcoming protests and demonstrations.**
 Built with **Node.js**, **Express**, and **Prisma**, backed by **PostgreSQL**, and designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
 
 > **⚠️ Work in Progress**

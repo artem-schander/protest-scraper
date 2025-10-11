@@ -226,46 +226,6 @@ async function parseDresden(): Promise<ProtestEvent[]> {
   }
 }
 
-// Disabled: Wrong URL - needs official police source
-/*
-async function parseKoeln(): Promise<ProtestEvent[]> {
-  const url = "https://www.stadt-koeln.de/artikel/70762/index.html";
-  const html = await fetchHTML(url);
-  if (!html) return [];
-
-  const $ = cheerio.load(html);
-  const events: ProtestEvent[] = [];
-
-  $("table tr").each((_, tr) => {
-    const tds = $(tr)
-      .find("td")
-      .map((_, td) => $(td).text().trim())
-      .get();
-
-    if (tds.length < 2) return;
-
-    const dateTxt = tds[0];
-    const title = tds[1] || "Versammlung";
-    const loc = tds[2] || "Köln";
-    const d = parseGermanDate(dateTxt);
-
-    if (!d) return;
-
-    events.push({
-      source: "Stadt Köln",
-      city: "Köln",
-      title,
-      start: d.toISOString(),
-      end: null,
-      location: loc,
-      url,
-    });
-  });
-
-  return events;
-}
-*/
-
 async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
   const base = "https://www.friedenskooperative.de";
   const url = `${base}/aktion`;
