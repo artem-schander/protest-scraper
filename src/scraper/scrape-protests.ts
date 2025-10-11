@@ -47,14 +47,24 @@ interface ScrapeResult {
   range: number;
 }
 
+interface GeoCoordinates {
+  lat: number;
+  lon: number;
+}
+
+interface GeocodeCache {
+  [city: string]: GeoCoordinates;
+}
+
 // Constants
 const HEADERS = {
-  "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/127.0 Safari/537.36",
+  "User-Agent": "protest-scraper/1.0 (https://github.com/artem-schander/protest-scraper)",
   "Accept-Language": "de-DE,de;q=0.9,en;q=0.8",
 };
 
 const DE_TZ = "Europe/Berlin";
 const now: Dayjs = dayjs().tz(DE_TZ);
+const GEOCODE_CACHE_FILE = "geocode-cache.json";
 
 // Utility functions
 export const delay = (ms: number): Promise<void> =>
@@ -130,6 +140,107 @@ async function fetchHTML(url: string): Promise<string | null> {
     console.error("[error]", url, error.message);
     return null;
   }
+}
+
+// Geocoding utilities
+function loadGeocodeCache(): GeocodeCache {
+  try {
+    if (fs.existsSync(GEOCODE_CACHE_FILE)) {
+      const data = fs.readFileSync(GEOCODE_CACHE_FILE, "utf8");
+      return JSON.parse(data);
+    }
+  } catch (e) {
+    console.error("[geocode cache] Failed to load cache:", (e as Error).message);
+  }
+  return {};
+}
+
+function saveGeocodeCache(cache: GeocodeCache): void {
+  try {
+    fs.writeFileSync(GEOCODE_CACHE_FILE, JSON.stringify(cache, null, 2), "utf8");
+  } catch (e) {
+    console.error("[geocode cache] Failed to save cache:", (e as Error).message);
+  }
+}
+
+async function geocodeCity(city: string, cache: GeocodeCache): Promise<GeoCoordinates | null> {
+  // Check cache first
+  const normalizedCity = city.trim();
+  if (cache[normalizedCity]) {
+    return cache[normalizedCity];
+  }
+
+  try {
+    // Use Nominatim (OpenStreetMap) - free, no API key required
+    // Rate limit: 1 request per second (enforced by caller)
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(normalizedCity)},Germany&format=json&limit=1`;
+
+    const response = await axios.get(url, {
+      headers: {
+        "User-Agent": "protest-scraper/1.0 (https://github.com/artem-schander/protest-scraper)",
+      },
+      timeout: 10000,
+    });
+
+    if (response.data && response.data.length > 0) {
+      const result = response.data[0];
+      const coords: GeoCoordinates = {
+        lat: parseFloat(result.lat),
+        lon: parseFloat(result.lon),
+      };
+
+      // Cache the result
+      cache[normalizedCity] = coords;
+      saveGeocodeCache(cache);
+
+      return coords;
+    }
+  } catch (e) {
+    console.error(`[geocode] Failed to geocode "${city}":`, (e as Error).message);
+  }
+
+  return null;
+}
+
+async function geocodeEvents(events: ProtestEvent[]): Promise<Map<string, GeoCoordinates>> {
+  const cache = loadGeocodeCache();
+  const coordsMap = new Map<string, GeoCoordinates>();
+
+  // Get unique cities
+  const uniqueCities = new Set<string>();
+  for (const event of events) {
+    if (event.city) {
+      uniqueCities.add(event.city.trim());
+    }
+  }
+
+  console.error(`[geocode] Found ${uniqueCities.size} unique cities to geocode`);
+
+  let geocoded = 0;
+  let fromCache = 0;
+
+  for (const city of uniqueCities) {
+    // Check if already in cache
+    if (cache[city]) {
+      coordsMap.set(city, cache[city]);
+      fromCache++;
+      continue;
+    }
+
+    // Geocode with 1 second delay (Nominatim rate limit)
+    const coords = await geocodeCity(city, cache);
+    if (coords) {
+      coordsMap.set(city, coords);
+      geocoded++;
+    }
+
+    // Respect rate limit: 1 request per second
+    await delay(1100);
+  }
+
+  console.error(`[geocode] Cached: ${fromCache}, New: ${geocoded}, Failed: ${uniqueCities.size - fromCache - geocoded}`);
+
+  return coordsMap;
 }
 
 // Source parsers
@@ -461,7 +572,10 @@ export function saveJSON(events: ProtestEvent[], file: string): void {
   fs.writeFileSync(file, JSON.stringify(events, null, 2), "utf8");
 }
 
-function saveICS(events: ProtestEvent[], file: string): void {
+async function saveICS(events: ProtestEvent[], file: string): Promise<void> {
+  // Geocode cities first
+  const coordsMap = await geocodeEvents(events);
+
   const icsEvents = events
     .filter((e) => e.start)
     .map((e) => {
@@ -479,9 +593,14 @@ function saveICS(events: ProtestEvent[], file: string): void {
         start: startArray,
         title: e.title,
         location: e.location || e.city || "",
-        description: `${e.source}\n${e.url || ""}`,
+        description: `${e.source}${e.attendees ? `\nExpected attendees: ${e.attendees}` : ""}`,
         productId: "protest-scraper",
       };
+
+      // Add URL as separate field for better UX
+      if (e.url) {
+        event.url = e.url;
+      }
 
       // Add categories for filtering/organization in calendar apps
       // Categories: City, Country, Source
@@ -492,6 +611,12 @@ function saveICS(events: ProtestEvent[], file: string): void {
 
       if (categories.length > 0) {
         event.categories = categories;
+      }
+
+      // Add geographic coordinates if available
+      if (e.city && coordsMap.has(e.city.trim())) {
+        const coords = coordsMap.get(e.city.trim())!;
+        event.geo = { lat: coords.lat, lon: coords.lon };
       }
 
       if (e.end) {
@@ -556,7 +681,7 @@ const sources = [
 
   saveCSV(events, opt.out);
   saveJSON(events, opt.json);
-  saveICS(events, opt.ics);
+  await saveICS(events, opt.ics);
 
   const result: ScrapeResult = { count: events.length, range: DAYS };
   console.log(JSON.stringify(result, null, 2));
