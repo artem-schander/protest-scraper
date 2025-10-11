@@ -483,6 +483,17 @@ function saveICS(events: ProtestEvent[], file: string): void {
         productId: "protest-scraper",
       };
 
+      // Add categories for filtering/organization in calendar apps
+      // Categories: City, Country, Source
+      const categories: string[] = [];
+      categories.push("Germany"); // All events are in Germany
+      if (e.city) categories.push(e.city);
+      if (e.source) categories.push(e.source);
+
+      if (categories.length > 0) {
+        event.categories = categories;
+      }
+
       if (e.end) {
         const endDate = dayjs(e.end);
         event.end = [
