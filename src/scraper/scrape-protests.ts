@@ -32,6 +32,7 @@ export interface ProtestEvent {
   end: string | null;
   location: string | null;
   locationDetails?: string | null; // Original location from source (before normalization)
+  language?: string; // e.g., "de-DE"
   url: string;
   attendees: number | null; // Expected/announced number of attendees
   categories?: string[]; // Event categories (e.g., "Demonstration", "Vigil", "Blockade")
@@ -39,7 +40,7 @@ export interface ProtestEvent {
 
 interface ScraperOptions {
   days: string;
-  out: string;
+  csv: string;
   json: string;
   ics: string;
 }
@@ -324,12 +325,13 @@ export async function parseBerlin(): Promise<ProtestEvent[]> {
     const attendees = parseAttendees(thema || "");
 
     events.push({
-      source: "Berlin Police",
+      source: "www.berlin.de",
       city: "Berlin",
       title: thema || "Versammlung",
       start: startDate?.toISOString() ?? null,
       end: endDate?.toISOString() ?? null,
       location,
+      language: "de-DE",
       url,
       attendees,
     });
@@ -374,11 +376,12 @@ export async function parseDresden(): Promise<ProtestEvent[]> {
       }
 
       events.push({
-        source: "Dresden City",
+        source: "www.dresden.de",
         city: "Dresden",
         title: v.Thema || "Versammlung",
         start: startDate?.toISOString() ?? null,
         end: endDate?.toISOString() ?? null,
+        language: "de-DE",
         location,
         url: "https://www.dresden.de/de/rathaus/dienstleistungen/versammlungsuebersicht.php",
         attendees,
@@ -554,11 +557,12 @@ export async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
                 const attendees = parseAttendees(fullText);
 
                 events.push({
-                  source: "Friedenskooperative",
+                  source: "www.friedenskooperative.de",
                   city,
                   title,
                   start: d.toISOString(),
                   end: endDate ? endDate.toISOString() : null,
+                  language: "de-DE",
                   location: location || city,
                   url,
                   attendees,
@@ -705,11 +709,12 @@ export async function parseDemokrateam(): Promise<ProtestEvent[]> {
         const attendees = parseAttendees(title);
 
         events.push({
-          source: "DemokraTEAM",
+          source: "www.demokrateam.org",
           city,
           title,
           start: eventDate.toISOString(),
           end: null,
+          language: "de-DE",
           location,
           url: link,
           attendees,
@@ -842,7 +847,7 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
 // Main execution
 program
   .option("--days <n>", "range forward in days", "40")
-  .option("--out <csv>", "CSV file", "protests.csv")
+  .option("--csv <csv>", "CSV file", "protests.csv")
   .option("--json <json>", "JSON file", "protests.json")
   .option("--ics <ics>", "ICS file", "protests.ics")
   .parse(process.argv);
@@ -879,7 +884,7 @@ const sources = [
   const coordsMap = await geocodeEvents(events);
   normalizeEventLocations(events, coordsMap);
 
-  saveCSV(events, opt.out);
+  saveCSV(events, opt.csv);
   saveJSON(events, opt.json);
   await saveICS(events, coordsMap, opt.ics);
 

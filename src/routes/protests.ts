@@ -10,7 +10,7 @@ const router = Router();
 // GET /api/protests - List protests with filters
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { city, days, verified, limit, skip, lat, lon, radius } = req.query;
+    const { city, source, language, days, verified, limit, skip, lat, lon, radius } = req.query;
 
     const db = getDatabase();
     const protests = db.collection<Protest>('protests');
@@ -24,6 +24,16 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     // City filter
     if (city && typeof city === 'string') {
       filter.city = city;
+    }
+
+    // source filter
+    if (source && typeof source === 'string') {
+      filter.source = source;
+    }
+
+    // language filter
+    if (language && typeof language === 'string') {
+      filter.language = language;
     }
 
     // Geolocation filter (takes precedence over city filter)
@@ -133,6 +143,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<
       title: protestData.title,
       start: protestData.start || null,
       end: protestData.end || null,
+      language: protestData.language || null,
       location: protestData.location || null,
       url: protestData.url || '',
       attendees: protestData.attendees || null,

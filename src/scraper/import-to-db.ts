@@ -117,6 +117,7 @@ async function importProtests(days: number): Promise<void> {
         title: event.title,
         start: event.start ? new Date(event.start) : null,
         end: event.end ? new Date(event.end) : null,
+        language: event.language,
         location: event.location,
         locationDetails: event.locationDetails,
         geoLocation,

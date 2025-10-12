@@ -36,6 +36,8 @@ async function initializeIndexes(database: Db): Promise<void> {
     await protests.createIndex({ city: 1 });
     await protests.createIndex({ start: 1 });
     await protests.createIndex({ verified: 1 });
+    await protests.createIndex({ source: 1 });
+    await protests.createIndex({ language: 1 });
     await protests.createIndex({ city: 1, start: 1 });
 
     // Geospatial index for location-based queries (GeoJSON format)

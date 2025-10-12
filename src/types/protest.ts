@@ -12,6 +12,7 @@ export interface Protest {
   title: string;
   start: Date | null;
   end: Date | null;
+  language?: string | null; // e.g., "de-DE"
   location: string | null;
   locationDetails?: string | null; // Original location from source (before normalization)
   geoLocation?: GeoLocation; // GeoJSON Point for geospatial queries
@@ -32,6 +33,7 @@ export interface ProtestInput {
   title: string;
   start?: Date | null;
   end?: Date | null;
+  language?: string | null; // e.g., "de-DE"
   location?: string | null;
   url?: string;
   attendees?: number | null;
@@ -42,6 +44,7 @@ export interface ProtestUpdateInput {
   title?: string;
   start?: Date | null;
   end?: Date | null;
+  language?: string | null;
   location?: string | null;
   url?: string;
   attendees?: number | null;

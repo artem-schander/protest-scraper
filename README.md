@@ -10,7 +10,7 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 
 ## 🚀 Features
 
-- **Automated scraping** of official protest data from Berlin Police
+- **Automated scraping** of official protest data from different sources
 - Public REST API for upcoming protests (filter by city or date range)
 - JWT-based authentication for registered users
 - Role system (`USER`, `MODERATOR`, `ADMIN`)
@@ -65,7 +65,7 @@ npm run import -- --days 60       # Import protests for next 60 days
 ```
 
 This command:
-1. Scrapes protests from Berlin Police, Dresden City, Friedenskooperative, and DemokraTEAM
+1. Scrapes protests from different sources
 2. Deduplicates events
 3. Imports them to MongoDB as verified protests
 4. Updates existing events (unless manually edited or deleted)
@@ -185,11 +185,12 @@ Response:
   "protests": [
     {
       "id": "507f1f77bcf86cd799439012",
-      "source": "Berlin Police",
+      "source": "www.berlin.de",
       "city": "Berlin",
       "title": "Demo für Klimaschutz",
       "start": "2025-10-15T14:00:00.000Z",
       "end": null,
+      "language": "de-DE",
       "location": "Brandenburger Tor",
       "coordinates": {
         "lat": 52.516275,
@@ -311,6 +312,8 @@ curl "http://localhost:3000/api/export/ics" -o protests.ics
 
 **Filter Parameters for All Endpoints:**
 - `city` - Filter by city name (e.g., `Berlin`, `Dresden`)
+- `source` - Filter by data source (e.g., `www.berlin.de`, `www.friedenskooperative.de`)
+- `language` - Filter by language code (e.g., `de-DE`, `en-US`)
 - `days` - Number of days forward from today (e.g., `30`, `60`)
 - `verified` - Show only verified protests (`true`/`false`, default: `true`)
 - `lat` - Latitude for geolocation search (e.g., `52.52`)
@@ -349,7 +352,7 @@ node dist/scraper/scrape-protests.js [options]
 
 Options:
   --days <n>      Days forward to scrape (default: 40)
-  --out <csv>     CSV output file (default: protests.csv)
+  --csv <csv>     CSV output file (default: protests.csv)
   --json <json>   JSON output file (default: protests.json)
   --ics <ics>     iCalendar output file (default: protests.ics)
 ```
@@ -366,7 +369,7 @@ node dist/scraper/scrape-protests.js --days 90
 # Custom output files
 node dist/scraper/scrape-protests.js \
   --days 30 \
-  --out demo-data.csv \
+  --csv demo-data.csv \
   --json demo-data.json \
   --ics demo-data.ics
 ```
