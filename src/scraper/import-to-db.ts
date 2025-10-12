@@ -68,9 +68,25 @@ async function importProtests(days: number): Promise<void> {
 
   console.error(`[scrape] Total events after dedup and filtering: ${filtered.length}`);
 
-  // Geocode unique cities
+  // Geocode unique cities and normalize locations
   const uniqueCities = [...new Set(filtered.map((e) => e.city).filter(Boolean) as string[])];
   const coordsMap = await geocodeCities(uniqueCities);
+
+  // Normalize event locations using geocoded data
+  for (const event of filtered) {
+    if (!event.city) continue;
+
+    const geoData = coordsMap.get(event.city);
+    if (!geoData || !geoData.display_name) continue;
+
+    // Preserve original location in locationDetails
+    if (event.location) {
+      event.locationDetails = event.location;
+    }
+
+    // Replace location with normalized address from Nominatim
+    event.location = geoData.display_name;
+  }
 
   // Import to database
   let imported = 0;
@@ -102,9 +118,11 @@ async function importProtests(days: number): Promise<void> {
         start: event.start ? new Date(event.start) : null,
         end: event.end ? new Date(event.end) : null,
         location: event.location,
+        locationDetails: event.locationDetails,
         geoLocation,
         url: event.url,
         attendees: event.attendees,
+        categories: event.categories, // Event categories (e.g., Demonstration, Vigil)
         verified: true, // Scraper imports are auto-verified
         createdAt: existing?.createdAt || new Date(),
         updatedAt: new Date(),

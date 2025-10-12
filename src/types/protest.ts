@@ -13,9 +13,11 @@ export interface Protest {
   start: Date | null;
   end: Date | null;
   location: string | null;
+  locationDetails?: string | null; // Original location from source (before normalization)
   geoLocation?: GeoLocation; // GeoJSON Point for geospatial queries
   url: string;
   attendees: number | null;
+  categories?: string[]; // Event categories (e.g., "Demonstration", "Vigil", "Blockade")
   verified: boolean;
   createdBy?: string; // User ID who created (if manual submission)
   manuallyEdited?: boolean; // Set to true when moderator/admin edits via API

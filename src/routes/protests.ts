@@ -94,6 +94,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
           : null,
         url: p.url,
         attendees: p.attendees,
+        categories: p.categories,
         verified: p.verified,
         createdAt: p.createdAt,
       })),

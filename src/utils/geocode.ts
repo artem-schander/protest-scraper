@@ -5,6 +5,7 @@ import path from 'path';
 interface GeoCoordinates {
   lat: number;
   lon: number;
+  display_name?: string; // Normalized address from Nominatim
 }
 
 interface GeocodeCache {
@@ -67,6 +68,7 @@ export async function geocodeCity(city: string): Promise<GeoCoordinates | null> 
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
+        display_name: result.display_name || undefined,
       };
 
       // Cache the result

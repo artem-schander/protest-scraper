@@ -31,8 +31,10 @@ export interface ProtestEvent {
   start: string | null;
   end: string | null;
   location: string | null;
+  locationDetails?: string | null; // Original location from source (before normalization)
   url: string;
   attendees: number | null; // Expected/announced number of attendees
+  categories?: string[]; // Event categories (e.g., "Demonstration", "Vigil", "Blockade")
 }
 
 interface ScraperOptions {
@@ -50,6 +52,7 @@ interface ScrapeResult {
 interface GeoCoordinates {
   lat: number;
   lon: number;
+  display_name?: string; // Normalized address from Nominatim
 }
 
 interface GeocodeCache {
@@ -76,9 +79,21 @@ export function parseGermanDate(str: string): Dayjs | null {
   let cleaned = str
     .replace(/[Uu]hr/g, "")
     .replace(/\s*-\s*\d{1,2}[:.]\d{2}.*$/, "") // Remove end time like "- 19.00"
+    .replace(/\s+/g, " ") // Normalize whitespace
     .replace(",", "")
-    .replace(/\bOkt\b/i, "10")
-    .replace(/\bOktober\b/i, "10")
+    // Replace German month names with numbers
+    .replace(/\bJan(?:uar)?\b/gi, "01")
+    .replace(/\bFeb(?:ruar)?\b/gi, "02")
+    .replace(/\bMär(?:z)?\b/gi, "03")
+    .replace(/\bApr(?:il)?\b/gi, "04")
+    .replace(/\bMai\b/gi, "05")
+    .replace(/\bJun(?:i)?\b/gi, "06")
+    .replace(/\bJul(?:i)?\b/gi, "07")
+    .replace(/\bAug(?:ust)?\b/gi, "08")
+    .replace(/\bSep(?:t(?:ember)?)?\b/gi, "09")
+    .replace(/\bOkt(?:ober)?\b/gi, "10")
+    .replace(/\bNov(?:ember)?\b/gi, "11")
+    .replace(/\bDez(?:ember)?\b/gi, "12")
     .trim();
 
   // Convert time dots to colons but preserve date dots
@@ -87,13 +102,28 @@ export function parseGermanDate(str: string): Dayjs | null {
   cleaned = cleaned.replace(/(\s)(\d{1,2})\.(\d{2})(\s|$)/, "$1$2:$3$4");
 
   // Try various formats
-  const d = dayjs(cleaned, [
+  let d = dayjs(cleaned, [
     "DD.MM.YYYY HH:mm",
     "DD.MM.YYYY",
+    "DD. MM HH:mm YYYY",    // For "18. 10 18:00 2025" (after month replacement)
+    "DD. MM YYYY",          // For "18. 10 2025" (after month replacement)
+    "DD. MM HH:mm",         // For "18. 10 18:00" (after month replacement, no year)
+    "DD. MM",               // For "18. 10" (after month replacement, no year)
     "DD.MM HH:mm",
     "YYYY-MM-DD HH:mm",
     "YYYY-MM-DD"
   ], true);
+
+  // If no year provided and date is valid, assume current or next year
+  if (d.isValid() && !cleaned.includes("20") && !cleaned.includes("19")) {
+    const currentYear = now.year();
+    // If date is in the past, assume next year
+    if (d.year(currentYear).isBefore(now)) {
+      d = d.year(currentYear + 1);
+    } else {
+      d = d.year(currentYear);
+    }
+  }
 
   return d.isValid() ? d : null;
 }
@@ -187,6 +217,7 @@ async function geocodeCity(city: string, cache: GeocodeCache): Promise<GeoCoordi
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
+        display_name: result.display_name || undefined,
       };
 
       // Cache the result
@@ -243,10 +274,27 @@ async function geocodeEvents(events: ProtestEvent[]): Promise<Map<string, GeoCoo
   return coordsMap;
 }
 
+// Normalize event locations using geocoded data
+function normalizeEventLocations(events: ProtestEvent[], coordsMap: Map<string, GeoCoordinates>): void {
+  for (const event of events) {
+    if (!event.city) continue;
+
+    const geoData = coordsMap.get(event.city.trim());
+    if (!geoData || !geoData.display_name) continue;
+
+    // Preserve original location in locationDetails
+    if (event.location) {
+      event.locationDetails = event.location;
+    }
+
+    // Replace location with normalized address from Nominatim
+    event.location = geoData.display_name;
+  }
+}
+
 // Source parsers
 export async function parseBerlin(): Promise<ProtestEvent[]> {
-  const url =
-    "https://www.berlin.de/polizei/service/versammlungsbehoerde/versammlungen-aufzuege/";
+  const url = "https://www.berlin.de/polizei/service/versammlungsbehoerde/versammlungen-aufzuege/";
   const html = await fetchHTML(url);
   if (!html) return [];
 
@@ -347,60 +395,206 @@ export async function parseDresden(): Promise<ProtestEvent[]> {
 
 export async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
   const base = "https://www.friedenskooperative.de";
-  const url = `${base}/aktion`;
-  const html = await fetchHTML(url);
-  if (!html) return [];
-
-  const $ = cheerio.load(html);
+  const endpoint = `${base}/views/ajax`;
   const events: ProtestEvent[] = [];
 
-  // Look for event boxes
-  $(".box").each((_, box) => {
-    const $box = $(box);
+  // Category mappings: ID -> English name
+  const categories: Record<string, string> = {
+    "34": "Demonstration",
+    "35": "Vigil",
+    "53": "Government Event",
+    "54": "Counter-Demonstration",
+    "55": "Blockade",
+  };
 
-    // Find title link
-    const a = $box.find("h2.node-title a").first();
-    const title = a.text().trim() || "Friedensaktion";
-    const link = a.attr("href") ?
-      (a.attr("href")!.startsWith("http") ? a.attr("href")! : base + a.attr("href")!) :
-      url;
+  try {
+    // Loop through all categories
+    for (const [categoryId, categoryName] of Object.entries(categories)) {
+      let page = 0;
+      let hasMore = true;
 
-    // Get text content
-    const text = $box.find("p.text").text().trim() || $box.text().trim();
-    const fullText = title + " " + text;
+      console.error(`[Friedenskooperative] Scraping category ${categoryId}: ${categoryName}`);
 
-    // Find date pattern in title or text (e.g., "Demo am 11.10.")
-    const dateMatch = fullText.match(/(\d{1,2})\.(\d{1,2})\.(?:(\d{4}))?/);
-    if (!dateMatch) return;
+      while (hasMore) {
+        // Build form data (most params are boilerplate from the site)
+        const formData = new URLSearchParams({
+          page: page.toString(),
+          view_name: "termine",
+          view_display_id: "page",
+          view_args: "",
+          view_path: "node/33",
+          view_base_path: "termine",
+          view_dom_id: "c591d6225e0201870f07992dce6c489c",
+          pager_element: "0",
+          field_date_event_rrule: "1",
+          bundesland: "All",
+          veranstaltungsart: categoryId, // Category filter
+          thema: "All",
+        });
 
-    let dateStr = dateMatch[0];
-    // Add current year if not present
-    if (!/\d{4}/.test(dateStr)) {
-      dateStr = `${dateMatch[1]}.${dateMatch[2]}.${now.year()}`;
+        try {
+          const response = await axios.post(endpoint, formData.toString(), {
+            headers: {
+              ...HEADERS,
+              "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+              "X-Requested-With": "XMLHttpRequest",
+            },
+            timeout: 30000,
+          });
+
+          await delay(1500); // Respect rate limits
+
+          // Response is JSON array with commands
+          const jsonResponse = response.data;
+          if (!Array.isArray(jsonResponse)) {
+            hasMore = false;
+            break;
+          }
+
+          // Find the "insert" command with HTML content
+          let html: string | null = null;
+          for (const cmd of jsonResponse) {
+            if (cmd.command === "insert" && cmd.data) {
+              html = cmd.data;
+              break;
+            }
+          }
+
+          if (!html) {
+            hasMore = false;
+            break;
+          }
+
+          const $ = cheerio.load(html);
+
+          // Parse events grouped by month/year headings
+          const viewContent = $(".view-content").last();
+          let currentMonthYear = "";
+
+          viewContent.children().each((_, elem) => {
+            const $elem = $(elem);
+
+            // Check if this is a month/year heading (h3)
+            if ($elem.is("h3")) {
+              currentMonthYear = $elem.text().trim(); // e.g., "Oktober 2025"
+              return;
+            }
+
+            // Check if this is a box with events
+            if ($elem.is(".box")) {
+              // Each box can contain multiple events
+              $elem.find(".row.row-eq-height").each((_, row) => {
+                const $row = $(row);
+
+                // Extract title and link
+                const titleLink = $row.find("h2.node-title a").first();
+                const title = titleLink.text().trim() || "Friedensaktion";
+                const relativeUrl = titleLink.attr("href") || "";
+                const url = relativeUrl.startsWith("http") ? relativeUrl : base + relativeUrl;
+
+                // Extract date from .date-column .date
+                const dateElem = $row.find(".date-column .date").first();
+                let dateStr = dateElem.find(".date-display-single").first().text().trim();
+
+                // Check for date range format: <div class="date-display-range">
+                const dateRange = dateElem.find(".date-display-range");
+                let endTimeStr: string | null = null;
+                if (dateRange.length > 0) {
+                  const startTime = dateRange.find(".date-display-start").text().trim();
+                  const endTime = dateRange.find(".date-display-end").text().trim();
+
+                  // dateStr is like "02. Apr", startTime is "13:00", endTime is "17:00"
+                  if (startTime) {
+                    dateStr = `${dateStr} ${startTime}`;
+                  }
+                  if (endTime) {
+                    endTimeStr = `${dateStr.split(" ")[0]} ${endTime}`; // Same date, different time
+                  }
+                }
+
+                // Combine with month/year from heading
+                // dateStr is like "18. Okt 18:00", currentMonthYear is "Oktober 2025"
+                // Extract year from currentMonthYear
+                const yearMatch = currentMonthYear.match(/(\d{4})/);
+                const year = yearMatch ? yearMatch[1] : now.year().toString();
+                const fullDateStr = `${dateStr} ${year}`;
+
+                const d = parseGermanDate(fullDateStr);
+                if (!d) return;
+
+                // Parse end date if exists
+                let endDate: Dayjs | null = null;
+                if (endTimeStr) {
+                  const fullEndDateStr = `${endTimeStr} ${year}`;
+                  endDate = parseGermanDate(fullEndDateStr);
+                }
+
+                // Extract city from .date-column .city
+                let city: string | null = $row.find(".date-column .city").text().trim() || null;
+
+                // Extract location from .place.line.info
+                let location: string | null = null;
+                const placeInfo = $row.find(".place.line.info span").text().trim();
+                if (placeInfo) {
+                  location = placeInfo;
+                  // If no city yet, try to extract from location (first part before comma)
+                  if (!city) {
+                    const cityMatch = placeInfo.match(/^([^,]+)/);
+                    city = cityMatch ? cityMatch[1].trim() : null;
+                  }
+                }
+
+                // If still no location, use city
+                if (!location && city) {
+                  location = city;
+                }
+
+                // Extract full text for attendees parsing
+                const fullText = $row.text();
+                const attendees = parseAttendees(fullText);
+
+                events.push({
+                  source: "Friedenskooperative",
+                  city,
+                  title,
+                  start: d.toISOString(),
+                  end: endDate ? endDate.toISOString() : null,
+                  location: location || city,
+                  url,
+                  attendees,
+                  categories: [categoryName],
+                });
+              });
+            }
+          });
+
+          const eventCount = $(".view-content").last().find(".row.row-eq-height").length;
+          if (eventCount === 0) {
+            hasMore = false;
+            break;
+          }
+
+          page++;
+
+          // Safety limit: max 20 pages per category
+          if (page >= 20) {
+            hasMore = false;
+          }
+
+        } catch (err) {
+          const error = err as Error;
+          console.error(`[Friedenskooperative] Error on category ${categoryId}, page ${page}:`, error.message);
+          hasMore = false;
+        }
+      }
     }
 
-    // Try to find city/location
-    const cityMatch = fullText.match(/\b(?:in|bei|aus)\s+([A-ZÄÖÜ][a-zäöüß\-]+(?:\s+[A-ZÄÖÜ][a-zäöüß\-]+)?)\b/);
-    const city = cityMatch ? cityMatch[1].trim() : null;
-
-    const d = parseGermanDate(dateStr);
-    if (!d) return;
-
-    const attendees = parseAttendees(fullText);
-
-    events.push({
-      source: "Friedenskooperative",
-      city: city,
-      title: title,
-      start: d.toISOString(),
-      end: null,
-      location: city,
-      url: link,
-      attendees,
-    });
-  });
-
-  return events;
+    return events;
+  } catch (e) {
+    const error = e as Error;
+    console.error("[parseFriedenskooperative error]", error.message);
+    return [];
+  }
 }
 
 export async function parseDemokrateam(): Promise<ProtestEvent[]> {
@@ -572,9 +766,7 @@ export function saveJSON(events: ProtestEvent[], file: string): void {
   fs.writeFileSync(file, JSON.stringify(events, null, 2), "utf8");
 }
 
-async function saveICS(events: ProtestEvent[], file: string): Promise<void> {
-  // Geocode cities first
-  const coordsMap = await geocodeEvents(events);
+async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordinates>, file: string): Promise<void> {
 
   const icsEvents = events
     .filter((e) => e.start)
@@ -603,11 +795,16 @@ async function saveICS(events: ProtestEvent[], file: string): Promise<void> {
       }
 
       // Add categories for filtering/organization in calendar apps
-      // Categories: City, Country, Source
+      // Categories: Event Type, City, Country, Source
       const categories: string[] = [];
       categories.push("Germany"); // All events are in Germany
       if (e.city) categories.push(e.city);
       if (e.source) categories.push(e.source);
+
+      // Add event-specific categories (e.g., Demonstration, Vigil, Blockade)
+      if (e.categories && e.categories.length > 0) {
+        categories.push(...e.categories);
+      }
 
       if (categories.length > 0) {
         event.categories = categories;
@@ -656,7 +853,6 @@ const DAYS = parseInt(opt.days);
 const sources = [
   parseBerlin,
   parseDresden,
-  // parseKoeln, // Disabled: Wrong URL - needs official police source
   parseFriedenskooperative,
   parseDemokrateam,
 ];
@@ -679,9 +875,13 @@ const sources = [
   const events = dedupe(all).filter((e) => withinNextDays(e.start, DAYS));
   events.sort((a, b) => (a.start || "").localeCompare(b.start || ""));
 
+  // Geocode cities and normalize locations
+  const coordsMap = await geocodeEvents(events);
+  normalizeEventLocations(events, coordsMap);
+
   saveCSV(events, opt.out);
   saveJSON(events, opt.json);
-  await saveICS(events, opt.ics);
+  await saveICS(events, coordsMap, opt.ics);
 
   const result: ScrapeResult = { count: events.length, range: DAYS };
   console.log(JSON.stringify(result, null, 2));
