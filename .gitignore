@@ -13,7 +13,7 @@ dist/
 *.csv
 *.json
 *.ics
-protests.*
+./protests.*
 
 # IDE
 .vscode/

@@ -8,7 +8,7 @@ import {
   dedupe,
   withinNextDays,
   type ProtestEvent,
-} from "./scrape-protests.js";
+} from "../../src/scraper/scrape-protests.js";
 
 // Initialize dayjs plugins
 dayjs.extend(customParseFormat);

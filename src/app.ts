@@ -1,0 +1,49 @@
+import express, { Application } from 'express';
+import cors from 'cors';
+import { errorHandler } from './middleware/errorHandler.js';
+import authRoutes from './routes/auth.js';
+import protestRoutes from './routes/protests.js';
+import exportRoutes from './routes/export.js';
+
+export function createApp(): Application {
+  const app: Application = express();
+
+  // Middleware
+  app.use(cors());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  // Routes
+  app.get('/', (_req, res) => {
+    res.json({
+      message: 'Protest Service API',
+      version: '1.0.0',
+      endpoints: {
+        auth: {
+          register: 'POST /api/auth/register',
+          login: 'POST /api/auth/login',
+        },
+        protests: {
+          list: 'GET /api/protests',
+          create: 'POST /api/protests (authenticated)',
+          update: 'PUT /api/protests/:id (moderator/admin)',
+          delete: 'DELETE /api/protests/:id (admin)',
+        },
+        export: {
+          csv: 'GET /api/export/csv?city=Berlin&days=30',
+          json: 'GET /api/export/json?city=Berlin&days=30',
+          ics: 'GET /api/export/ics?city=Berlin&days=30 (subscribable!)',
+        },
+      },
+    });
+  });
+
+  app.use('/api/auth', authRoutes);
+  app.use('/api/protests', protestRoutes);
+  app.use('/api/export', exportRoutes);
+
+  // Error handler (must be last)
+  app.use(errorHandler);
+
+  return app;
+}

@@ -290,7 +290,7 @@ export async function parseBerlin(): Promise<ProtestEvent[]> {
   return events;
 }
 
-async function parseDresden(): Promise<ProtestEvent[]> {
+export async function parseDresden(): Promise<ProtestEvent[]> {
   const url = "https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json";
 
   try {
@@ -345,7 +345,7 @@ async function parseDresden(): Promise<ProtestEvent[]> {
   }
 }
 
-async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
+export async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
   const base = "https://www.friedenskooperative.de";
   const url = `${base}/aktion`;
   const html = await fetchHTML(url);
@@ -403,7 +403,7 @@ async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
   return events;
 }
 
-async function parseDemokrateam(): Promise<ProtestEvent[]> {
+export async function parseDemokrateam(): Promise<ProtestEvent[]> {
   const endpoint = "https://www.demokrateam.org/wp-admin/admin-ajax.php";
   const events: ProtestEvent[] = [];
 

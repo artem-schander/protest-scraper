@@ -1,10 +1,10 @@
 # 🪧 Protest Service API
 
 **A collaborative open-source service to collect and share upcoming protests and demonstrations.**
-Built with **Node.js**, **Express**, and **Prisma**, backed by **PostgreSQL**, and designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
+Built with **Node.js**, **Express**, and **MongoDB**, designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
 
-> **⚠️ Work in Progress**
-> This project is under active development. The scraper component is functional, but the API/database infrastructure is not yet implemented. See the [Roadmap](#-roadmap--progress) for current status.
+> **✅ Fully Functional**
+> The scraper component and REST API are fully implemented. You can deploy the service using Docker Compose. See the [Roadmap](#-roadmap--progress) for future enhancements.
 
 ---
 
@@ -16,7 +16,7 @@ Built with **Node.js**, **Express**, and **Prisma**, backed by **PostgreSQL**, a
 - Role system (`USER`, `MODERATOR`, `ADMIN`)
 - Admin & Moderator routes for verifying, editing, or deleting entries
 - Integration-ready with automated scrapers (import endpoint)
-- Dockerized setup with PostgreSQL & Prisma ORM
+- Dockerized setup with MongoDB
 - Comprehensive test suite with Vitest
 
 ---
@@ -26,8 +26,7 @@ Built with **Node.js**, **Express**, and **Prisma**, backed by **PostgreSQL**, a
 | Component | Tool |
 |------------|------|
 | Backend | Node.js (Express) |
-| ORM | Prisma |
-| Database | PostgreSQL |
+| Database | MongoDB (native driver) |
 | Auth | JWT (JSON Web Token) |
 | Deployment | Docker + Docker Compose |
 
@@ -44,9 +43,10 @@ Built with **Node.js**, **Express**, and **Prisma**, backed by **PostgreSQL**, a
 ```bash
 git clone https://github.com/YOUR_USERNAME/protest-service.git
 cd protest-service
+npm install
 cp .env.example .env
+# Edit .env and set MONGODB_URI and JWT_SECRET
 docker compose up -d
-npx prisma migrate dev --name init
 ```
 
 ### Running in Dev Mode
@@ -55,25 +55,33 @@ npx prisma migrate dev --name init
 npm run dev
 ```
 
-### Running the Scraper
+### Importing Protest Data
+
+The scraper fetches protests from official sources and imports them directly into MongoDB:
 
 ```bash
-npm run scrape                    # Scrape protests (default: next 40 days)
-npm run scrape -- --days 30       # Scrape protests for next 30 days
+npm run import                    # Import protests (default: next 40 days)
+npm run import -- --days 60       # Import protests for next 60 days
 ```
 
-Output files:
-- `protests.json` - JSON format
-- `protests.csv` - CSV format
-- `protests.ics` - iCalendar format
+This command:
+1. Scrapes protests from Berlin Police, Dresden City, Friedenskooperative, and DemokraTEAM
+2. Deduplicates events
+3. Imports them to MongoDB as verified protests
+4. Updates existing events (unless manually edited or deleted)
 
-**Scraper Documentation:** See [Scraper Usage Guide](#-scraper-standalone-usage) below for detailed options.
+**Conflict Protection:** The scraper respects manual changes:
+- Events edited via API (PUT) are marked as `manuallyEdited: true` and won't be overwritten
+- Events deleted via API (DELETE) are soft-deleted (`deleted: true`) and won't be re-imported
+- This prevents losing manual corrections when the scraper runs again
+
+**Legacy File Export:** The original scraper (`npm run scrape`) still creates CSV/JSON/ICS files if needed. See [Scraper Standalone Usage](#-scraper-standalone-usage) below.
 
 ### Running Tests
 
 ```bash
 npm test                          # Run tests once
-npm run test:watch               # Run tests in watch mode
+npm run test:watch                # Run tests in watch mode
 ```
 
 ### Running in Production
@@ -94,6 +102,222 @@ docker compose up -d --build
 | `POST` | `/api/protests` | ✅ | Add new protest |
 | `PUT` | `/api/protests/:id` | MODERATOR / ADMIN | Edit protest |
 | `DELETE` | `/api/protests/:id` | ADMIN | Delete protest |
+| `GET` | `/api/export/csv` | - | Export protests as CSV (supports filters) |
+| `GET` | `/api/export/json` | - | Export protests as JSON (supports filters) |
+| `GET` | `/api/export/ics` | - | Export as iCalendar - **subscribable!** (supports filters) |
+
+### API Examples
+
+#### Register a new user
+
+```bash
+curl -X POST http://localhost:3000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+Response:
+```json
+{
+  "message": "User registered successfully",
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "email": "user@example.com",
+    "role": "USER",
+    "createdAt": "2025-10-12T10:30:00.000Z"
+  }
+}
+```
+
+#### Login
+
+```bash
+curl -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securepassword123"
+  }'
+```
+
+Response:
+```json
+{
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "507f1f77bcf86cd799439011",
+    "email": "user@example.com",
+    "role": "USER"
+  }
+}
+```
+
+#### List protests (public)
+
+```bash
+# All upcoming verified protests
+curl http://localhost:3000/api/protests
+
+# Filter by city
+curl "http://localhost:3000/api/protests?city=Berlin"
+
+# Filter by date range (next 30 days)
+curl "http://localhost:3000/api/protests?days=30"
+
+# Geolocation search - "Protests near me"
+# Find protests within 50km of Berlin (lat: 52.52, lon: 13.405)
+curl "http://localhost:3000/api/protests?lat=52.52&lon=13.405&radius=50"
+
+# Geolocation search with custom radius (10km)
+curl "http://localhost:3000/api/protests?lat=48.137&lon=11.576&radius=10"
+
+# Combined filters with pagination
+curl "http://localhost:3000/api/protests?city=Berlin&days=30&limit=20&skip=0"
+```
+
+Response:
+```json
+{
+  "protests": [
+    {
+      "id": "507f1f77bcf86cd799439012",
+      "source": "Berlin Police",
+      "city": "Berlin",
+      "title": "Demo für Klimaschutz",
+      "start": "2025-10-15T14:00:00.000Z",
+      "end": null,
+      "location": "Brandenburger Tor",
+      "coordinates": {
+        "lat": 52.516275,
+        "lon": 13.377704
+      },
+      "url": "https://...",
+      "attendees": 500,
+      "verified": true,
+      "createdAt": "2025-10-12T10:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 42,
+    "limit": 50,
+    "skip": 0
+  }
+}
+```
+
+#### Create a protest (authenticated)
+
+```bash
+curl -X POST http://localhost:3000/api/protests \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "title": "Demonstration für Menschenrechte",
+    "city": "München",
+    "start": "2025-11-01T15:00:00.000Z",
+    "location": "Marienplatz",
+    "url": "https://example.org/event",
+    "attendees": 200
+  }'
+```
+
+Response (USER role - unverified):
+```json
+{
+  "message": "Protest created (pending verification)",
+  "protest": {
+    "id": "507f1f77bcf86cd799439013",
+    "verified": false,
+    ...
+  }
+}
+```
+
+Response (MODERATOR/ADMIN role - auto-verified):
+```json
+{
+  "message": "Protest created and verified",
+  "protest": {
+    "id": "507f1f77bcf86cd799439013",
+    "verified": true,
+    ...
+  }
+}
+```
+
+#### Update a protest (MODERATOR/ADMIN only)
+
+```bash
+curl -X PUT http://localhost:3000/api/protests/507f1f77bcf86cd799439013 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "title": "Updated title",
+    "verified": true,
+    "attendees": 1000
+  }'
+```
+
+#### Delete a protest (ADMIN only)
+
+```bash
+curl -X DELETE http://localhost:3000/api/protests/507f1f77bcf86cd799439013 \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+**Note:** Deletions are "soft deletes" - the protest remains in the database with a `deleted: true` flag but won't appear in public listings or exports. This prevents the scraper from re-importing deleted events.
+
+#### Export protests as CSV
+
+```bash
+# All upcoming protests
+curl "http://localhost:3000/api/export/csv" -o protests.csv
+
+# Filter by city and date range
+curl "http://localhost:3000/api/export/csv?city=Berlin&days=30" -o berlin-protests.csv
+```
+
+#### Export protests as JSON
+
+```bash
+# All upcoming protests
+curl "http://localhost:3000/api/export/json" -o protests.json
+
+# Filter by city
+curl "http://localhost:3000/api/export/json?city=Dresden" -o dresden-protests.json
+```
+
+#### Subscribe to protests calendar (ICS)
+
+The ICS endpoint is **subscribable** - you can add it as a calendar subscription in Google Calendar, Apple Calendar, Outlook, etc.
+
+```bash
+# Download ICS file
+curl "http://localhost:3000/api/export/ics" -o protests.ics
+
+# Subscribe to all Berlin protests (next 90 days) in your calendar app
+# Use this URL: http://localhost:3000/api/export/ics?city=Berlin&days=90
+```
+
+**Calendar Subscription URLs:**
+- All protests: `http://your-domain.com/api/export/ics`
+- Berlin only: `http://your-domain.com/api/export/ics?city=Berlin`
+- Next 30 days: `http://your-domain.com/api/export/ics?days=30`
+- Berlin, next 30 days: `http://your-domain.com/api/export/ics?city=Berlin&days=30`
+
+**Filter Parameters for All Endpoints:**
+- `city` - Filter by city name (e.g., `Berlin`, `Dresden`)
+- `days` - Number of days forward from today (e.g., `30`, `60`)
+- `verified` - Show only verified protests (`true`/`false`, default: `true`)
+- `lat` - Latitude for geolocation search (e.g., `52.52`)
+- `lon` - Longitude for geolocation search (e.g., `13.405`)
+- `radius` - Search radius in kilometers (default: `50`, only with lat/lon)
+- `limit` - Max results per page (default: `50`, max: `100`)
+- `skip` - Offset for pagination (default: `0`)
 
 ---
 
@@ -217,9 +441,10 @@ The scraper includes:
 - [x] Attendee number extraction from German text patterns
 - [x] Duplicate detection and removal
 - [x] Date range filtering
-- [x] CSV export
-- [x] JSON export
-- [x] ICS (iCalendar) export
+- [x] CSV export (file-based and API endpoint)
+- [x] JSON export (file-based and API endpoint)
+- [x] ICS (iCalendar) export (file-based and API endpoint)
+- [x] MongoDB import script with deduplication
 - [x] Comprehensive test suite (date parsing, deduplication, filtering)
 
 #### Data Model
@@ -238,24 +463,29 @@ The scraper includes:
 - [ ] Munich scraper integration
 - [ ] Additional regional sources
 
-#### API & Database (Not Yet Implemented)
-- [ ] PostgreSQL database schema
-- [ ] Prisma ORM integration
-- [ ] Express REST API
-- [ ] JWT authentication
-- [ ] User registration endpoint
-- [ ] Login endpoint
-- [ ] Public protest listing endpoint
-- [ ] Protected protest creation endpoint
-- [ ] Moderator edit endpoint
-- [ ] Admin delete endpoint
-- [ ] Manual verification workflow for USER submissions
-- [ ] Auto-verification for MODERATOR/ADMIN submissions
+#### API & Database
+- [x] MongoDB connection and indexes
+- [x] TypeScript type definitions
+- [x] Express REST API setup
+- [x] JWT authentication middleware
+- [x] User registration endpoint
+- [x] Login endpoint
+- [x] Public protest listing endpoint with filters (city, date range, pagination)
+- [x] Protected protest creation endpoint
+- [x] Moderator edit endpoint
+- [x] Admin delete endpoint
+- [x] Manual verification workflow for USER submissions
+- [x] Auto-verification for MODERATOR/ADMIN submissions
+- [x] Export endpoints (CSV, JSON, ICS) with filter support
+- [x] Subscribable ICS calendar feeds with custom filters
+- [x] Geolocation search ("protests near me" feature)
+- [x] Automatic geocoding of city names to coordinates
+- [x] Comprehensive API test suite with 39 passing tests
 
 #### Deployment & DevOps
-- [ ] Docker Compose setup
-- [ ] Production Dockerfile
-- [ ] Environment configuration (.env.example)
+- [x] Docker Compose setup with MongoDB
+- [x] Production Dockerfile (multi-stage build)
+- [x] Environment configuration (.env.example)
 - [ ] CI/CD pipeline
 - [ ] Automated scraper schedule (cron job)
 
@@ -263,18 +493,18 @@ The scraper includes:
 - [x] README with usage instructions
 - [x] Scraper standalone documentation
 - [x] Roadmap checklist
-- [ ] API endpoint documentation
-- [ ] Authentication flow documentation
+- [x] API endpoint documentation with curl examples
+- [x] Authentication flow documentation
 - [ ] Contributing guidelines
 - [ ] Code of conduct
 
 ### 📋 Feature Priority
 
 **High Priority:**
-1. Complete API implementation (endpoints, auth, database)
-2. Docker containerization
-3. Automated scraping schedule
-4. API documentation
+1. ~~Complete API implementation (endpoints, auth, database)~~ ✅ **DONE**
+2. ~~Docker containerization~~ ✅ **DONE**
+3. Automated scraping schedule (cron job to run scraper periodically)
+4. ~~API documentation~~ ✅ **DONE**
 
 **Medium Priority:**
 1. Additional scraper sources (Hamburg, Munich, etc.)

@@ -8,8 +8,7 @@ A collaborative open-source REST API service for collecting and sharing upcoming
 
 **Tech Stack:**
 - Backend: Node.js with Express
-- Database: PostgreSQL
-- ORM: Prisma
+- Database: MongoDB (native driver, no ORM)
 - Authentication: JWT (JSON Web Token)
 - Deployment: Docker + Docker Compose
 
@@ -18,18 +17,14 @@ A collaborative open-source REST API service for collecting and sharing upcoming
 ### Development Setup
 ```bash
 # First time setup
-docker compose up -d                    # Start PostgreSQL
-npx prisma migrate dev --name <name>    # Run database migrations
+cp .env.example .env                    # Create environment file
+docker compose up -d                    # Start MongoDB
+npm install                             # Install dependencies
 npm run dev                             # Start development server
 ```
 
 ### Database Management
-```bash
-npx prisma migrate dev --name <name>    # Create and apply new migration
-npx prisma migrate deploy               # Apply migrations in production
-npx prisma generate                     # Regenerate Prisma Client after schema changes
-npx prisma studio                       # Open Prisma Studio GUI for database inspection
-```
+MongoDB uses the native driver without migrations. Database indexes are automatically created on application startup via `src/db/connection.ts`.
 
 ### Production
 ```bash
@@ -63,11 +58,17 @@ JWT tokens are used for authentication. The auth flow involves:
 - `PUT /api/protests/:id` - Edit protest (MODERATOR or ADMIN only)
 - `DELETE /api/protests/:id` - Delete protest (ADMIN only)
 
-### Data Model Considerations
+### Data Model
 
-The Prisma schema should include:
-- **User**: email, password (hashed), role (USER/MODERATOR/ADMIN)
-- **Protest**: title, description, city, date, location, verified status, timestamps
+MongoDB collections with TypeScript interfaces defined in `src/types/`:
+
+**Users Collection:**
+- email (unique), password (hashed), role (USER/MODERATOR/ADMIN)
+- Indexes: email (unique)
+
+**Protests Collection:**
+- source, city, title, start, end, location, url, attendees, verified, createdBy
+- Indexes: city, start, verified, city+start composite, 2dsphere geospatial
 - Protests submitted by USER role require `verified: false` by default
 - Protests submitted by MODERATOR/ADMIN should be auto-verified (`verified: true`)
 
@@ -77,10 +78,10 @@ The service is designed to accept automated scraper imports via the protest crea
 
 ## Development Guidelines
 
-- Use Prisma migrations for all database schema changes (never modify the database directly)
-- JWT secret should be stored in `.env` file (never commit)
-- Implement proper password hashing (bcrypt recommended)
-- Query filters on `/api/protests` endpoint should support both city filtering and date range (days parameter)
-- All timestamps should be stored in UTC
-- protest scraper: no errors but also no protests
-- demokrateam wip
+- MongoDB native driver is used without ORM for simplicity and performance
+- Database indexes are created automatically on startup via `connectToDatabase()`
+- JWT secret must be stored in `.env` file (never commit)
+- Passwords are hashed using bcrypt before storage
+- Query filters on `/api/protests` endpoint support city filtering and date range (days parameter)
+- All timestamps are stored in UTC as Date objects
+- TypeScript interfaces in `src/types/` define data models without runtime validation
