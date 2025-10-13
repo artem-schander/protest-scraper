@@ -174,6 +174,12 @@ curl "http://localhost:3000/api/protests?source=www.berlin.de"
 # Filter by language
 curl "http://localhost:3000/api/protests?language=de-DE"
 
+# Search for protests with "climate" in the title
+curl "http://localhost:3000/api/protests?search=climate"
+
+# Search for "democracy" or "Demokratie" (case-insensitive)
+curl "http://localhost:3000/api/protests?search=demokratie"
+
 # Filter by date range (relative - next 30 days from today)
 curl "http://localhost:3000/api/protests?days=30"
 
@@ -192,6 +198,9 @@ curl "http://localhost:3000/api/protests?city=Berlin&days=30&limit=20&skip=0"
 
 # Complex filter: German protests in Berlin for October 2025
 curl "http://localhost:3000/api/protests?city=Berlin&country=DE&language=de-DE&startDate=2025-10-01&endDate=2025-10-31"
+
+# Search for climate protests in Germany
+curl "http://localhost:3000/api/protests?search=climate&country=DE"
 ```
 
 Response:
@@ -332,6 +341,7 @@ curl "http://localhost:3000/api/export/ics" -o protests.ics
 - All protests: `http://your-domain.com/api/export/ics`
 - Berlin only: `http://your-domain.com/api/export/ics?city=Berlin`
 - Germany only: `http://your-domain.com/api/export/ics?country=DE`
+- Climate protests: `http://your-domain.com/api/export/ics?search=climate`
 - Next 30 days: `http://your-domain.com/api/export/ics?days=30`
 - Berlin, next 30 days: `http://your-domain.com/api/export/ics?city=Berlin&days=30`
 - October 2025: `http://your-domain.com/api/export/ics?startDate=2025-10-01&endDate=2025-10-31`
@@ -348,6 +358,7 @@ All endpoints (`/api/protests`, `/api/export/csv`, `/api/export/json`, `/api/exp
 | `source` | string | Filter by data source | `www.berlin.de`, `www.friedenskooperative.de` |
 | `country` | string | Filter by ISO 3166-1 alpha-2 country code | `DE`, `AT`, `CH` |
 | `language` | string | Filter by language code | `de-DE`, `en-US` |
+| `search` | string | Full-text search in title (case-insensitive) | `climate`, `democracy` |
 | `startDate` | string | Start date (ISO 8601) - events from this date forward | `2025-10-15` |
 | `endDate` | string | End date (ISO 8601) - events up to this date (inclusive) | `2025-10-31` |
 | `days` | number | Number of days forward from today (alternative to startDate/endDate) | `30`, `60` |
@@ -366,6 +377,7 @@ All endpoints (`/api/protests`, `/api/export/csv`, `/api/export/json`, `/api/exp
 - `limit` and `skip` only apply to `/api/protests` endpoint (not export endpoints)
 - `country` codes are case-insensitive but stored as uppercase (e.g., `de` becomes `DE`)
 - `endDate` is inclusive - it includes all events starting on that day (until 23:59:59.999)
+- `search` performs case-insensitive partial matching in the title field (e.g., `search=climate` matches "Climate Protest", "Klimaschutz", etc.)
 - When using geolocation (`lat`/`lon`), the `city` filter is automatically ignored
 - Export endpoints default to `verified=true` for public safety
 

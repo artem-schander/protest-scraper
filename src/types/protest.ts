@@ -59,6 +59,7 @@ export interface ProtestQueryFilters {
   city?: string;
   country?: string; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
   language?: string; // e.g., "de-DE"
+  search?: string; // full-text search in title (case-insensitive partial match)
   days?: string; // number of days from now to filter (query param is string)
   startDate?: string; // ISO 8601 date string (e.g., "2025-10-15") - filter start >= this date
   endDate?: string; // ISO 8601 date string (e.g., "2025-10-30") - filter start <= this date

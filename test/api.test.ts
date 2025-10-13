@@ -409,6 +409,71 @@ describe('Protests API', () => {
       expect(res.body.protests[0].city).toBe('Vienna');
     });
 
+    it('should search by title (case-insensitive)', async () => {
+      const res = await request(app).get('/api/protests?search=climate');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].title).toBe('Climate Protest Berlin');
+    });
+
+    it('should search by title with different case', async () => {
+      const res = await request(app).get('/api/protests?search=PEACE');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].title).toBe('Peace March Munich');
+    });
+
+    it('should search by partial title match', async () => {
+      const res = await request(app).get('/api/protests?search=demo');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].title).toBe('Democracy Rally Vienna');
+    });
+
+    it('should return empty results for non-matching search', async () => {
+      const res = await request(app).get('/api/protests?search=nonexistent');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(0);
+    });
+
+    it('should combine search with other filters', async () => {
+      const res = await request(app).get('/api/protests?search=protest&country=DE');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(2); // "Climate Protest Berlin" and "December Protest"
+      expect(res.body.protests.every((p: any) => p.country === 'DE')).toBe(true);
+      expect(res.body.protests.every((p: any) => p.title.toLowerCase().includes('protest'))).toBe(true);
+    });
+
+    it('should handle special regex characters in search', async () => {
+      // Add a protest with special characters
+      await db.collection<Protest>('protests').insertOne({
+        source: 'test',
+        city: 'Test City',
+        country: 'DE',
+        title: 'Protest (Demo) for Climate [Action]',
+        start: new Date('2025-10-18T14:00:00Z'),
+        end: null,
+        location: 'Test Location',
+        url: 'https://example.com/special',
+        attendees: 100,
+        verified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      // Search for literal parentheses - should be escaped and work correctly
+      const res = await request(app).get('/api/protests?search=(Demo)');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].title).toContain('(Demo)');
+    });
+
     it('should filter by explicit date range', async () => {
       const res = await request(app).get(
         '/api/protests?startDate=2025-10-15&endDate=2025-10-31'
@@ -853,6 +918,15 @@ describe('Export API', () => {
         expect(res.text).not.toContain('Munich Peace March');
       });
 
+      it('should search by title', async () => {
+        const res = await request(app).get('/api/export/csv?search=climate');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).not.toContain('Munich Peace March');
+        expect(res.text).not.toContain('Vienna Democracy Rally');
+      });
+
       it('should filter by country', async () => {
         const res = await request(app).get('/api/export/csv?country=AT');
 
@@ -902,6 +976,15 @@ describe('Export API', () => {
         expect(protests[0].title).toBe('Munich Peace March');
       });
 
+      it('should search by title', async () => {
+        const res = await request(app).get('/api/export/json?search=peace');
+
+        expect(res.status).toBe(200);
+        const protests = JSON.parse(res.text);
+        expect(protests.length).toBe(1);
+        expect(protests[0].title).toBe('Munich Peace March');
+      });
+
       it('should filter by country and date range', async () => {
         const res = await request(app).get(
           '/api/export/json?country=DE&startDate=2025-10-01&endDate=2025-10-31'
@@ -922,6 +1005,16 @@ describe('Export API', () => {
         expect(res.text).toContain('BEGIN:VCALENDAR');
         expect(res.text).toContain('Vienna Democracy Rally');
         expect(res.text).not.toContain('Berlin Climate Protest');
+      });
+
+      it('should search by title', async () => {
+        const res = await request(app).get('/api/export/ics?search=democracy');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('BEGIN:VCALENDAR');
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Berlin Climate Protest');
+        expect(res.text).not.toContain('Munich Peace March');
       });
 
       it('should filter by date range', async () => {

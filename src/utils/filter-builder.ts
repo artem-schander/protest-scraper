@@ -3,7 +3,7 @@ import { ProtestQueryFilters } from '../types/protest.js';
 
 /**
  * Builds a MongoDB filter object from Express request query parameters.
- * Supports all protest filtering options: city, source, country, language,
+ * Supports all protest filtering options: city, source, country, language, search (title),
  * date range (startDate/endDate or days), geolocation (lat/lon/radius), and verified status.
  *
  * @param req - Express Request object with query parameters
@@ -20,6 +20,7 @@ export function buildProtestFilter(
     source,
     country,
     language,
+    search,
     days,
     startDate,
     endDate,
@@ -52,6 +53,13 @@ export function buildProtestFilter(
   // Language filter
   if (language && typeof language === 'string') {
     filter.language = language;
+  }
+
+  // Full-text search in title (case-insensitive partial match)
+  if (search && typeof search === 'string') {
+    // Escape special regex characters to prevent regex injection
+    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    filter.title = { $regex: escapedSearch, $options: 'i' };
   }
 
   // Geolocation filter (takes precedence over city filter)
