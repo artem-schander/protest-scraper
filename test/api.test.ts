@@ -275,6 +275,240 @@ describe('Protests API', () => {
     });
   });
 
+  describe('GET /api/protests - Comprehensive Filter Tests', () => {
+    beforeEach(async () => {
+      // Clear existing protests and add comprehensive test data
+      await db.collection('protests').deleteMany({});
+
+      await db.collection<Protest>('protests').insertMany([
+        // German protests
+        {
+          source: 'www.berlin.de',
+          city: 'Berlin',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'Climate Protest Berlin',
+          start: new Date('2025-10-15T14:00:00Z'),
+          end: null,
+          location: 'Brandenburger Tor',
+          geoLocation: {
+            type: 'Point',
+            coordinates: [13.377704, 52.516275],
+          },
+          url: 'https://example.com/berlin1',
+          attendees: 1000,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          source: 'www.friedenskooperative.de',
+          city: 'Munich',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'Peace March Munich',
+          start: new Date('2025-11-01T15:00:00Z'),
+          end: null,
+          location: 'Marienplatz',
+          geoLocation: {
+            type: 'Point',
+            coordinates: [11.576124, 48.137154],
+          },
+          url: 'https://example.com/munich1',
+          attendees: 500,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        // Austrian protest
+        {
+          source: 'www.example.at',
+          city: 'Vienna',
+          country: 'AT',
+          language: 'de-AT',
+          title: 'Democracy Rally Vienna',
+          start: new Date('2025-10-20T16:00:00Z'),
+          end: null,
+          location: 'Stephansplatz',
+          geoLocation: {
+            type: 'Point',
+            coordinates: [16.373064, 48.208176],
+          },
+          url: 'https://example.com/vienna1',
+          attendees: 300,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        // Unverified protest
+        {
+          source: 'user-submission',
+          city: 'Dresden',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'Unverified Protest Dresden',
+          start: new Date('2025-10-25T17:00:00Z'),
+          end: null,
+          location: 'Altmarkt',
+          url: 'https://example.com/dresden1',
+          attendees: 200,
+          verified: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        // December protest (outside October range)
+        {
+          source: 'www.berlin.de',
+          city: 'Berlin',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'December Protest',
+          start: new Date('2025-12-05T14:00:00Z'),
+          end: null,
+          location: 'Alexanderplatz',
+          url: 'https://example.com/berlin2',
+          attendees: 800,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    });
+
+    it('should filter by source', async () => {
+      const res = await request(app).get('/api/protests?source=www.berlin.de');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(2);
+      expect(res.body.protests.every((p: any) => p.source === 'www.berlin.de')).toBe(true);
+    });
+
+    it('should filter by country code (case-insensitive)', async () => {
+      const res = await request(app).get('/api/protests?country=de');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(3); // Berlin, Munich, December (excludes unverified Dresden)
+      expect(res.body.protests.every((p: any) => p.country === 'DE')).toBe(true);
+    });
+
+    it('should filter by country code uppercase', async () => {
+      const res = await request(app).get('/api/protests?country=AT');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].country).toBe('AT');
+      expect(res.body.protests[0].city).toBe('Vienna');
+    });
+
+    it('should filter by language', async () => {
+      const res = await request(app).get('/api/protests?language=de-AT');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].language).toBe('de-AT');
+      expect(res.body.protests[0].city).toBe('Vienna');
+    });
+
+    it('should filter by explicit date range', async () => {
+      const res = await request(app).get(
+        '/api/protests?startDate=2025-10-15&endDate=2025-10-31'
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(2); // Berlin (Oct 15) and Vienna (Oct 20), excludes unverified Dresden
+      expect(res.body.protests.every((p: any) => {
+        const start = new Date(p.start);
+        return start >= new Date('2025-10-15') && start <= new Date('2025-10-31T23:59:59.999Z');
+      })).toBe(true);
+    });
+
+    it('should filter by start date only', async () => {
+      const res = await request(app).get('/api/protests?startDate=2025-11-01');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(2); // Munich (Nov 1) and Berlin (Dec 5)
+      expect(res.body.protests.every((p: any) => {
+        const start = new Date(p.start);
+        return start >= new Date('2025-11-01');
+      })).toBe(true);
+    });
+
+    it('should filter by end date only', async () => {
+      const res = await request(app).get('/api/protests?endDate=2025-10-20');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(2); // Berlin (Oct 15) and Vienna (Oct 20)
+      expect(res.body.protests.every((p: any) => {
+        const start = new Date(p.start);
+        return start <= new Date('2025-10-20T23:59:59.999Z');
+      })).toBe(true);
+    });
+
+    it('should include unverified protests when verified=false', async () => {
+      const res = await request(app).get('/api/protests?verified=false');
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].verified).toBe(false);
+      expect(res.body.protests[0].title).toBe('Unverified Protest Dresden');
+    });
+
+    it('should combine multiple filters', async () => {
+      const res = await request(app).get(
+        '/api/protests?country=DE&startDate=2025-10-01&endDate=2025-10-31&source=www.berlin.de'
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].city).toBe('Berlin');
+      expect(res.body.protests[0].title).toBe('Climate Protest Berlin');
+    });
+
+    it('should prioritize startDate/endDate over days parameter', async () => {
+      // Add a protest for tomorrow
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      await db.collection<Protest>('protests').insertOne({
+        source: 'test',
+        city: 'Test City',
+        country: 'DE',
+        title: 'Tomorrow Protest',
+        start: tomorrow,
+        end: null,
+        location: 'Test Location',
+        url: 'https://example.com/tomorrow',
+        attendees: 100,
+        verified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      // Using both days and explicit dates - explicit dates should win
+      const res = await request(app).get(
+        '/api/protests?days=365&startDate=2025-10-15&endDate=2025-10-31'
+      );
+
+      expect(res.status).toBe(200);
+      // Should only return October protests, not the tomorrow protest or December
+      const titles = res.body.protests.map((p: any) => p.title);
+      expect(titles).not.toContain('Tomorrow Protest');
+      expect(titles).not.toContain('December Protest');
+    });
+
+    it('should handle geolocation filter with other filters', async () => {
+      // Search near Berlin with country filter
+      const res = await request(app).get(
+        '/api/protests?lat=52.52&lon=13.405&radius=50&country=DE&startDate=2025-10-01&endDate=2025-10-31'
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.protests.length).toBe(1);
+      expect(res.body.protests[0].city).toBe('Berlin');
+      expect(res.body.protests[0].title).toBe('Climate Protest Berlin');
+    });
+  });
+
   describe('POST /api/protests', () => {
     it('should create unverified protest for USER', async () => {
       const res = await request(app)
@@ -549,6 +783,168 @@ describe('Export API', () => {
       const protests = JSON.parse(res.text);
       expect(protests.some((p: any) => p.title === 'Export Test 1')).toBe(false);
       expect(protests.some((p: any) => p.title === 'Export Test 2')).toBe(true);
+    });
+  });
+
+  describe('Export API - Filter Support', () => {
+    beforeEach(async () => {
+      // Clear and add comprehensive test data
+      await db.collection('protests').deleteMany({});
+
+      await db.collection<Protest>('protests').insertMany([
+        {
+          source: 'www.berlin.de',
+          city: 'Berlin',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'Berlin Climate Protest',
+          start: new Date('2025-10-15T14:00:00Z'),
+          end: null,
+          location: 'Brandenburger Tor',
+          geoLocation: {
+            type: 'Point',
+            coordinates: [13.377704, 52.516275],
+          },
+          url: 'https://example.com/berlin1',
+          attendees: 1000,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          source: 'www.friedenskooperative.de',
+          city: 'Munich',
+          country: 'DE',
+          language: 'de-DE',
+          title: 'Munich Peace March',
+          start: new Date('2025-11-01T15:00:00Z'),
+          end: null,
+          location: 'Marienplatz',
+          url: 'https://example.com/munich1',
+          attendees: 500,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          source: 'www.example.at',
+          city: 'Vienna',
+          country: 'AT',
+          language: 'de-AT',
+          title: 'Vienna Democracy Rally',
+          start: new Date('2025-10-20T16:00:00Z'),
+          end: null,
+          location: 'Stephansplatz',
+          url: 'https://example.com/vienna1',
+          attendees: 300,
+          verified: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+    });
+
+    describe('CSV export filters', () => {
+      it('should filter by source', async () => {
+        const res = await request(app).get('/api/export/csv?source=www.berlin.de');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).not.toContain('Munich Peace March');
+      });
+
+      it('should filter by country', async () => {
+        const res = await request(app).get('/api/export/csv?country=AT');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Berlin Climate Protest');
+      });
+
+      it('should filter by language', async () => {
+        const res = await request(app).get('/api/export/csv?language=de-AT');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Berlin Climate Protest');
+      });
+
+      it('should filter by date range', async () => {
+        const res = await request(app).get(
+          '/api/export/csv?startDate=2025-10-15&endDate=2025-10-31'
+        );
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Munich Peace March'); // Nov 1
+      });
+
+      it('should combine multiple filters', async () => {
+        const res = await request(app).get(
+          '/api/export/csv?country=DE&startDate=2025-10-01&endDate=2025-10-31'
+        );
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).not.toContain('Munich Peace March'); // Outside date range
+        expect(res.text).not.toContain('Vienna Democracy Rally'); // Wrong country
+      });
+    });
+
+    describe('JSON export filters', () => {
+      it('should filter by source', async () => {
+        const res = await request(app).get('/api/export/json?source=www.friedenskooperative.de');
+
+        expect(res.status).toBe(200);
+        const protests = JSON.parse(res.text);
+        expect(protests.length).toBe(1);
+        expect(protests[0].title).toBe('Munich Peace March');
+      });
+
+      it('should filter by country and date range', async () => {
+        const res = await request(app).get(
+          '/api/export/json?country=DE&startDate=2025-10-01&endDate=2025-10-31'
+        );
+
+        expect(res.status).toBe(200);
+        const protests = JSON.parse(res.text);
+        expect(protests.length).toBe(1);
+        expect(protests[0].title).toBe('Berlin Climate Protest');
+      });
+    });
+
+    describe('ICS export filters', () => {
+      it('should filter by country', async () => {
+        const res = await request(app).get('/api/export/ics?country=AT');
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('BEGIN:VCALENDAR');
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Berlin Climate Protest');
+      });
+
+      it('should filter by date range', async () => {
+        const res = await request(app).get(
+          '/api/export/ics?startDate=2025-10-15&endDate=2025-10-31'
+        );
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).toContain('Vienna Democracy Rally');
+        expect(res.text).not.toContain('Munich Peace March');
+      });
+
+      it('should combine source and language filters', async () => {
+        const res = await request(app).get(
+          '/api/export/ics?language=de-DE&source=www.berlin.de'
+        );
+
+        expect(res.status).toBe(200);
+        expect(res.text).toContain('Berlin Climate Protest');
+        expect(res.text).not.toContain('Munich Peace March'); // Different source
+        expect(res.text).not.toContain('Vienna Democracy Rally'); // Different language
+      });
     });
   });
 });

@@ -4,96 +4,20 @@ import { getDatabase } from '../db/connection.js';
 import { Protest, ProtestInput, ProtestQueryFilters, ProtestUpdateInput } from '../types/protest.js';
 import { UserRole } from '../types/user.js';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth.js';
+import { buildProtestFilter } from '../utils/filter-builder.js';
 
 const router = Router();
 
 // GET /api/protests - List protests with filters
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const {
-      city,
-      source,
-      country,
-      language,
-      days,
-      verified,
-      limit,
-      skip,
-      lat,
-      lon,
-      radius,
-    }: ProtestQueryFilters = req.query;
+    const { limit, skip }: ProtestQueryFilters = req.query;
 
     const db = getDatabase();
     const protests = db.collection<Protest>('protests');
 
-    // Build query filter
-    const filter: any = {};
-
-    // Always exclude soft-deleted events
-    filter.deleted = { $ne: true };
-
-    // City filter
-    if (city && typeof city === 'string') {
-      filter.city = city;
-    }
-
-    // source filter
-    if (source && typeof source === 'string') {
-      filter.source = source;
-    }
-
-    // country filter
-    if (country && typeof country === 'string') {
-      filter.country = country.toUpperCase(); // Ensure uppercase for ISO codes
-    }
-
-    // language filter
-    if (language && typeof language === 'string') {
-      filter.language = language;
-    }
-
-    // Geolocation filter (takes precedence over city filter)
-    if (lat && lon && typeof lat === 'string' && typeof lon === 'string') {
-      const latitude = parseFloat(lat);
-      const longitude = parseFloat(lon);
-      const radiusKm = radius && typeof radius === 'string' ? parseFloat(radius) : 50; // Default 50km
-
-      if (!isNaN(latitude) && !isNaN(longitude) && !isNaN(radiusKm)) {
-        // Use $geoWithin + $centerSphere for geolocation search
-        // This works with additional sorting unlike $near
-        filter.geoLocation = {
-          $geoWithin: {
-            $centerSphere: [
-              [longitude, latitude], // GeoJSON: [lon, lat]
-              radiusKm / 6378.1, // Convert km to radians (Earth radius = 6378.1 km)
-            ],
-          },
-        };
-
-        // Remove city filter when using geolocation
-        delete filter.city;
-      }
-    }
-
-    // Date range filter
-    if (days && typeof days === 'string') {
-      const daysNum = parseInt(days, 10);
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + daysNum);
-
-      filter.start = {
-        $gte: new Date(),
-        $lte: futureDate,
-      };
-    }
-
-    // Verified filter
-    if (verified !== undefined && typeof verified === 'string') {
-      filter.verified = verified === 'true';
-    } else {
-      filter.verified = true;
-    }
+    // Build query filter using shared utility
+    const filter = buildProtestFilter(req);
 
     const limitNum = Math.min(parseInt((limit as string) || '50', 10), 100); // Max 100
     const skipNum = parseInt((skip as string) || '0', 10);

@@ -165,8 +165,23 @@ curl http://localhost:3000/api/protests
 # Filter by city
 curl "http://localhost:3000/api/protests?city=Berlin"
 
-# Filter by date range (next 30 days)
+# Filter by country (ISO 3166-1 alpha-2 code)
+curl "http://localhost:3000/api/protests?country=DE"
+
+# Filter by data source
+curl "http://localhost:3000/api/protests?source=www.berlin.de"
+
+# Filter by language
+curl "http://localhost:3000/api/protests?language=de-DE"
+
+# Filter by date range (relative - next 30 days from today)
 curl "http://localhost:3000/api/protests?days=30"
+
+# Filter by explicit date range (absolute dates)
+curl "http://localhost:3000/api/protests?startDate=2025-10-15&endDate=2025-10-31"
+
+# Filter by start date only (all events from October 15 forward)
+curl "http://localhost:3000/api/protests?startDate=2025-10-15"
 
 # Geolocation search - "Protests near me"
 # Find protests within 50km of Berlin (lat: 52.52, lon: 13.405)
@@ -174,6 +189,9 @@ curl "http://localhost:3000/api/protests?lat=52.52&lon=13.405&radius=50"
 
 # Combined filters with pagination
 curl "http://localhost:3000/api/protests?city=Berlin&days=30&limit=20&skip=0"
+
+# Complex filter: German protests in Berlin for October 2025
+curl "http://localhost:3000/api/protests?city=Berlin&country=DE&language=de-DE&startDate=2025-10-01&endDate=2025-10-31"
 ```
 
 Response:
@@ -277,6 +295,12 @@ curl "http://localhost:3000/api/export/csv" -o protests.csv
 
 # Filter by city and date range
 curl "http://localhost:3000/api/export/csv?city=Berlin&days=30" -o berlin-protests.csv
+
+# Filter by country and explicit date range
+curl "http://localhost:3000/api/export/csv?country=DE&startDate=2025-10-01&endDate=2025-10-31" -o germany-october.csv
+
+# Filter by source and geolocation
+curl "http://localhost:3000/api/export/csv?source=www.friedenskooperative.de&lat=52.52&lon=13.405&radius=100" -o peace-berlin-area.csv
 ```
 
 #### Export protests as JSON
@@ -287,6 +311,9 @@ curl "http://localhost:3000/api/export/json" -o protests.json
 
 # Filter by city
 curl "http://localhost:3000/api/export/json?city=Dresden" -o dresden-protests.json
+
+# Filter by language and country
+curl "http://localhost:3000/api/export/json?language=de-DE&country=AT" -o austria-german.json
 ```
 
 #### Subscribe to protests calendar (ICS)
@@ -304,20 +331,43 @@ curl "http://localhost:3000/api/export/ics" -o protests.ics
 **Calendar Subscription URLs:**
 - All protests: `http://your-domain.com/api/export/ics`
 - Berlin only: `http://your-domain.com/api/export/ics?city=Berlin`
+- Germany only: `http://your-domain.com/api/export/ics?country=DE`
 - Next 30 days: `http://your-domain.com/api/export/ics?days=30`
 - Berlin, next 30 days: `http://your-domain.com/api/export/ics?city=Berlin&days=30`
+- October 2025: `http://your-domain.com/api/export/ics?startDate=2025-10-01&endDate=2025-10-31`
+- Near me (50km radius): `http://your-domain.com/api/export/ics?lat=52.52&lon=13.405&radius=50`
+- Specific source: `http://your-domain.com/api/export/ics?source=www.friedenskooperative.de`
 
-**Filter Parameters for All Endpoints:**
-- `city` - Filter by city name (e.g., `Berlin`, `Dresden`)
-- `source` - Filter by data source (e.g., `www.berlin.de`, `www.friedenskooperative.de`)
-- `language` - Filter by language code (e.g., `de-DE`, `en-US`)
-- `days` - Number of days forward from today (e.g., `30`, `60`)
-- `verified` - Show only verified protests (`true`/`false`, default: `true`)
-- `lat` - Latitude for geolocation search (e.g., `52.52`)
-- `lon` - Longitude for geolocation search (e.g., `13.405`)
-- `radius` - Search radius in kilometers (default: `50`, only with lat/lon)
-- `limit` - Max results per page (default: `50`, max: `100`)
-- `skip` - Offset for pagination (default: `0`)
+**Filter Parameters:**
+
+All endpoints (`/api/protests`, `/api/export/csv`, `/api/export/json`, `/api/export/ics`) support the following filters:
+
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| `city` | string | Filter by city name | `Berlin`, `Dresden` |
+| `source` | string | Filter by data source | `www.berlin.de`, `www.friedenskooperative.de` |
+| `country` | string | Filter by ISO 3166-1 alpha-2 country code | `DE`, `AT`, `CH` |
+| `language` | string | Filter by language code | `de-DE`, `en-US` |
+| `startDate` | string | Start date (ISO 8601) - events from this date forward | `2025-10-15` |
+| `endDate` | string | End date (ISO 8601) - events up to this date (inclusive) | `2025-10-31` |
+| `days` | number | Number of days forward from today (alternative to startDate/endDate) | `30`, `60` |
+| `verified` | boolean | Show only verified protests (default: `true`) | `true`, `false` |
+| `lat` | number | Latitude for geolocation search (requires `lon`) | `52.52` |
+| `lon` | number | Longitude for geolocation search (requires `lat`) | `13.405` |
+| `radius` | number | Search radius in kilometers (default: `50`, only with lat/lon) | `25`, `100` |
+| `limit` | number | Max results per page (default: `50`, max: `100`) | `20`, `50` |
+| `skip` | number | Offset for pagination (default: `0`) | `0`, `50` |
+
+**Filter Priority:**
+- Date filtering: `startDate`/`endDate` > `days` parameter > default (future events only)
+- Location filtering: `lat`/`lon` (geolocation) > `city` (exact match)
+
+**Notes:**
+- `limit` and `skip` only apply to `/api/protests` endpoint (not export endpoints)
+- `country` codes are case-insensitive but stored as uppercase (e.g., `de` becomes `DE`)
+- `endDate` is inclusive - it includes all events starting on that day (until 23:59:59.999)
+- When using geolocation (`lat`/`lon`), the `city` filter is automatically ignored
+- Export endpoints default to `verified=true` for public safety
 
 ---
 
