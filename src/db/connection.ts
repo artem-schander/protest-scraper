@@ -34,6 +34,7 @@ async function initializeIndexes(database: Db): Promise<void> {
     const protests = database.collection('protests');
 
     await protests.createIndex({ city: 1 });
+    await protests.createIndex({ country: 1 });
     await protests.createIndex({ start: 1 });
     await protests.createIndex({ verified: 1 });
     await protests.createIndex({ source: 1 });

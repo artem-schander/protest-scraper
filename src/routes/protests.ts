@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { getDatabase } from '../db/connection.js';
-import { Protest, ProtestInput, ProtestUpdateInput } from '../types/protest.js';
+import { Protest, ProtestInput, ProtestQueryFilters, ProtestUpdateInput } from '../types/protest.js';
 import { UserRole } from '../types/user.js';
 import { authenticate, authorize, AuthRequest } from '../middleware/auth.js';
 
@@ -10,7 +10,19 @@ const router = Router();
 // GET /api/protests - List protests with filters
 router.get('/', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { city, source, language, days, verified, limit, skip, lat, lon, radius } = req.query;
+    const {
+      city,
+      source,
+      country,
+      language,
+      days,
+      verified,
+      limit,
+      skip,
+      lat,
+      lon,
+      radius,
+    }: ProtestQueryFilters = req.query;
 
     const db = getDatabase();
     const protests = db.collection<Protest>('protests');
@@ -29,6 +41,11 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
     // source filter
     if (source && typeof source === 'string') {
       filter.source = source;
+    }
+
+    // country filter
+    if (country && typeof country === 'string') {
+      filter.country = country.toUpperCase(); // Ensure uppercase for ISO codes
     }
 
     // language filter
@@ -95,10 +112,13 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
         id: p._id?.toString(),
         source: p.source,
         city: p.city,
+        country: p.country,
+        language: p.language,
         title: p.title,
         start: p.start,
         end: p.end,
         location: p.location,
+        locationDetails: p.locationDetails,
         coordinates: p.geoLocation?.coordinates
           ? { lat: p.geoLocation.coordinates[1], lon: p.geoLocation.coordinates[0] }
           : null,
@@ -140,6 +160,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<
     const newProtest: Omit<Protest, '_id'> = {
       source: protestData.source || 'Manual Submission',
       city: protestData.city || null,
+      country: protestData.country || null,
       title: protestData.title,
       start: protestData.start || null,
       end: protestData.end || null,

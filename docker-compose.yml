@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:7
     container_name: protest-service-mongodb
     ports:
-      - '27017:27017'
+      - 27017:27017
     environment:
       MONGO_INITDB_DATABASE: protest-service
     volumes:
@@ -19,7 +17,7 @@ services:
       dockerfile: Dockerfile
     container_name: protest-service-api
     ports:
-      - '3000:3000'
+      - 3000:3000
     environment:
       MONGODB_URI: mongodb://mongodb:27017/protest-service
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}

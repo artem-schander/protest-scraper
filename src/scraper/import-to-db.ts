@@ -13,7 +13,7 @@ import utc from 'dayjs/plugin/utc.js';
 import { program } from 'commander';
 import { connectToDatabase, closeConnection } from '../db/connection.js';
 import { Protest, GeoLocation } from '../types/protest.js';
-import { geocodeCities } from '../utils/geocode.js';
+import type { GeoCoordinates } from '../utils/geocode.js';
 import {
   parseBerlin,
   parseDresden,
@@ -68,15 +68,45 @@ async function importProtests(days: number): Promise<void> {
 
   console.error(`[scrape] Total events after dedup and filtering: ${filtered.length}`);
 
-  // Geocode unique cities and normalize locations
-  const uniqueCities = [...new Set(filtered.map((e) => e.city).filter(Boolean) as string[])];
-  const coordsMap = await geocodeCities(uniqueCities);
+  // Geocode locations using full details (street, postal code, city) and normalize
+  const uniqueLocations = new Map<string, { city: string | null; country: string | null }>();
+  for (const event of filtered) {
+    // Use location if available (contains street, postal code, etc.)
+    // Otherwise fallback to city name
+    const locationKey = event.location || event.city;
+    if (locationKey) {
+      const key = locationKey.trim();
+      // Store the first occurrence's city and country for fallback
+      if (!uniqueLocations.has(key)) {
+        uniqueLocations.set(key, { city: event.city, country: event.country });
+      }
+    }
+  }
+
+  console.error(`[geocode] Geocoding ${uniqueLocations.size} unique locations using full addresses...`);
+
+  const coordsMap = new Map<string, GeoCoordinates>();
+  const { geocodeLocation } = await import('../utils/geocode.js');
+
+  // Build map by geocoding each unique location with fallback to city+country
+  let geocoded = 0;
+  for (const [location, metadata] of uniqueLocations) {
+    const coords = await geocodeLocation(location, location, metadata.city, metadata.country);
+    if (coords) {
+      coordsMap.set(location, coords);
+      geocoded++;
+    }
+  }
+
+  console.error(`[geocode] Successfully geocoded ${geocoded}/${uniqueLocations.size} locations`);
 
   // Normalize event locations using geocoded data
   for (const event of filtered) {
-    if (!event.city) continue;
+    // Use location (detailed address) or city as lookup key
+    const locationKey = (event.location || event.city)?.trim();
+    if (!locationKey) continue;
 
-    const geoData = coordsMap.get(event.city);
+    const geoData = coordsMap.get(locationKey);
     if (!geoData || !geoData.display_name) continue;
 
     // Preserve original location in locationDetails
@@ -101,10 +131,11 @@ async function importProtests(days: number): Promise<void> {
         start: event.start ? new Date(event.start) : null,
       });
 
-      // Get coordinates for the city
+      // Get coordinates for the location
       let geoLocation: GeoLocation | undefined;
-      if (event.city && coordsMap.has(event.city)) {
-        const coords = coordsMap.get(event.city)!;
+      const locationKey = (event.locationDetails || event.location || event.city)?.trim();
+      if (locationKey && coordsMap.has(locationKey)) {
+        const coords = coordsMap.get(locationKey)!;
         geoLocation = {
           type: 'Point',
           coordinates: [coords.lon, coords.lat], // [longitude, latitude] for GeoJSON
@@ -114,6 +145,7 @@ async function importProtests(days: number): Promise<void> {
       const protestData: Omit<Protest, '_id'> = {
         source: event.source,
         city: event.city,
+        country: event.country,
         title: event.title,
         start: event.start ? new Date(event.start) : null,
         end: event.end ? new Date(event.end) : null,

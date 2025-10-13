@@ -2,13 +2,13 @@ import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
 
-interface GeoCoordinates {
+export interface GeoCoordinates {
   lat: number;
   lon: number;
   display_name?: string; // Normalized address from Nominatim
 }
 
-interface GeocodeCache {
+export interface GeocodeCache {
   [city: string]: GeoCoordinates;
 }
 
@@ -37,21 +37,39 @@ function saveGeocodeCache(cache: GeocodeCache): void {
 const delay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function geocodeCity(city: string): Promise<GeoCoordinates | null> {
+// Map ISO 3166-1 alpha-2 country codes to full country names for geocoding
+const COUNTRY_NAMES: Record<string, string> = {
+  'DE': 'Germany',
+  'AT': 'Austria',
+  'CH': 'Switzerland',
+  'FR': 'France',
+  'IT': 'Italy',
+  'NL': 'Netherlands',
+  'BE': 'Belgium',
+  'PL': 'Poland',
+  'CZ': 'Czech Republic',
+  'DK': 'Denmark',
+  // Add more as needed
+};
+
+export async function geocodeLocation(
+  query: string,
+  cacheKey?: string,
+  fallbackCity?: string | null,
+  fallbackCountryCode?: string | null
+): Promise<GeoCoordinates | null> {
   const cache = loadGeocodeCache();
-  const normalizedCity = city.trim();
+  const key = cacheKey || query.trim();
 
   // Check cache first
-  if (cache[normalizedCity]) {
-    return cache[normalizedCity];
+  if (cache[key]) {
+    return cache[key];
   }
 
   try {
     // Use Nominatim (OpenStreetMap) - free, no API key required
     // Rate limit: 1 request per second
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-      normalizedCity
-    )},Germany&format=json&limit=1`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
 
     const response = await axios.get(url, {
       headers: {
@@ -72,13 +90,49 @@ export async function geocodeCity(city: string): Promise<GeoCoordinates | null> 
       };
 
       // Cache the result
-      cache[normalizedCity] = coords;
+      cache[key] = coords;
       saveGeocodeCache(cache);
 
       return coords;
     }
+
+    // If no results and fallback city+country is provided, retry with simplified query
+    if (fallbackCity && fallbackCountryCode) {
+      const countryName = COUNTRY_NAMES[fallbackCountryCode] || fallbackCountryCode;
+      const fallbackQuery = `${fallbackCity}, ${countryName}`;
+
+      console.error(`[geocode] No results for "${query}", retrying with: "${fallbackQuery}"`);
+
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&limit=1`;
+
+      const fallbackResponse = await axios.get(fallbackUrl, {
+        headers: {
+          'User-Agent': 'protest-scraper/1.0 (https://github.com/artem-schander/protest-scraper)',
+        },
+        timeout: 10000,
+      });
+
+      // Respect rate limit
+      await delay(1100);
+
+      if (fallbackResponse.data && fallbackResponse.data.length > 0) {
+        const result = fallbackResponse.data[0];
+        const coords: GeoCoordinates = {
+          lat: parseFloat(result.lat),
+          lon: parseFloat(result.lon),
+          display_name: result.display_name || undefined,
+        };
+
+        // Cache using the original cache key
+        cache[key] = coords;
+        saveGeocodeCache(cache);
+
+        console.error(`[geocode] Fallback succeeded for "${query}"`);
+        return coords;
+      }
+    }
   } catch (e) {
-    console.error(`[geocode] Failed to geocode "${city}":`, (e as Error).message);
+    console.error(`[geocode] Failed to geocode "${query}":`, (e as Error).message);
   }
 
   return null;
@@ -102,8 +156,8 @@ export async function geocodeCities(cities: string[]): Promise<Map<string, GeoCo
       continue;
     }
 
-    // Geocode with rate limit
-    const coords = await geocodeCity(city);
+    // Geocode with rate limit (use city as both query and cache key)
+    const coords = await geocodeLocation(city, city);
     if (coords) {
       coordsMap.set(city, coords);
       geocoded++;

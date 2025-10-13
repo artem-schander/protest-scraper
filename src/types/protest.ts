@@ -9,6 +9,7 @@ export interface Protest {
   _id?: ObjectId;
   source: string;
   city: string | null;
+  country?: string | null; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
   title: string;
   start: Date | null;
   end: Date | null;
@@ -30,6 +31,7 @@ export interface Protest {
 export interface ProtestInput {
   source?: string;
   city?: string | null;
+  country?: string | null; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
   title: string;
   start?: Date | null;
   end?: Date | null;
@@ -41,6 +43,7 @@ export interface ProtestInput {
 
 export interface ProtestUpdateInput {
   city?: string | null;
+  country?: string | null; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
   title?: string;
   start?: Date | null;
   end?: Date | null;
@@ -52,12 +55,15 @@ export interface ProtestUpdateInput {
 }
 
 export interface ProtestQueryFilters {
+  source?: string;
   city?: string;
-  days?: number; // number of days from now to filter
-  verified?: boolean;
-  limit?: number;
-  skip?: number;
-  lat?: number; // latitude for geolocation search
-  lon?: number; // longitude for geolocation search
-  radius?: number; // radius in kilometers for geolocation search
+  country?: string; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
+  language?: string; // e.g., "de-DE"
+  days?: string; // number of days from now to filter (query param is string)
+  verified?: string; // boolean as string (query param is string)
+  limit?: string; // query param is always string
+  skip?: string; // query param is always string
+  lat?: string; // latitude for geolocation search (query param is string)
+  lon?: string; // longitude for geolocation search (query param is string)
+  radius?: string; // radius in kilometers for geolocation search (query param is string)
 }

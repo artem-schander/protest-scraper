@@ -7,6 +7,8 @@ npm-debug.log
 README.md
 CLAUDE.md
 *.csv
-*.json
 *.ics
 protests.*
+# Exclude JSON output files but keep package files
+protests.json
+geocode-cache.json

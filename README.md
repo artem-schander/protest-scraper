@@ -172,9 +172,6 @@ curl "http://localhost:3000/api/protests?days=30"
 # Find protests within 50km of Berlin (lat: 52.52, lon: 13.405)
 curl "http://localhost:3000/api/protests?lat=52.52&lon=13.405&radius=50"
 
-# Geolocation search with custom radius (10km)
-curl "http://localhost:3000/api/protests?lat=48.137&lon=11.576&radius=10"
-
 # Combined filters with pagination
 curl "http://localhost:3000/api/protests?city=Berlin&days=30&limit=20&skip=0"
 ```
@@ -190,8 +187,8 @@ Response:
       "title": "Demo für Klimaschutz",
       "start": "2025-10-15T14:00:00.000Z",
       "end": null,
-      "language": "de-DE",
       "location": "Brandenburger Tor",
+      "language": "de-DE",
       "coordinates": {
         "lat": 52.516275,
         "lon": 13.377704
@@ -388,12 +385,13 @@ The scraper automatically collects protest/demonstration data from:
 #### JSON Structure
 ```json
 {
-  "source": "DemokraTEAM",
+  "source": "www.demokrateam.org",
   "city": "Berlin",
   "title": "Demo für Demokratie",
   "start": "2025-10-15T14:00:00.000Z",
   "end": null,
   "location": "Berlin, Brandenburger Tor",
+  "language": "de-DE",
   "url": "https://www.demokrateam.org/aktionen/...",
   "attendees": 5000
 }
@@ -401,8 +399,8 @@ The scraper automatically collects protest/demonstration data from:
 
 #### CSV Format
 ```csv
-source,city,title,start,end,location,url,attendees
-"DemokraTEAM","Berlin","Demo für Demokratie","2025-10-15T14:00:00.000Z","","Berlin, Brandenburger Tor","https://...",5000
+source,city,title,start,end,location,language,url,attendees
+"www.demokrateam.org","Berlin","Demo für Demokratie","2025-10-15T14:00:00.000Z","","Berlin, Brandenburger Tor","de-DE","https://...",5000
 ```
 
 #### ICS Format
@@ -417,7 +415,7 @@ Standard iCalendar format compatible with Google Calendar, Apple Calendar, Outlo
 | `title` | string | Event title/theme |
 | `start` | ISO 8601 string \| null | Event start date/time (UTC) |
 | `end` | ISO 8601 string \| null | Event end date/time (UTC) |
-| `location` | string \| null | Full location description |
+| `location` | string \| null | Normalized location description |
 | `url` | string | Source URL for event details |
 | `attendees` | number \| null | Expected/announced number of attendees |
 
@@ -438,11 +436,13 @@ The scraper includes:
 #### Scraper Core
 - [x] Berlin Police scraper (table parsing with date/time extraction)
 - [x] Dresden City scraper (JSON API integration)
-- [x] Friedenskooperative scraper (event box parsing)
+- [x] Friedenskooperative scraper (hybrid POST API + HTML parsing)
 - [x] DemokraTEAM scraper (hybrid POST API + HTML parsing with label filtering)
 - [x] German date parser (supports multiple formats: DD.MM.YYYY, DD.MM HH:mm, etc.)
 - [x] Attendee number extraction from German text patterns
 - [x] Duplicate detection and removal
+- [x] Command-line interface with options
+- [x] Geocoding addresses to coordinates
 - [x] Date range filtering
 - [x] CSV export (file-based and API endpoint)
 - [x] JSON export (file-based and API endpoint)

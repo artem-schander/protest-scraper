@@ -27,6 +27,7 @@ dayjs.extend(utc);
 export interface ProtestEvent {
   source: string;
   city: string | null;
+  country: string | null; // ISO 3166-1 alpha-2 e.g., "DE"
   title: string;
   start: string | null;
   end: string | null;
@@ -194,17 +195,85 @@ function saveGeocodeCache(cache: GeocodeCache): void {
   }
 }
 
-async function geocodeCity(city: string, cache: GeocodeCache): Promise<GeoCoordinates | null> {
+// Map ISO 3166-1 alpha-2 country codes to full country names for geocoding
+const COUNTRY_NAMES: Record<string, string> = {
+  'DE': 'Germany',
+  'AT': 'Austria',
+  'CH': 'Switzerland',
+  'FR': 'France',
+  'IT': 'Italy',
+  'NL': 'Netherlands',
+  'BE': 'Belgium',
+  'PL': 'Poland',
+  'CZ': 'Czech Republic',
+  'DK': 'Denmark',
+  // Add more as needed
+};
+
+async function geocodeEvents(events: ProtestEvent[]): Promise<Map<string, GeoCoordinates>> {
+  const cache = loadGeocodeCache();
+  const coordsMap = new Map<string, GeoCoordinates>();
+
+  // Get unique locations and map them to city+country for fallback
+  const uniqueLocations = new Map<string, { city: string | null; country: string | null }>();
+  for (const event of events) {
+    // Use location if available (contains street, postal code, etc.)
+    // Otherwise fallback to city name
+    const locationKey = event.location || event.city;
+    if (locationKey) {
+      const key = locationKey.trim();
+      // Store the first occurrence's city and country for fallback
+      if (!uniqueLocations.has(key)) {
+        uniqueLocations.set(key, { city: event.city, country: event.country });
+      }
+    }
+  }
+
+  console.error(`[geocode] Found ${uniqueLocations.size} unique locations to geocode`);
+
+  let geocoded = 0;
+  let fromCache = 0;
+
+  for (const [location, metadata] of uniqueLocations) {
+    // Check if already in cache
+    if (cache[location]) {
+      coordsMap.set(location, cache[location]);
+      fromCache++;
+      continue;
+    }
+
+    // Geocode with full location details and fallback to city+country if needed
+    const coords = await geocodeLocation(location, location, cache, metadata.city, metadata.country);
+    if (coords) {
+      coordsMap.set(location, coords);
+      geocoded++;
+    }
+
+    // Respect rate limit: 1 request per second
+    // await delay(1100);
+  }
+
+  console.error(`[geocode] Cached: ${fromCache}, New: ${geocoded}, Failed: ${uniqueLocations.size - fromCache - geocoded}`);
+
+  return coordsMap;
+}
+
+async function geocodeLocation(
+  query: string,
+  cacheKey: string,
+  cache: GeocodeCache,
+  fallbackCity?: string | null,
+  fallbackCountryCode?: string | null
+): Promise<GeoCoordinates | null> {
   // Check cache first
-  const normalizedCity = city.trim();
-  if (cache[normalizedCity]) {
-    return cache[normalizedCity];
+  if (cache[cacheKey]) {
+    return cache[cacheKey];
   }
 
   try {
     // Use Nominatim (OpenStreetMap) - free, no API key required
     // Rate limit: 1 request per second (enforced by caller)
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(normalizedCity)},Germany&format=json&limit=1`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
 
     const response = await axios.get(url, {
       headers: {
@@ -222,65 +291,62 @@ async function geocodeCity(city: string, cache: GeocodeCache): Promise<GeoCoordi
       };
 
       // Cache the result
-      cache[normalizedCity] = coords;
+      cache[cacheKey] = coords;
       saveGeocodeCache(cache);
 
       return coords;
     }
+
+    // If no results and fallback city+country is provided, retry with simplified query
+    if (fallbackCity && fallbackCountryCode) {
+      const countryName = COUNTRY_NAMES[fallbackCountryCode] || fallbackCountryCode;
+      const fallbackQuery = `${fallbackCity}, ${countryName}`;
+
+      // console.error(`[geocode] No results for "${query}", retrying with: "${fallbackQuery}"`);
+
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&limit=1`;
+
+      const fallbackResponse = await axios.get(fallbackUrl, {
+        headers: {
+          "User-Agent": "protest-scraper/1.0 (https://github.com/artem-schander/protest-scraper)",
+        },
+        timeout: 10000,
+      });
+
+      // Respect rate limit
+      await delay(1100);
+
+      if (fallbackResponse.data && fallbackResponse.data.length > 0) {
+        const result = fallbackResponse.data[0];
+        const coords: GeoCoordinates = {
+          lat: parseFloat(result.lat),
+          lon: parseFloat(result.lon),
+          display_name: result.display_name || undefined,
+        };
+
+        // Cache using the original cache key
+        cache[cacheKey] = coords;
+        saveGeocodeCache(cache);
+
+        // console.error(`[geocode] Fallback succeeded for "${query}"`);
+        return coords;
+      }
+    }
   } catch (e) {
-    console.error(`[geocode] Failed to geocode "${city}":`, (e as Error).message);
+    console.error(`[geocode] Failed to geocode "${query}":`, (e as Error).message);
   }
 
   return null;
 }
 
-async function geocodeEvents(events: ProtestEvent[]): Promise<Map<string, GeoCoordinates>> {
-  const cache = loadGeocodeCache();
-  const coordsMap = new Map<string, GeoCoordinates>();
-
-  // Get unique cities
-  const uniqueCities = new Set<string>();
-  for (const event of events) {
-    if (event.city) {
-      uniqueCities.add(event.city.trim());
-    }
-  }
-
-  console.error(`[geocode] Found ${uniqueCities.size} unique cities to geocode`);
-
-  let geocoded = 0;
-  let fromCache = 0;
-
-  for (const city of uniqueCities) {
-    // Check if already in cache
-    if (cache[city]) {
-      coordsMap.set(city, cache[city]);
-      fromCache++;
-      continue;
-    }
-
-    // Geocode with 1 second delay (Nominatim rate limit)
-    const coords = await geocodeCity(city, cache);
-    if (coords) {
-      coordsMap.set(city, coords);
-      geocoded++;
-    }
-
-    // Respect rate limit: 1 request per second
-    await delay(1100);
-  }
-
-  console.error(`[geocode] Cached: ${fromCache}, New: ${geocoded}, Failed: ${uniqueCities.size - fromCache - geocoded}`);
-
-  return coordsMap;
-}
-
 // Normalize event locations using geocoded data
 function normalizeEventLocations(events: ProtestEvent[], coordsMap: Map<string, GeoCoordinates>): void {
   for (const event of events) {
-    if (!event.city) continue;
+    // Use location (detailed address) or city as lookup key
+    const locationKey = (event.location || event.city)?.trim();
+    if (!locationKey) continue;
 
-    const geoData = coordsMap.get(event.city.trim());
+    const geoData = coordsMap.get(locationKey);
     if (!geoData || !geoData.display_name) continue;
 
     // Preserve original location in locationDetails
@@ -327,6 +393,7 @@ export async function parseBerlin(): Promise<ProtestEvent[]> {
     events.push({
       source: "www.berlin.de",
       city: "Berlin",
+      country: "DE",
       title: thema || "Versammlung",
       start: startDate?.toISOString() ?? null,
       end: endDate?.toISOString() ?? null,
@@ -378,6 +445,7 @@ export async function parseDresden(): Promise<ProtestEvent[]> {
       events.push({
         source: "www.dresden.de",
         city: "Dresden",
+        country: "DE",
         title: v.Thema || "Versammlung",
         start: startDate?.toISOString() ?? null,
         end: endDate?.toISOString() ?? null,
@@ -559,6 +627,7 @@ export async function parseFriedenskooperative(): Promise<ProtestEvent[]> {
                 events.push({
                   source: "www.friedenskooperative.de",
                   city,
+                  country: "DE",
                   title,
                   start: d.toISOString(),
                   end: endDate ? endDate.toISOString() : null,
@@ -711,6 +780,7 @@ export async function parseDemokrateam(): Promise<ProtestEvent[]> {
         events.push({
           source: "www.demokrateam.org",
           city,
+          country: "DE",
           title,
           start: eventDate.toISOString(),
           end: null,
@@ -816,8 +886,9 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
       }
 
       // Add geographic coordinates if available
-      if (e.city && coordsMap.has(e.city.trim())) {
-        const coords = coordsMap.get(e.city.trim())!;
+      const locationKey = (e.locationDetails || e.location || e.city)?.trim();
+      if (locationKey && coordsMap.has(locationKey)) {
+        const coords = coordsMap.get(locationKey)!;
         event.geo = { lat: coords.lat, lon: coords.lon };
       }
 
@@ -844,50 +915,52 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
   fs.writeFileSync(file, value!, "utf8");
 }
 
-// Main execution
-program
-  .option("--days <n>", "range forward in days", "40")
-  .option("--csv <csv>", "CSV file", "protests.csv")
-  .option("--json <json>", "JSON file", "protests.json")
-  .option("--ics <ics>", "ICS file", "protests.ics")
-  .parse(process.argv);
+// Main execution - only run if this file is executed directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+  program
+    .option("--days <n>", "range forward in days", "40")
+    .option("--csv <csv>", "CSV file", "protests.csv")
+    .option("--json <json>", "JSON file", "protests.json")
+    .option("--ics <ics>", "ICS file", "protests.ics")
+    .parse(process.argv);
 
-const opt = program.opts<ScraperOptions>();
-const DAYS = parseInt(opt.days);
+  const opt = program.opts<ScraperOptions>();
+  const DAYS = parseInt(opt.days);
 
-const sources = [
-  parseBerlin,
-  parseDresden,
-  parseFriedenskooperative,
-  parseDemokrateam,
-];
+  const sources = [
+    parseBerlin,
+    parseDresden,
+    parseFriedenskooperative,
+    parseDemokrateam,
+  ];
 
-(async (): Promise<void> => {
-  console.error("[scrape] Fetching sources …");
-  const all: ProtestEvent[] = [];
+  (async (): Promise<void> => {
+    console.error("[scrape] Fetching sources …");
+    const all: ProtestEvent[] = [];
 
-  for (const fn of sources) {
-    try {
-      const ev = await fn();
-      console.error(`[${fn.name}] ${ev.length}`);
-      all.push(...ev);
-    } catch (e) {
-      const error = e as Error;
-      console.error(`[${fn.name}] failed:`, error.message);
+    for (const fn of sources) {
+      try {
+        const ev = await fn();
+        console.error(`[${fn.name}] ${ev.length}`);
+        all.push(...ev);
+      } catch (e) {
+        const error = e as Error;
+        console.error(`[${fn.name}] failed:`, error.message);
+      }
     }
-  }
 
-  const events = dedupe(all).filter((e) => withinNextDays(e.start, DAYS));
-  events.sort((a, b) => (a.start || "").localeCompare(b.start || ""));
+    const events = dedupe(all).filter((e) => withinNextDays(e.start, DAYS));
+    events.sort((a, b) => (a.start || "").localeCompare(b.start || ""));
 
-  // Geocode cities and normalize locations
-  const coordsMap = await geocodeEvents(events);
-  normalizeEventLocations(events, coordsMap);
+    // Geocode cities and normalize locations
+    const coordsMap = await geocodeEvents(events);
+    normalizeEventLocations(events, coordsMap);
 
-  saveCSV(events, opt.csv);
-  saveJSON(events, opt.json);
-  await saveICS(events, coordsMap, opt.ics);
+    saveCSV(events, opt.csv);
+    saveJSON(events, opt.json);
+    await saveICS(events, coordsMap, opt.ics);
 
-  const result: ScrapeResult = { count: events.length, range: DAYS };
-  console.log(JSON.stringify(result, null, 2));
-})();
+    const result: ScrapeResult = { count: events.length, range: DAYS };
+    console.log(JSON.stringify(result, null, 2));
+  })();
+}
