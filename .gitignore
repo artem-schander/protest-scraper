@@ -10,10 +10,10 @@ dist/
 .env.local
 
 # Output files
-*.csv
-*.json
-*.ics
-./protests.*
+output/
+
+# Geocode Cache
+geocode-cache.json
 
 # IDE
 .vscode/

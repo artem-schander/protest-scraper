@@ -15,7 +15,7 @@ export interface Protest {
   end: Date | null;
   language?: string | null; // e.g., "de-DE"
   location: string | null;
-  locationDetails?: string | null; // Original location from source (before normalization)
+  originalLocation?: string | null; // Original location from source (before normalization)
   geoLocation?: GeoLocation; // GeoJSON Point for geospatial queries
   url: string;
   attendees: number | null;

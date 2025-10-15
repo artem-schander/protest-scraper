@@ -200,7 +200,7 @@ interface Protest {
   end: Date | null;
   language?: string | null;    // e.g., "de-DE"
   location: string | null;     // Normalized address from geocoding
-  locationDetails?: string | null;  // Original location before normalization
+  originalLocation?: string | null;  // Original location before normalization
   geoLocation?: GeoLocation;   // GeoJSON Point [lon, lat] for geospatial queries
   url: string;
   attendees: number | null;

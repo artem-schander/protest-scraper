@@ -42,7 +42,7 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
         start: p.start,
         end: p.end,
         location: p.location,
-        locationDetails: p.locationDetails,
+        originalLocation: p.originalLocation,
         coordinates: p.geoLocation?.coordinates
           ? { lat: p.geoLocation.coordinates[1], lon: p.geoLocation.coordinates[0] }
           : null,

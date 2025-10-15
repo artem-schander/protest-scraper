@@ -9,8 +9,18 @@ export enum UserRole {
 export interface User {
   _id?: ObjectId;
   email: string;
-  password: string; // hashed
+  password?: string; // hashed - optional for OAuth users
   role: UserRole;
+
+  // Email verification
+  emailVerified: boolean;
+  verificationToken?: string;
+  verificationTokenExpires?: Date;
+
+  // OAuth
+  oauthProvider?: 'google' | 'apple';
+  oauthId?: string; // User ID from OAuth provider
+
   createdAt: Date;
   updatedAt: Date;
 }

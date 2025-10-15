@@ -94,10 +94,23 @@ docker compose up -d --build
 
 ## 📚 API Overview
 
+### Authentication Endpoints
+
+| Method | Endpoint | Rate Limit | Description |
+|--------|----------|------------|-------------|
+| `POST` | `/api/auth/register` | 5/15min | Register new user (sends verification email) |
+| `POST` | `/api/auth/login` | 10/15min | Obtain JWT token |
+| `GET` | `/api/auth/verify-email` | - | Verify email with token |
+| `POST` | `/api/auth/resend-verification` | 3/15min | Resend verification email |
+| `GET` | `/api/auth/google` | - | Initiate Google OAuth flow |
+| `GET` | `/api/auth/google/callback` | - | Google OAuth callback |
+| `GET` | `/api/auth/apple` | - | Initiate Apple OAuth flow |
+| `GET` | `/api/auth/apple/callback` | - | Apple OAuth callback |
+
+### Protest & Export Endpoints
+
 | Method | Endpoint | Auth | Description |
 |--------|-----------|------|-------------|
-| `POST` | `/api/auth/register` | - | Register new user |
-| `POST` | `/api/auth/login` | - | Obtain JWT token |
 | `GET` | `/api/protests` | Optional | List protests (filter by `?city=Berlin&days=40`) |
 | `POST` | `/api/protests` | ✅ | Add new protest |
 | `PUT` | `/api/protests/:id` | MODERATOR / ADMIN | Edit protest |
@@ -274,6 +287,92 @@ Response (MODERATOR/ADMIN role - auto-verified):
 }
 ```
 
+#### Verify email
+
+After registration, users receive an email with a verification link:
+
+```bash
+# User clicks link in email (GET request)
+curl "http://localhost:3000/api/auth/verify-email?token=abc123..."
+```
+
+Response:
+```json
+{
+  "message": "Email verified successfully! You can now log in.",
+  "verified": true
+}
+```
+
+#### Resend verification email
+
+```bash
+curl -X POST http://localhost:3000/api/auth/resend-verification \
+  -H "Content-Type: application/json" \
+  -d '{"email": "user@example.com"}'
+```
+
+Response:
+```json
+{
+  "message": "Verification email sent. Please check your inbox."
+}
+```
+
+#### Login with Google OAuth
+
+```bash
+# Step 1: Redirect user to Google OAuth (opens in browser)
+open http://localhost:3000/api/auth/google
+
+# Step 2: User authorizes and is redirected back
+# Step 3: Receive JWT token automatically
+```
+
+Development response:
+```json
+{
+  "message": "Google login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "507f1f77bcf86cd799439014",
+    "email": "user@gmail.com",
+    "role": "USER",
+    "emailVerified": true
+  }
+}
+```
+
+Production behavior: Redirects to frontend with token
+
+#### Login with Apple OAuth
+
+```bash
+# Step 1: Redirect user to Apple Sign In (opens in browser)
+open http://localhost:3000/api/auth/apple
+
+# Step 2: User authorizes and is redirected back
+# Step 3: Receive JWT token automatically
+```
+
+Development response:
+```json
+{
+  "message": "Apple login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "507f1f77bcf86cd799439015",
+    "email": "user@icloud.com",
+    "role": "USER",
+    "emailVerified": true
+  }
+}
+```
+
+Production behavior: Redirects to frontend with token
+
+**Note:** Apple OAuth callback uses POST instead of GET for enhanced security.
+
 #### Update a protest (MODERATOR/ADMIN only)
 
 ```bash
@@ -380,6 +479,104 @@ All endpoints (`/api/protests`, `/api/export/csv`, `/api/export/json`, `/api/exp
 - `search` performs case-insensitive partial matching in the title field (e.g., `search=climate` matches "Climate Protest", "Klimaschutz", etc.)
 - When using geolocation (`lat`/`lon`), the `city` filter is automatically ignored
 - Export endpoints default to `verified=true` for public safety
+
+---
+
+## 🔐 Authentication & Security
+
+### Rate Limiting (Spam Protection)
+
+All authentication endpoints are protected by rate limiting:
+
+- **Registration**: 5 attempts per 15 minutes per IP
+- **Login**: 10 attempts per 15 minutes per IP
+- **Resend Verification**: 3 attempts per 15 minutes per IP
+
+When rate limit is exceeded, the API returns `429 Too Many Requests` with retry information in `RateLimit-*` headers.
+
+### Email Verification
+
+**Setup Required**: Configure SMTP settings in `.env` file
+
+```bash
+# Gmail example (use App Password, not regular password)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_FROM='"Protest Service" <noreply@protest-service.com>'
+```
+
+**Alternative Email Providers:**
+- **SendGrid**: Set `SENDGRID_API_KEY` (100 emails/day free)
+- **Mailgun**: 5,000 emails/month free for 3 months
+- **AWS SES**: 62,000 emails/month free (if on AWS)
+- **Resend**: 100 emails/day free
+
+**Email Verification Flow:**
+1. User registers → receives verification email (24-hour token expiry)
+2. User clicks link in email → email verified
+3. User can log in (optional: enforce `REQUIRE_EMAIL_VERIFICATION=true`)
+
+**Features:**
+- HTML + plain text email templates
+- Automatic welcome email after verification
+- Resend verification email endpoint
+- Gracefully handles missing email config (development mode)
+
+### OAuth Authentication
+
+**Supported Providers:**
+- Google OAuth 2.0
+- Apple Sign In
+
+**Google OAuth Setup:**
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Create OAuth 2.0 credentials
+3. Add authorized redirect URI: `http://localhost:3000/api/auth/google/callback`
+4. Add to `.env`:
+
+```bash
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+```
+
+**Apple OAuth Setup** (optional):
+
+1. Go to [Apple Developer Portal](https://developer.apple.com/account/resources/identifiers/list/serviceId)
+2. Create a Service ID and configure Sign in with Apple
+3. Generate an Apple Sign In private key (.p8 file)
+4. Add authorized redirect URI: `http://localhost:3000/api/auth/apple/callback`
+5. Add to `.env`:
+
+```bash
+APPLE_CLIENT_ID=your-apple-client-id
+APPLE_TEAM_ID=your-apple-team-id
+APPLE_KEY_ID=your-apple-key-id
+APPLE_PRIVATE_KEY_PATH=path/to/AuthKey_XXXXX.p8
+APPLE_REDIRECT_URI=http://localhost:3000/api/auth/apple/callback
+```
+
+**OAuth Features:**
+- PKCE (Proof Key for Code Exchange) for security
+- CSRF protection with state tokens
+- Auto-creates user from OAuth account
+- Email pre-verified for OAuth users
+- Links existing accounts by email
+- Works in development & production modes
+
+**Production Configuration:**
+
+```bash
+# Production mode redirects to frontend
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+In production, OAuth callbacks redirect to `FRONTEND_URL/auth/callback?token=...`
 
 ---
 
@@ -535,7 +732,11 @@ The scraper includes:
 - [x] JWT authentication middleware
 - [x] User registration endpoint
 - [x] Login endpoint
+- [x] **Rate limiting for spam protection (5/15min registration, 10/15min login)**
+- [x] **Email verification system with nodemailer**
+- [x] **OAuth authentication (Google, Apple)**
 - [x] Public protest listing endpoint with filters (city, date range, pagination)
+- [x] **Full-text search in protest titles**
 - [x] Protected protest creation endpoint
 - [x] Moderator edit endpoint
 - [x] Admin delete endpoint
@@ -545,7 +746,7 @@ The scraper includes:
 - [x] Subscribable ICS calendar feeds with custom filters
 - [x] Geolocation search ("protests near me" feature)
 - [x] Automatic geocoding of city names to coordinates
-- [x] Comprehensive API test suite with 39 passing tests
+- [x] Comprehensive API test suite with 74+ passing tests
 
 #### Deployment & DevOps
 - [x] Docker Compose setup with MongoDB

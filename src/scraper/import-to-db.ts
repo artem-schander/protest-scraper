@@ -109,13 +109,14 @@ async function importProtests(days: number): Promise<void> {
     const geoData = coordsMap.get(locationKey);
     if (!geoData || !geoData.display_name) continue;
 
-    // Preserve original location in locationDetails
+    // Preserve original location in originalLocation
     if (event.location) {
-      event.locationDetails = event.location;
+      event.originalLocation = event.location;
     }
 
-    // Replace location with normalized address from Nominatim
-    event.location = geoData.display_name;
+    // Replace location with formatted address (user-friendly)
+    // Fallback to display_name if formatting fails
+    event.location = geoData.formatted || geoData.display_name;
   }
 
   // Import to database
@@ -133,7 +134,7 @@ async function importProtests(days: number): Promise<void> {
 
       // Get coordinates for the location
       let geoLocation: GeoLocation | undefined;
-      const locationKey = (event.locationDetails || event.location || event.city)?.trim();
+      const locationKey = (event.originalLocation || event.location || event.city)?.trim();
       if (locationKey && coordsMap.has(locationKey)) {
         const coords = coordsMap.get(locationKey)!;
         geoLocation = {
@@ -151,7 +152,7 @@ async function importProtests(days: number): Promise<void> {
         end: event.end ? new Date(event.end) : null,
         language: event.language,
         location: event.location,
-        locationDetails: event.locationDetails,
+        originalLocation: event.originalLocation,
         geoLocation,
         url: event.url,
         attendees: event.attendees,

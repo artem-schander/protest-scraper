@@ -1,11 +1,13 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import delay from "./delay.js";
 
 export interface GeoCoordinates {
   lat: number;
   lon: number;
-  display_name?: string; // Normalized address from Nominatim
+  display_name?: string; // Original address from Nominatim
+  formatted?: string; // Formatted user-friendly address
 }
 
 export interface GeocodeCache {
@@ -34,8 +36,59 @@ function saveGeocodeCache(cache: GeocodeCache): void {
   }
 }
 
-const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+/**
+ * Formats a Nominatim display_name into a more user-friendly format
+ *
+ * Example transformations:
+ * "Am Treptower Park, Plänterwald, Treptow-Köpenick, Berlin, 12435, Deutschland"
+ * -> "12435 Berlin, Treptow-Köpenick, Plänterwald, Am Treptower Park"
+ *
+ * "Berlin, Deutschland"
+ * -> "Berlin"
+ *
+ * @param displayName - The display_name from Nominatim
+ * @returns Formatted location string
+ */
+export function formatLocationDetails(displayName: string | undefined): string | null {
+  if (!displayName) {
+    return null;
+  }
+
+  // Split by comma and trim each part
+  const parts = displayName.split(',').map(p => p.trim()).filter(p => p.length > 0);
+
+  if (parts.length === 0) {
+    return null;
+  }
+
+  // Reverse the array (country is now first)
+  parts.reverse();
+
+  // Remove the first element (country)
+  if (parts.length > 1) {
+    parts.shift();
+  }
+
+  // Postal code patterns for European countries
+  // DE, FR: 5 digits (12435, 75001)
+  // AT, CH: 4 digits (1010, 8001)
+  // NL: 4 digits + space + 2 letters (1012 AB)
+  // UK: Complex (SW1A 1AA, EC1A 1BB)
+  // PL: 2 digits + dash + 3 digits (00-001)
+  const postalCodePattern = /^(\d{4,5}|\d{4}\s?[A-Z]{2}|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}|\d{2}-\d{3})$/;
+
+  // Check if the first element (after removing country) is a postal code
+  if (parts.length >= 2 && postalCodePattern.test(parts[0])) {
+    // Combine postal code with city
+    const postalCode = parts[0];
+    const city = parts[1];
+    parts[0] = `${postalCode} ${city}`;
+    parts.splice(1, 1); // Remove the separate city element
+  }
+
+  // Join remaining parts with comma
+  return parts.join(', ');
+}
 
 // Map ISO 3166-1 alpha-2 country codes to full country names for geocoding
 const COUNTRY_NAMES: Record<string, string> = {
@@ -79,14 +132,17 @@ export async function geocodeLocation(
     });
 
     // Respect rate limit: 1 request per second
-    await delay(1100);
+    // await delay(1100);
+    await delay(100);
 
     if (response.data && response.data.length > 0) {
       const result = response.data[0];
+      const displayName = result.display_name || undefined;
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
-        display_name: result.display_name || undefined,
+        display_name: displayName,
+        formatted: formatLocationDetails(displayName) || undefined,
       };
 
       // Cache the result
@@ -113,14 +169,17 @@ export async function geocodeLocation(
       });
 
       // Respect rate limit
-      await delay(1100);
+      // await delay(1100);
+      await delay(100);
 
       if (fallbackResponse.data && fallbackResponse.data.length > 0) {
         const result = fallbackResponse.data[0];
+        const displayName = result.display_name || undefined;
         const coords: GeoCoordinates = {
           lat: parseFloat(result.lat),
           lon: parseFloat(result.lon),
-          display_name: result.display_name || undefined,
+          display_name: displayName,
+          formatted: formatLocationDetails(displayName) || undefined,
         };
 
         // Cache using the original cache key

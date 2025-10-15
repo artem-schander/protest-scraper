@@ -17,6 +17,8 @@ import timezone from "dayjs/plugin/timezone.js";
 import utc from "dayjs/plugin/utc.js";
 import { program } from "commander";
 import { createEvents } from "ics";
+import { formatLocationDetails } from "../utils/geocode.js";
+import delay from "../utils/delay.js";
 
 // Initialize dayjs plugins
 dayjs.extend(customParseFormat);
@@ -32,7 +34,7 @@ export interface ProtestEvent {
   start: string | null;
   end: string | null;
   location: string | null;
-  locationDetails?: string | null; // Original location from source (before normalization)
+  originalLocation?: string | null; // Original location from source (before normalization)
   language?: string; // e.g., "de-DE"
   url: string;
   attendees: number | null; // Expected/announced number of attendees
@@ -54,7 +56,8 @@ interface ScrapeResult {
 interface GeoCoordinates {
   lat: number;
   lon: number;
-  display_name?: string; // Normalized address from Nominatim
+  display_name?: string; // Original address from Nominatim
+  formatted?: string; // Formatted user-friendly address
 }
 
 interface GeocodeCache {
@@ -72,9 +75,6 @@ const now: Dayjs = dayjs().tz(DE_TZ);
 const GEOCODE_CACHE_FILE = "geocode-cache.json";
 
 // Utility functions
-export const delay = (ms: number): Promise<void> =>
-  new Promise((resolve) => setTimeout(resolve, ms));
-
 export function parseGermanDate(str: string): Dayjs | null {
   if (!str) return null;
 
@@ -165,7 +165,8 @@ async function fetchHTML(url: string): Promise<string | null> {
       headers: HEADERS,
       timeout: 30000,
     });
-    await delay(1000);
+    // await delay(1000);
+    await delay(100);
     return response.data;
   } catch (e) {
     const error = e as Error;
@@ -284,10 +285,12 @@ async function geocodeLocation(
 
     if (response.data && response.data.length > 0) {
       const result = response.data[0];
+      const displayName = result.display_name || undefined;
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
-        display_name: result.display_name || undefined,
+        display_name: displayName,
+        formatted: formatLocationDetails(displayName) || undefined,
       };
 
       // Cache the result
@@ -314,14 +317,16 @@ async function geocodeLocation(
       });
 
       // Respect rate limit
-      await delay(1100);
+      // await delay(1100);
 
       if (fallbackResponse.data && fallbackResponse.data.length > 0) {
         const result = fallbackResponse.data[0];
+        const displayName = result.display_name || undefined;
         const coords: GeoCoordinates = {
           lat: parseFloat(result.lat),
           lon: parseFloat(result.lon),
-          display_name: result.display_name || undefined,
+          display_name: displayName,
+          formatted: formatLocationDetails(displayName) || undefined,
         };
 
         // Cache using the original cache key
@@ -349,13 +354,14 @@ function normalizeEventLocations(events: ProtestEvent[], coordsMap: Map<string, 
     const geoData = coordsMap.get(locationKey);
     if (!geoData || !geoData.display_name) continue;
 
-    // Preserve original location in locationDetails
+    // Preserve original location in originalLocation
     if (event.location) {
-      event.locationDetails = event.location;
+      event.originalLocation = event.location;
     }
 
-    // Replace location with normalized address from Nominatim
-    event.location = geoData.display_name;
+    // Replace location with formatted address (user-friendly)
+    // Fallback to display_name if formatting fails
+    event.location = geoData.formatted || geoData.display_name;
   }
 }
 
@@ -436,7 +442,7 @@ export async function parseDresden(): Promise<ProtestEvent[]> {
 
       let attendees: number|null = parseInt(v.Teilnehmer);
       if (!attendees) attendees = parseAttendees(v.Thema || "");
-      
+
       let location = "Dresden";
       if (v.Ort || v.Startpunkt || null) {
         location += ", " + (v.Ort || v.Startpunkt || null);
@@ -834,11 +840,13 @@ export function saveCSV(events: ProtestEvent[], file: string): void {
     );
   }
 
-  fs.writeFileSync(file, lines.join("\n"), "utf8");
+  if (!fs.existsSync("output")) fs.mkdirSync("output");
+  fs.writeFileSync(`output/${file}`, lines.join("\n"), "utf8");
 }
 
 export function saveJSON(events: ProtestEvent[], file: string): void {
-  fs.writeFileSync(file, JSON.stringify(events, null, 2), "utf8");
+  if (!fs.existsSync("output")) fs.mkdirSync("output");
+  fs.writeFileSync(`output/${file}`, JSON.stringify(events, null, 2), "utf8");
 }
 
 async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordinates>, file: string): Promise<void> {
@@ -872,9 +880,9 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
       // Add categories for filtering/organization in calendar apps
       // Categories: Event Type, City, Country, Source
       const categories: string[] = [];
-      categories.push("Germany"); // All events are in Germany
       if (e.city) categories.push(e.city);
       if (e.source) categories.push(e.source);
+      if (e.country && COUNTRY_NAMES[e.country]) categories.push(COUNTRY_NAMES[e.country]);
 
       // Add event-specific categories (e.g., Demonstration, Vigil, Blockade)
       if (e.categories && e.categories.length > 0) {
@@ -886,7 +894,7 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
       }
 
       // Add geographic coordinates if available
-      const locationKey = (e.locationDetails || e.location || e.city)?.trim();
+      const locationKey = (e.originalLocation || e.location || e.city)?.trim();
       if (locationKey && coordsMap.has(locationKey)) {
         const coords = coordsMap.get(locationKey)!;
         event.geo = { lat: coords.lat, lon: coords.lon };
@@ -912,7 +920,8 @@ async function saveICS(events: ProtestEvent[], coordsMap: Map<string, GeoCoordin
     return;
   }
 
-  fs.writeFileSync(file, value!, "utf8");
+  if (!fs.existsSync("output")) fs.mkdirSync("output");
+  fs.writeFileSync(`output/${file}`, value!, "utf8");
 }
 
 // Main execution - only run if this file is executed directly
