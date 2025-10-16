@@ -72,7 +72,7 @@ const HEADERS = {
 
 const DE_TZ = "Europe/Berlin";
 const now: Dayjs = dayjs().tz(DE_TZ);
-const GEOCODE_CACHE_FILE = "geocode-cache.json";
+const GEOCODE_CACHE_FILE = "cache/geocode.json";
 
 // Utility functions
 export function parseGermanDate(str: string): Dayjs | null {

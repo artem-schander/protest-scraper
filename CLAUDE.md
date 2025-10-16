@@ -182,7 +182,7 @@ const COUNTRY_NAMES: Record<string, string> = {
 ```
 
 **Caching:**
-- Geocoded results cached to `geocode-cache.json`
+- Geocoded results cached to `cache/geocode.json`
 - Cache key is the full location string
 - Rate limit: 1 request per second (Nominatim requirement)
 
@@ -273,7 +273,7 @@ Query pattern for "protests near me":
 - `rootDir: ./src`, `outDir: ./dist`
 
 ### Docker Best Practices
-- `.dockerignore`: Excludes output files (protests.json, geocode-cache.json) but allows tsconfig.json and package files
+- `.dockerignore`: Excludes output files (output/*) but allows tsconfig.json and package files
 - Multi-stage build: builder stage compiles TS, production stage copies dist/
 - Uses yarn, not npm
 - No `version` key in docker-compose.yml (obsolete)

@@ -1,0 +1,1202 @@
+{
+  "10557 Berlin, Paul-Löbe-Allee 1": {
+    "lat": 52.5191897,
+    "lon": 13.3761089,
+    "display_name": "1, Paul-Löbe-Allee, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Paul-Löbe-Allee, 1"
+  },
+  "12435 Berlin, Am Treptower Park": {
+    "lat": 52.4831307,
+    "lon": 13.4703227,
+    "display_name": "Am Treptower Park, Plänterwald, Treptow-Köpenick, Berlin, 12435, Deutschland",
+    "formatted": "12435 Berlin, Treptow-Köpenick, Plänterwald, Am Treptower Park"
+  },
+  "10117 Berlin, Jägerstr. 22": {
+    "lat": 52.5139924,
+    "lon": 13.3942672,
+    "display_name": "22, Jägerstraße, Friedrichswerder, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichswerder, Jägerstraße, 22"
+  },
+  "10117 Berlin, Pariser Platz": {
+    "lat": 52.5163514,
+    "lon": 13.3786908,
+    "display_name": "Pariser Platz, Friedrich-Wilhelm-Stadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrich-Wilhelm-Stadt, Pariser Platz"
+  },
+  "10117 Berlin, Friedrichstr. 176-179": {
+    "lat": 52.5134146,
+    "lon": 13.3884869,
+    "display_name": "Russisches Haus der Wissenschaft und Kultur, 176–179, Friedrichstraße, Friedrichstadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichstadt, Friedrichstraße, 176–179, Russisches Haus der Wissenschaft und Kultur"
+  },
+  "10557 Berlin, Melanchthonstr. 23": {
+    "lat": 52.5209462,
+    "lon": 13.3541149,
+    "display_name": "23, Melanchthonstraße, Moabit, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Moabit, Melanchthonstraße, 23"
+  },
+  "12437 Berlin, Chris-Gueffroy-Allee 52": {
+    "lat": 52.454548,
+    "lon": 13.4718435,
+    "display_name": "52, Chris-Gueffroy-Allee, Siedlung X, Baumschulenweg, Treptow-Köpenick, Berlin, 12437, Deutschland",
+    "formatted": "12437 Berlin, Treptow-Köpenick, Baumschulenweg, Siedlung X, Chris-Gueffroy-Allee, 52"
+  },
+  "13158 Berlin, Kastanienallee 15A": {
+    "lat": 52.5919365,
+    "lon": 13.3956179,
+    "display_name": "15A, Kastanienallee, Nordend, Rosenthal, Pankow, Berlin, 13158, Deutschland",
+    "formatted": "13158 Berlin, Pankow, Rosenthal, Nordend, Kastanienallee, 15A"
+  },
+  "Chlodwigplatz, Köln,  Chlodwigplatz,  50678 Köln": {
+    "lat": 50.921349,
+    "lon": 6.9596465,
+    "display_name": "Chlodwigplatz, Severinsviertel, Altstadt-Süd, Innenstadt, Köln, Nordrhein-Westfalen, 50678, Deutschland",
+    "formatted": "50678 Nordrhein-Westfalen, Köln, Innenstadt, Altstadt-Süd, Severinsviertel, Chlodwigplatz"
+  },
+  "Innenstadt Ulm,  89073 Ulm": {
+    "lat": 48.3961317,
+    "lon": 9.9934084,
+    "display_name": "Ulm, Unter der Metzig, Innenstadt, Mitte, Ulm, Baden-Württemberg, 89073, Deutschland",
+    "formatted": "89073 Baden-Württemberg, Ulm, Mitte, Innenstadt, Unter der Metzig, Ulm"
+  },
+  "Innenstadt Dortmund,  44135 Dortmund": {
+    "lat": 51.4924922,
+    "lon": 7.4518549,
+    "display_name": "SIGNAL IDUNA PARK, 50, Strobelallee, Innenstadt West, Dortmund, Nordrhein-Westfalen, 44139, Deutschland",
+    "formatted": "44139 Nordrhein-Westfalen, Dortmund, Innenstadt West, Strobelallee, 50, SIGNAL IDUNA PARK"
+  },
+  "Hamburg, Jüthornstrasse 104": {
+    "lat": 53.5681439,
+    "lon": 10.0848393,
+    "display_name": "104, Jüthornstraße, Marienthal, Wandsbek, Hamburg, 22043, Deutschland",
+    "formatted": "22043 Hamburg, Wandsbek, Marienthal, Jüthornstraße, 104"
+  },
+  "Oschatz, Altmarkt": {
+    "lat": 51.298513,
+    "lon": 13.1081936,
+    "display_name": "Altmarkt, Altoschatz, Oschatz, Nordsachsen, Sachsen, 04758, Deutschland",
+    "formatted": "04758 Sachsen, Nordsachsen, Oschatz, Altoschatz, Altmarkt"
+  },
+  "10117 Berlin, Pariser Platz 1": {
+    "lat": 52.5162699,
+    "lon": 13.3777034,
+    "display_name": "Brandenburger Tor, 1, Pariser Platz, Friedrich-Wilhelm-Stadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrich-Wilhelm-Stadt, Pariser Platz, 1, Brandenburger Tor"
+  },
+  "Bad Freienwalde (Oder), Berthold Brecht Gymnasium": {
+    "lat": 52.787521,
+    "lon": 14.0300689,
+    "display_name": "Bad Freienwalde (Oder), Wölsickendorf-Wollenberg, Märkisch-Oderland, Brandenburg, 16259, Deutschland",
+    "formatted": "16259 Brandenburg, Märkisch-Oderland, Wölsickendorf-Wollenberg, Bad Freienwalde (Oder)"
+  },
+  "10117 Berlin, Platz der Märzrevolution": {
+    "lat": 52.5185497,
+    "lon": 13.3951831,
+    "display_name": "Platz der Märzrevolution, Friedrichswerder, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichswerder, Platz der Märzrevolution"
+  },
+  "Stadland, Marktplatz Rodenkirchen": {
+    "lat": 53.4174791,
+    "lon": 8.3878358,
+    "display_name": "Stadland, Landkreis Wesermarsch, Niedersachsen, Deutschland",
+    "formatted": "Niedersachsen, Landkreis Wesermarsch, Stadland"
+  },
+  "10117 Berlin, Niederkirchnerstr. 5": {
+    "lat": 52.5078666,
+    "lon": 13.3815043,
+    "display_name": "Abgeordnetenhaus von Berlin, 5, Niederkirchnerstraße, Friedrichstadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichstadt, Niederkirchnerstraße, 5, Abgeordnetenhaus von Berlin"
+  },
+  "10557 Berlin, Platz der Republik 1": {
+    "lat": 52.5185941,
+    "lon": 13.3762818,
+    "display_name": "Deutscher Bundestag, 1, Platz der Republik, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Platz der Republik, 1, Deutscher Bundestag"
+  },
+  "10179 Berlin, Jannowitzbrücke": {
+    "lat": 52.5142146,
+    "lon": 13.4194925,
+    "display_name": "Jannowitzbrücke, Holzmarktstraße, Stralauer Vorstadt, Mitte, Berlin, 10179, Deutschland",
+    "formatted": "10179 Berlin, Mitte, Stralauer Vorstadt, Holzmarktstraße, Jannowitzbrücke"
+  },
+  "10117 Berlin, Glinkastr. 5": {
+    "lat": 52.5113237,
+    "lon": 13.3863193,
+    "display_name": "5, Glinkastraße, Friedrichstadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichstadt, Glinkastraße, 5"
+  },
+  "Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "10585 Berlin, Wilmersdorfer Str.": {
+    "lat": 52.5066749,
+    "lon": 13.3066372,
+    "display_name": "Wilmersdorfer Straße, Kantstraße, Charlottenburg, Charlottenburg-Wilmersdorf, Berlin, 10627, Deutschland",
+    "formatted": "10627 Berlin, Charlottenburg-Wilmersdorf, Charlottenburg, Kantstraße, Wilmersdorfer Straße"
+  },
+  "10178 Berlin, Alexanderplatz 2": {
+    "lat": 52.5209193,
+    "lon": 13.4142934,
+    "display_name": "CURRY 61 Alexanderplatz, 2, Alexanderplatz, Mitte, Berlin, 10178, Deutschland",
+    "formatted": "10178 Berlin, Mitte, Alexanderplatz, 2, CURRY 61 Alexanderplatz"
+  },
+  "Dresden, Kleine Kirchgasse": {
+    "lat": 51.0504045,
+    "lon": 13.7406847,
+    "display_name": "Kleine Kirchgasse, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Kleine Kirchgasse"
+  },
+  "10245 Berlin, Rotherstr. 18": {
+    "lat": 52.5035837,
+    "lon": 13.4497311,
+    "display_name": "18, Rotherstraße, Mediaspree, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10245, Deutschland",
+    "formatted": "10245 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Mediaspree, Rotherstraße, 18"
+  },
+  "12101 Berlin, Tempelhofer Damm 100": {
+    "lat": 52.4725358,
+    "lon": 13.3853761,
+    "display_name": "100, Tempelhofer Damm, Gartenstadt Neu-Tempelhof, Tempelhof, Tempelhof-Schöneberg, Berlin, 12101, Deutschland",
+    "formatted": "12101 Berlin, Tempelhof-Schöneberg, Tempelhof, Gartenstadt Neu-Tempelhof, Tempelhofer Damm, 100"
+  },
+  "12101 Berlin, Tempelhofer Damm 99": {
+    "lat": 52.4717731,
+    "lon": 13.3860135,
+    "display_name": "99, Tempelhofer Damm, Gartenstadt Neu-Tempelhof, Tempelhof, Tempelhof-Schöneberg, Berlin, 12101, Deutschland",
+    "formatted": "12101 Berlin, Tempelhof-Schöneberg, Tempelhof, Gartenstadt Neu-Tempelhof, Tempelhofer Damm, 99"
+  },
+  "Schlossplatz Stuttgart,  Schlossplatz,  70173 Stuttgart": {
+    "lat": 48.7781282,
+    "lon": 9.1762705,
+    "display_name": "Kleiner Schlossplatz / Theodor-Heuss-Straße, Kleiner Schloßplatz, Neue Vorstadt, Stuttgart-Mitte, Stuttgart, Baden-Württemberg, 70173, Deutschland",
+    "formatted": "70173 Baden-Württemberg, Stuttgart, Stuttgart-Mitte, Neue Vorstadt, Kleiner Schloßplatz, Kleiner Schlossplatz / Theodor-Heuss-Straße"
+  },
+  "Elvis-Presley-Platz, Friedberg,  Elvis-Presley-Platz,  61169 Friedberg": {
+    "lat": 48.3551962,
+    "lon": 10.9786498,
+    "display_name": "Friedberg, Landkreis Aichach-Friedberg, Bayern, 86316, Deutschland",
+    "formatted": "86316 Bayern, Landkreis Aichach-Friedberg, Friedberg"
+  },
+  "Berlin, S Tempelhof": {
+    "lat": 52.4649016,
+    "lon": 13.3959089,
+    "display_name": "Tempelhof, Tempelhof-Schöneberg, Berlin, Deutschland",
+    "formatted": "Berlin, Tempelhof-Schöneberg, Tempelhof"
+  },
+  "12099 Berlin, Ordensmeisterstr. 12": {
+    "lat": 52.457362,
+    "lon": 13.3915745,
+    "display_name": "12, Ordensmeisterstraße, Tempelhof, Tempelhof-Schöneberg, Berlin, 12099, Deutschland",
+    "formatted": "12099 Berlin, Tempelhof-Schöneberg, Tempelhof, Ordensmeisterstraße, 12"
+  },
+  "10969 Berlin, Ritterstr. 78": {
+    "lat": 52.5033215,
+    "lon": 13.4022836,
+    "display_name": "78, Ritterstraße, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10969, Deutschland",
+    "formatted": "10969 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Ritterstraße, 78"
+  },
+  "10557 Berlin, Platz der Republik/ Paul-Löbe-Allee": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "Betzdorf, Rataus": {
+    "lat": 50.7879961,
+    "lon": 7.8723802,
+    "display_name": "Betzdorf, Betzdorf-Gebhardshain, Landkreis Altenkirchen (Westerwald), Rheinland-Pfalz, 57518, Deutschland",
+    "formatted": "57518 Rheinland-Pfalz, Landkreis Altenkirchen (Westerwald), Betzdorf-Gebhardshain, Betzdorf"
+  },
+  "12459 Berlin, Siemensstr. 7": {
+    "lat": 52.4639493,
+    "lon": 13.508897,
+    "display_name": "7, Siemensstraße, Oberschöneweide, Treptow-Köpenick, Berlin, 12459, Deutschland",
+    "formatted": "12459 Berlin, Treptow-Köpenick, Oberschöneweide, Siemensstraße, 7"
+  },
+  "Südermarkt, Flensburg,  Südermarkt,  24937 Flensburg": {
+    "lat": 54.7825672,
+    "lon": 9.4363336,
+    "display_name": "Südermarkt, St. Nikolai, Altstadt, Flensburg, Schleswig-Holstein, 24937, Deutschland",
+    "formatted": "24937 Schleswig-Holstein, Flensburg, Altstadt, St. Nikolai, Südermarkt"
+  },
+  "10178 Berlin, Alexanderplatz 1": {
+    "lat": 52.5215059,
+    "lon": 13.4123809,
+    "display_name": "Berolinahaus, 1, Alexanderplatz, Mitte, Berlin, 10178, Deutschland",
+    "formatted": "10178 Berlin, Mitte, Alexanderplatz, 1, Berolinahaus"
+  },
+  "10178 Berlin, Alexanderplatz": {
+    "lat": 52.5219814,
+    "lon": 13.4136358,
+    "display_name": "Alexanderplatz, Stralauer Vorstadt, Mitte, Berlin, 10178, Deutschland",
+    "formatted": "10178 Berlin, Mitte, Stralauer Vorstadt, Alexanderplatz"
+  },
+  "Dresden, Dr.-Külz-Ring": {
+    "lat": 51.0474863,
+    "lon": 13.7402846,
+    "display_name": "Dr.-Külz-Ring, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Dr.-Külz-Ring"
+  },
+  "Erlangen, Hugenottenplatz": {
+    "lat": 49.5966663,
+    "lon": 11.0047652,
+    "display_name": "Hugenottenplatz, Innenstadt, Erlangen, Bayern, 91054, Deutschland",
+    "formatted": "91054 Bayern, Erlangen, Innenstadt, Hugenottenplatz"
+  },
+  "Dresden, Theaterplatz": {
+    "lat": 51.0538077,
+    "lon": 13.7356598,
+    "display_name": "Theaterplatz, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Theaterplatz"
+  },
+  "Oranienburg, Schlossplatz": {
+    "lat": 52.7541763,
+    "lon": 13.236836,
+    "display_name": "Schloßplatz, Altstadt, Oranienburg, Oberhavel, Brandenburg, 16515, Deutschland",
+    "formatted": "16515 Brandenburg, Oberhavel, Oranienburg, Altstadt, Schloßplatz"
+  },
+  "10961 Berlin, Blücherplatz 1": {
+    "lat": 52.4965672,
+    "lon": 13.3924936,
+    "display_name": "Amerika-Gedenkbibliothek, 1, Blücherplatz, Tempelhofer Vorstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10961, Deutschland",
+    "formatted": "10961 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Tempelhofer Vorstadt, Blücherplatz, 1, Amerika-Gedenkbibliothek"
+  },
+  "10179 Berlin, Klosterstr. 47": {
+    "lat": 52.5168,
+    "lon": 13.4115997,
+    "display_name": "Senatsverwaltung für Inneres und Sport, 47, Klosterstraße, Nikolaiviertel, Neu-Cölln, Mitte, Berlin, 10179, Deutschland",
+    "formatted": "10179 Berlin, Mitte, Neu-Cölln, Nikolaiviertel, Klosterstraße, 47, Senatsverwaltung für Inneres und Sport"
+  },
+  "10707 Berlin, Fehrbelliner Platz 1": {
+    "lat": 52.4912236,
+    "lon": 13.3150557,
+    "display_name": "1, Fehrbelliner Platz, Güntzelkiez, Wilmersdorf, Charlottenburg-Wilmersdorf, Berlin, 10707, Deutschland",
+    "formatted": "10707 Berlin, Charlottenburg-Wilmersdorf, Wilmersdorf, Güntzelkiez, Fehrbelliner Platz, 1"
+  },
+  "Marktplatz, Schorndorf,  Marktplatz,  73614 Schorndorf": {
+    "lat": 48.8057678,
+    "lon": 9.527303,
+    "display_name": "Stadtverwaltung Schorndorf, 1, Marktplatz, Erlensiedlung, Schorndorf, Vereinbarte Verwaltungsgemeinschaft der Stadt Schorndorf, Rems-Murr-Kreis, Baden-Württemberg, 73614, Deutschland",
+    "formatted": "73614 Baden-Württemberg, Rems-Murr-Kreis, Vereinbarte Verwaltungsgemeinschaft der Stadt Schorndorf, Schorndorf, Erlensiedlung, Marktplatz, 1, Stadtverwaltung Schorndorf"
+  },
+  "10999 Berlin, Fraenkelufer 10": {
+    "lat": 52.4960226,
+    "lon": 13.416844,
+    "display_name": "Synagoge Fraenkelufer, 10-12, Fraenkelufer, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10999, Deutschland",
+    "formatted": "10999 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Fraenkelufer, 10-12, Synagoge Fraenkelufer"
+  },
+  "Dresden": {
+    "lat": 51.0493286,
+    "lon": 13.7381437,
+    "display_name": "Dresden, Sachsen, Deutschland",
+    "formatted": "Sachsen, Dresden"
+  },
+  "13127 Berlin, Hugenottenplatz": {
+    "lat": 52.6069386,
+    "lon": 13.4206083,
+    "display_name": "Hugenottenplatz, Buchholz-West, Französisch Buchholz, Pankow, Berlin, 13127, Deutschland",
+    "formatted": "13127 Berlin, Pankow, Französisch Buchholz, Buchholz-West, Hugenottenplatz"
+  },
+  "10435 Berlin, Kollwitzplatz": {
+    "lat": 52.5360538,
+    "lon": 13.4170422,
+    "display_name": "Kollwitzplatz, Kollwitzkiez, Prenzlauer Berg, Pankow, Berlin, 10435, Deutschland",
+    "formatted": "10435 Berlin, Pankow, Prenzlauer Berg, Kollwitzkiez, Kollwitzplatz"
+  },
+  "13509 Berlin, Kehrwieder 1": {
+    "lat": 52.5933052,
+    "lon": 13.2992549,
+    "display_name": "1, Kehrwieder, Kleinhaussiedlung am Steinberg, Tegel, Reinickendorf, Berlin, 13509, Deutschland",
+    "formatted": "13509 Berlin, Reinickendorf, Tegel, Kleinhaussiedlung am Steinberg, Kehrwieder, 1"
+  },
+  "Husum, THEO Einkaufszentrum": {
+    "lat": 54.4854137,
+    "lon": 9.0537941,
+    "display_name": "Husum, Kreis Nordfriesland, Schleswig-Holstein, 25813, Deutschland",
+    "formatted": "25813 Schleswig-Holstein, Kreis Nordfriesland, Husum"
+  },
+  "12163 Berlin, Schloßstr. 10": {
+    "lat": 52.4619286,
+    "lon": 13.3249602,
+    "display_name": "Wellensteyn, 10, Schloßstraße, Steglitz, Steglitz-Zehlendorf, Berlin, 12163, Deutschland",
+    "formatted": "12163 Berlin, Steglitz-Zehlendorf, Steglitz, Schloßstraße, 10, Wellensteyn"
+  },
+  "Hitzacker, am Butt": {
+    "lat": 53.1513876,
+    "lon": 11.0467012,
+    "display_name": "De Grode Butt, Am Markt, Hitzacker (Elbe), Samtgemeinde Elbtalaue, Lüchow-Dannenberg, Niedersachsen, 29456, Deutschland",
+    "formatted": "29456 Niedersachsen, Lüchow-Dannenberg, Samtgemeinde Elbtalaue, Hitzacker (Elbe), Am Markt, De Grode Butt"
+  },
+  "Ahrensburg, Rondeel": {
+    "lat": 53.6730089,
+    "lon": 10.2390143,
+    "display_name": "Rondeel, Ahrensburg, Kreis Stormarn, Schleswig-Holstein, 22926, Deutschland",
+    "formatted": "22926 Schleswig-Holstein, Kreis Stormarn, Ahrensburg, Rondeel"
+  },
+  "Oldenburg, Lefferseck": {
+    "lat": 53.1419602,
+    "lon": 8.2136624,
+    "display_name": "Lefferseck, Burgstraßenviertel, Innenstadt, Oldenburg, Niedersachsen, 26122, Deutschland",
+    "formatted": "26122 Niedersachsen, Oldenburg, Innenstadt, Burgstraßenviertel, Lefferseck"
+  },
+  "Kaltenkirchen, Rossmann Parkplatz": {
+    "lat": 53.8371714,
+    "lon": 9.9614889,
+    "display_name": "Kaltenkirchen, Kreis Segeberg, Schleswig-Holstein, Deutschland",
+    "formatted": "Schleswig-Holstein, Kreis Segeberg, Kaltenkirchen"
+  },
+  "12681 Berlin, Helene-Weigel-Platz": {
+    "lat": 52.5287542,
+    "lon": 13.537467,
+    "display_name": "Helene-Weigel-Platz, Springpfuhl, Marzahn, Marzahn-Hellersdorf, Berlin, 12681, Deutschland",
+    "formatted": "12681 Berlin, Marzahn-Hellersdorf, Marzahn, Springpfuhl, Helene-Weigel-Platz"
+  },
+  "Dresden, Altmarkt": {
+    "lat": 51.0496269,
+    "lon": 13.7378803,
+    "display_name": "Altmarkt, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Altmarkt"
+  },
+  "10999 Berlin, Kottbusser Tor": {
+    "lat": 52.4989853,
+    "lon": 13.4183107,
+    "display_name": "Kottbusser Tor, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10999, Deutschland",
+    "formatted": "10999 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Kottbusser Tor"
+  },
+  "Innenstadt Detmold,   Detmold": {
+    "lat": 51.936284,
+    "lon": 8.8791526,
+    "display_name": "Detmold, Kreis Lippe, Nordrhein-Westfalen, Deutschland",
+    "formatted": "Nordrhein-Westfalen, Kreis Lippe, Detmold"
+  },
+  "10117 Berlin, Platz des 18. März": {
+    "lat": 52.5163704,
+    "lon": 13.3772972,
+    "display_name": "Platz des 18. März, Friedrich-Wilhelm-Stadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrich-Wilhelm-Stadt, Platz des 18. März"
+  },
+  "13086 Berlin, Antonplatz 1": {
+    "lat": 52.5487495,
+    "lon": 13.4506766,
+    "display_name": "Sky Apotheke am Antonplatz, 1, Langhansstraße, Munizipalviertel, Weißensee, Pankow, Berlin, 13086, Deutschland",
+    "formatted": "13086 Berlin, Pankow, Weißensee, Munizipalviertel, Langhansstraße, 1, Sky Apotheke am Antonplatz"
+  },
+  "Reutlingen, Echaz-Terasse": {
+    "lat": 48.4919508,
+    "lon": 9.2114144,
+    "display_name": "Reutlingen, Landkreis Reutlingen, Baden-Württemberg, Deutschland",
+    "formatted": "Baden-Württemberg, Landkreis Reutlingen, Reutlingen"
+  },
+  "13347 Berlin, Nettelbeckplatz": {
+    "lat": 52.5447135,
+    "lon": 13.3693714,
+    "display_name": "Nettelbeckplatz, Maxgärten, Wedding, Mitte, Berlin, 13347, Deutschland",
+    "formatted": "13347 Berlin, Mitte, Wedding, Maxgärten, Nettelbeckplatz"
+  },
+  "10559 Berlin, Alt-Moabit 116": {
+    "lat": 52.5238713,
+    "lon": 13.3534025,
+    "display_name": "116, Alt-Moabit, Moabit, Mitte, Berlin, 10559, Deutschland",
+    "formatted": "10559 Berlin, Mitte, Moabit, Alt-Moabit, 116"
+  },
+  "10963 Berlin, Luckenwalder Str.": {
+    "lat": 52.4997843,
+    "lon": 13.3771309,
+    "display_name": "Luckenwalder Straße, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10963, Deutschland",
+    "formatted": "10963 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luckenwalder Straße"
+  },
+  "Köln, Breslauer Platz": {
+    "lat": 50.9439777,
+    "lon": 6.9588908,
+    "display_name": "Breslauer Platz, Andreasviertel, Altstadt-Nord, Innenstadt, Köln, Nordrhein-Westfalen, 50667, Deutschland",
+    "formatted": "50667 Nordrhein-Westfalen, Köln, Innenstadt, Altstadt-Nord, Andreasviertel, Breslauer Platz"
+  },
+  "Weiden in der Oberpfalz, Bahnhof": {
+    "lat": 49.6721244,
+    "lon": 12.1558157,
+    "display_name": "Bahnhofstraße, Stockerhut, Weiden in der Oberpfalz, Bayern, 92637, Deutschland",
+    "formatted": "92637 Bayern, Weiden in der Oberpfalz, Stockerhut, Bahnhofstraße"
+  },
+  "Stuttgart, Schlossplatz": {
+    "lat": 48.7775803,
+    "lon": 9.1800535,
+    "display_name": "Schlossplatz, Rathaus, Stuttgart-Mitte, Stuttgart, Baden-Württemberg, 70173, Deutschland",
+    "formatted": "70173 Baden-Württemberg, Stuttgart, Stuttgart-Mitte, Rathaus, Schlossplatz"
+  },
+  "10117 Berlin, Pariser Platz 2": {
+    "lat": 52.515292,
+    "lon": 13.3781671,
+    "display_name": "Botschaft der Vereinigten Staaten von Amerika, 2, Pariser Platz, Dorotheenstadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Dorotheenstadt, Pariser Platz, 2, Botschaft der Vereinigten Staaten von Amerika"
+  },
+  "Dresden, Prager Straße": {
+    "lat": 51.0453496,
+    "lon": 13.7363623,
+    "display_name": "Prager Straße, Seevorstadt-Ost/Großer Garten, Seevorstadt, Altstadt, Dresden, Sachsen, 01069, Deutschland",
+    "formatted": "01069 Sachsen, Dresden, Altstadt, Seevorstadt, Seevorstadt-Ost/Großer Garten, Prager Straße"
+  },
+  "Innenstadt Lahr,  77933 Lahr": {
+    "lat": 49.9440252,
+    "lon": 6.2909576,
+    "display_name": "Lahr, Südeifel, Eifelkreis Bitburg-Prüm, Rheinland-Pfalz, Deutschland",
+    "formatted": "Rheinland-Pfalz, Eifelkreis Bitburg-Prüm, Südeifel, Lahr"
+  },
+  "Konstanz, Herosé-Park": {
+    "lat": 47.6696203,
+    "lon": 9.1735346,
+    "display_name": "Herose-Park, Rheinpromenade, Petershausen-West, Konstanz, Verwaltungsgemeinschaft Konstanz, Landkreis Konstanz, Baden-Württemberg, 78467, Deutschland",
+    "formatted": "78467 Baden-Württemberg, Landkreis Konstanz, Verwaltungsgemeinschaft Konstanz, Konstanz, Petershausen-West, Rheinpromenade, Herose-Park"
+  },
+  "10178 Berlin, Pariser Platz": {
+    "lat": 52.5163514,
+    "lon": 13.3786908,
+    "display_name": "Pariser Platz, Friedrich-Wilhelm-Stadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrich-Wilhelm-Stadt, Pariser Platz"
+  },
+  "10245 Berlin, Grünberger Str. 71": {
+    "lat": 52.5114516,
+    "lon": 13.4593628,
+    "display_name": "71, Grünberger Straße, Boxhagener Kiez, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10245, Deutschland",
+    "formatted": "10245 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Boxhagener Kiez, Grünberger Straße, 71"
+  },
+  "10247 Berlin, Scharnweberstr. 23": {
+    "lat": 52.513022,
+    "lon": 13.4652888,
+    "display_name": "Kita Scharnweberstraße, 23, Scharnweberstraße, Samariterviertel, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10247, Deutschland",
+    "formatted": "10247 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Samariterviertel, Scharnweberstraße, 23, Kita Scharnweberstraße"
+  },
+  "13129 Berlin, Alt-Blankenburg 12": {
+    "lat": 52.5924276,
+    "lon": 13.4522911,
+    "display_name": "12, Alt-Blankenburg, Blankenburg, Pankow, Berlin, 13129, Deutschland",
+    "formatted": "13129 Berlin, Pankow, Blankenburg, Alt-Blankenburg, 12"
+  },
+  "Berlin, Krugstege / Dorfkirche Blankenburg": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "13353 Berlin, Nordufer 20": {
+    "lat": 52.5395724,
+    "lon": 13.3468259,
+    "display_name": "Robert Koch-Institut, 20, Nordufer, Wedding, Mitte, Berlin, 13353, Deutschland",
+    "formatted": "13353 Berlin, Mitte, Wedding, Nordufer, 20, Robert Koch-Institut"
+  },
+  "10707 Berlin, Württembergische Str. 16": {
+    "lat": 52.4946207,
+    "lon": 13.3154459,
+    "display_name": "16, Württembergische Straße, Fasanenkiez, Wilmersdorf, Charlottenburg-Wilmersdorf, Berlin, 10707, Deutschland",
+    "formatted": "10707 Berlin, Charlottenburg-Wilmersdorf, Wilmersdorf, Fasanenkiez, Württembergische Straße, 16"
+  },
+  "Domplatte, Köln,  Domkloster 4,  50667 Köln": {
+    "lat": 50.938361,
+    "lon": 6.959974,
+    "display_name": "Köln, Nordrhein-Westfalen, Deutschland",
+    "formatted": "Nordrhein-Westfalen, Köln"
+  },
+  "10623 Berlin": {
+    "lat": 52.5094427,
+    "lon": 13.3257361,
+    "display_name": "10623, Charlottenburg, Charlottenburg-Wilmersdorf, Berlin, Deutschland",
+    "formatted": "Berlin, Charlottenburg-Wilmersdorf, Charlottenburg, 10623"
+  },
+  "Detmold, Marktplatz": {
+    "lat": 51.9352836,
+    "lon": 8.8789914,
+    "display_name": "Marktplatz, Detmold-Nord, Detmold, Kreis Lippe, Nordrhein-Westfalen, 32756, Deutschland",
+    "formatted": "32756 Nordrhein-Westfalen, Kreis Lippe, Detmold, Detmold-Nord, Marktplatz"
+  },
+  "Dresden, Alaunpark": {
+    "lat": 51.0708616,
+    "lon": 13.75621,
+    "display_name": "Alaunplatz, Äußere Neustadt, Neustadt, Dresden, Sachsen, 01099, Deutschland",
+    "formatted": "01099 Sachsen, Dresden, Neustadt, Äußere Neustadt, Alaunplatz"
+  },
+  "14169 Berlin, Teltower Damm": {
+    "lat": 52.4311411,
+    "lon": 13.2591769,
+    "display_name": "Teltower Damm, Zehlendorf, Steglitz-Zehlendorf, Berlin, Teltow, 14169, Deutschland",
+    "formatted": "14169 Teltow, Berlin, Steglitz-Zehlendorf, Zehlendorf, Teltower Damm"
+  },
+  "10557 Berlin, Willy-Brandt-Str. 1": {
+    "lat": 52.5201616,
+    "lon": 13.3691247,
+    "display_name": "Bundeskanzleramt, 1, Willy-Brandt-Straße, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Willy-Brandt-Straße, 1, Bundeskanzleramt"
+  },
+  "10785 Berlin, Potsdamer Platz": {
+    "lat": 52.5098014,
+    "lon": 13.3755898,
+    "display_name": "Potsdamer Platz, Tiergarten, Mitte, Berlin, 10785, Deutschland",
+    "formatted": "10785 Berlin, Mitte, Tiergarten, Potsdamer Platz"
+  },
+  "10435 Berlin, Schönhauser Allee 36": {
+    "lat": 52.5394242,
+    "lon": 13.4136682,
+    "display_name": "Maschinenhaus Kulturbrauerei, 36, Schönhauser Allee, Bremer Höhe, Prenzlauer Berg, Pankow, Berlin, 10435, Deutschland",
+    "formatted": "10435 Berlin, Pankow, Prenzlauer Berg, Bremer Höhe, Schönhauser Allee, 36, Maschinenhaus Kulturbrauerei"
+  },
+  "Dresden, Bautzner Landstraße": {
+    "lat": 51.061813,
+    "lon": 13.8461783,
+    "display_name": "Bautzner Landstraße, Neubühlau, Bühlau/Weißer Hirsch, Bühlau, Loschwitz, Dresden, Sachsen, 01324, Deutschland",
+    "formatted": "01324 Sachsen, Dresden, Loschwitz, Bühlau, Bühlau/Weißer Hirsch, Neubühlau, Bautzner Landstraße"
+  },
+  "Gelnhausen, Main-Kinzig-Forum": {
+    "lat": 50.2006702,
+    "lon": 9.1975377,
+    "display_name": "Main-Kinzig-Forum, 24, Barbarossastraße, Gelnhausen-Mitte, Gelnhausen, Main-Kinzig-Kreis, Hessen, 63571, Deutschland",
+    "formatted": "63571 Hessen, Main-Kinzig-Kreis, Gelnhausen, Gelnhausen-Mitte, Barbarossastraße, 24, Main-Kinzig-Forum"
+  },
+  "Gera, Theatervorplatz": {
+    "lat": 50.8765528,
+    "lon": 12.0832674,
+    "display_name": "Gera, Thüringen, Deutschland",
+    "formatted": "Thüringen, Gera"
+  },
+  "Görlitz, Platz der Friedlichen Revolution": {
+    "lat": 51.1521287,
+    "lon": 14.9872854,
+    "display_name": "Platz der Friedlichen Revolution, Innenstadt, Görlitz, Sachsen, 02826, Deutschland",
+    "formatted": "02826 Sachsen, Görlitz, Innenstadt, Platz der Friedlichen Revolution"
+  },
+  "Bassum, Rathaus": {
+    "lat": 52.848048,
+    "lon": 8.7272987,
+    "display_name": "Rathaus, Alte Poststraße, Bassum, Landkreis Diepholz, Niedersachsen, 27211, Deutschland",
+    "formatted": "27211 Niedersachsen, Landkreis Diepholz, Bassum, Alte Poststraße, Rathaus"
+  },
+  "Dresden, Kulturpalast": {
+    "lat": 51.0509304,
+    "lon": 13.7383838,
+    "display_name": "Kulturpalast, 2, Schloßstraße, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Schloßstraße, 2, Kulturpalast"
+  },
+  "Dresden, Wilsdruffer Straße": {
+    "lat": 51.0503785,
+    "lon": 13.7381427,
+    "display_name": "Wilsdruffer Straße, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, Wilsdruffer Straße"
+  },
+  "Dresden, Jorge-Gomondai-Platz": {
+    "lat": 51.0623117,
+    "lon": 13.7455972,
+    "display_name": "Jorge-Gomondai-Platz, Innere Neustadt, Neustadt, Dresden, Sachsen, 01097, Deutschland",
+    "formatted": "01097 Sachsen, Dresden, Neustadt, Innere Neustadt, Jorge-Gomondai-Platz"
+  },
+  "12555 Berlin, Luisenhain": {
+    "lat": 52.4459522,
+    "lon": 13.5733282,
+    "display_name": "Anlegestelle Köpenick / Luisenhain, Alt-Köpenick, Altstadt Köpenick, Köpenick, Treptow-Köpenick, Berlin, 12555, Deutschland",
+    "formatted": "12555 Berlin, Treptow-Köpenick, Köpenick, Altstadt Köpenick, Alt-Köpenick, Anlegestelle Köpenick / Luisenhain"
+  },
+  "12163 Berlin, Schloßstr. 33": {
+    "lat": 52.4578154,
+    "lon": 13.3199258,
+    "display_name": "33-36, Schloßstraße, Steglitz, Steglitz-Zehlendorf, Berlin, Teltow, 12163, Deutschland",
+    "formatted": "12163 Teltow, Berlin, Steglitz-Zehlendorf, Steglitz, Schloßstraße, 33-36"
+  },
+  "13086 Berlin, Gustav-Adolf-Str. 2": {
+    "lat": 52.5519035,
+    "lon": 13.4311632,
+    "display_name": "Theater im Delphi, 2, Gustav-Adolf-Straße, Weißensee, Pankow, Berlin, 13086, Deutschland",
+    "formatted": "13086 Berlin, Pankow, Weißensee, Gustav-Adolf-Straße, 2, Theater im Delphi"
+  },
+  "Marktplatz, Osterholz-Scharmbeck,  Marktplatz,  27711 Osterholz-Scharmbeck": {
+    "lat": 53.2280218,
+    "lon": 8.786968,
+    "display_name": "VHS Osterholz-Scharmbeck Hambergen Schwanewede, 10, Marktplatz, Scharmbeck, Osterholz-Scharmbeck, Landkreis Osterholz, Niedersachsen, 27711, Deutschland",
+    "formatted": "27711 Niedersachsen, Landkreis Osterholz, Osterholz-Scharmbeck, Scharmbeck, Marktplatz, 10, VHS Osterholz-Scharmbeck Hambergen Schwanewede"
+  },
+  "10117 Berlin, Adele-Schreiber-Krieger-S- tr. 1": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "Celle, Markt": {
+    "lat": 52.6243767,
+    "lon": 10.0816853,
+    "display_name": "Markt, Blumlage/Altstadt, Celle, Landkreis Celle, Niedersachsen, 29221, Deutschland",
+    "formatted": "29221 Niedersachsen, Landkreis Celle, Celle, Blumlage/Altstadt, Markt"
+  },
+  "Dresden, Stresemannplatz": {
+    "lat": 51.043428,
+    "lon": 13.7741524,
+    "display_name": "Stresemannplatz, Gartenstadt Striesen, Striesen-Süd, Striesen, Blasewitz, Dresden, Sachsen, 01309, Deutschland",
+    "formatted": "01309 Sachsen, Dresden, Blasewitz, Striesen, Striesen-Süd, Gartenstadt Striesen, Stresemannplatz"
+  },
+  "Martinsplatz, Bonn,  Martinsplatz,  53111 Bonn": {
+    "lat": 50.732874,
+    "lon": 7.1002024,
+    "display_name": "Gemeinschaftspraxis für Radiologie und Nuklearmedizin Standort Martinsplatz 2 a, 2a, Martinsplatz, Bonn-Zentrum, Stadtbezirk Bonn, Bonn, Nordrhein-Westfalen, 53113, Deutschland",
+    "formatted": "53113 Nordrhein-Westfalen, Bonn, Stadtbezirk Bonn, Bonn-Zentrum, Martinsplatz, 2a, Gemeinschaftspraxis für Radiologie und Nuklearmedizin Standort Martinsplatz 2 a"
+  },
+  "Hauptkirche Sankt Petri, Hamburg,  Bei der Petrikirche 2,  20095 Hamburg": {
+    "lat": 53.550341,
+    "lon": 10.000654,
+    "display_name": "Hamburg, Deutschland",
+    "formatted": "Hamburg"
+  },
+  "10243 Berlin, Warschauer Str. 16": {
+    "lat": 52.5122744,
+    "lon": 13.45209,
+    "display_name": "16, Warschauer Straße, Boxhagener Kiez, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10243, Deutschland",
+    "formatted": "10243 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Boxhagener Kiez, Warschauer Straße, 16"
+  },
+  "10997 Berlin, Görlitzer Str. 1": {
+    "lat": 52.4983938,
+    "lon": 13.4336934,
+    "display_name": "1, Görlitzer Straße, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10997, Deutschland",
+    "formatted": "10997 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Görlitzer Straße, 1"
+  },
+  "Dresden, Carolaplatz": {
+    "lat": 51.0574659,
+    "lon": 13.7463771,
+    "display_name": "Carolaplatz, Innere Neustadt, Neustadt, Dresden, Sachsen, 01097, Deutschland",
+    "formatted": "01097 Sachsen, Dresden, Neustadt, Innere Neustadt, Carolaplatz"
+  },
+  "13353 Berlin, Müllerstr. 147": {
+    "lat": 52.5468477,
+    "lon": 13.3576744,
+    "display_name": "147, Müllerstraße, Sprengelkiez, Wedding, Mitte, Berlin, 13353, Deutschland",
+    "formatted": "13353 Berlin, Mitte, Wedding, Sprengelkiez, Müllerstraße, 147"
+  },
+  "Dermbach, Feldatalhalle": {
+    "lat": 50.7794336,
+    "lon": 10.1318552,
+    "display_name": "Feldatalhalle, 1, Turnrasen, Stadtlengsfeld, Dermbach, Wartburgkreis, Thüringen, 36466, Deutschland",
+    "formatted": "36466 Thüringen, Wartburgkreis, Dermbach, Stadtlengsfeld, Turnrasen, 1, Feldatalhalle"
+  },
+  "Stachus, München,  Stachus,  80335 München": {
+    "lat": 48.1393935,
+    "lon": 11.5654882,
+    "display_name": "Stachus-Passagen, 25, Karlsplatz (Stachus), Kreuzviertel, 1.4, Altstadt-Lehel, München, Bayern, 80335, Deutschland",
+    "formatted": "80335 Bayern, München, Altstadt-Lehel, 1.4, Kreuzviertel, Karlsplatz (Stachus), 25, Stachus-Passagen"
+  },
+  "10999 Berlin, Fraenkelufer": {
+    "lat": 52.4962822,
+    "lon": 13.4189522,
+    "display_name": "Fraenkelufer, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10999, Deutschland",
+    "formatted": "10999 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Fraenkelufer"
+  },
+  "10787 Berlin, An d. Urania 17": {
+    "lat": 52.5012401,
+    "lon": 13.3480623,
+    "display_name": "Urania, 17, An der Urania, Nollendorfkiez, Schöneberg, Tempelhof-Schöneberg, Berlin, 10787, Deutschland",
+    "formatted": "10787 Berlin, Tempelhof-Schöneberg, Schöneberg, Nollendorfkiez, An der Urania, 17, Urania"
+  },
+  "Greding, Marktplatz": {
+    "lat": 49.0456501,
+    "lon": 11.3523229,
+    "display_name": "Marktplatz, Greding, Landkreis Roth, Bayern, 91171, Deutschland",
+    "formatted": "91171 Bayern, Landkreis Roth, Greding, Marktplatz"
+  },
+  "München, Professor-Huber-Platz": {
+    "lat": 48.1501663,
+    "lon": 11.5816924,
+    "display_name": "Professor-Huber-Platz, Schönfeldvorstadt, 3.8, Maxvorstadt, München, Bayern, 80539, Deutschland",
+    "formatted": "80539 Bayern, München, Maxvorstadt, 3.8, Schönfeldvorstadt, Professor-Huber-Platz"
+  },
+  "Marburg, Erwin-Piscator-Haus": {
+    "lat": 50.8105271,
+    "lon": 8.7750369,
+    "display_name": "Erwin-Piscator-Haus, 11, Biegenstraße, Biegenviertel, Campusviertel, Marburg, Landkreis Marburg-Biedenkopf, Hessen, 35037, Deutschland",
+    "formatted": "35037 Hessen, Landkreis Marburg-Biedenkopf, Marburg, Campusviertel, Biegenviertel, Biegenstraße, 11, Erwin-Piscator-Haus"
+  },
+  "10787 Berlin, Olof-Palme-Platz": {
+    "lat": 52.5056151,
+    "lon": 13.3405892,
+    "display_name": "Olof-Palme-Platz, Tiergarten, Mitte, Berlin, 10787, Deutschland",
+    "formatted": "10787 Berlin, Mitte, Tiergarten, Olof-Palme-Platz"
+  },
+  "10317 Berlin, An der Mole 1": {
+    "lat": 52.5011545,
+    "lon": 13.469536,
+    "display_name": "1, An der Mole, Rummelsburg, Lichtenberg, Berlin, 10317, Deutschland",
+    "formatted": "10317 Berlin, Lichtenberg, Rummelsburg, An der Mole, 1"
+  },
+  "10243 Berlin, Uber Platz 2": {
+    "lat": 52.5055537,
+    "lon": 13.4434752,
+    "display_name": "Uber Platz, Mediaspree, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10243, Deutschland",
+    "formatted": "10243 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Mediaspree, Uber Platz"
+  },
+  "10117 Berlin, Werderscher Markt 1": {
+    "lat": 52.5158853,
+    "lon": 13.3975006,
+    "display_name": "Friedrichswerdersche Kirche, 1, Werderscher Markt, Nikolaiviertel, Friedrichswerder, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichswerder, Nikolaiviertel, Werderscher Markt, 1, Friedrichswerdersche Kirche"
+  },
+  "Oderturm, Frankfurt/Oder,  Logenstr. 8,  15230 Frankfurt/Oder": {
+    "lat": 52.3412273,
+    "lon": 14.549452,
+    "display_name": "Frankfurt (Oder), Zeschdorf, Brandenburg, Deutschland",
+    "formatted": "Brandenburg, Zeschdorf, Frankfurt (Oder)"
+  },
+  "10623 Berlin, Steinplatz": {
+    "lat": 52.5084836,
+    "lon": 13.3256388,
+    "display_name": "Steinplatz, Charlottenburg, Charlottenburg-Wilmersdorf, Berlin, 10623, Deutschland",
+    "formatted": "10623 Berlin, Charlottenburg-Wilmersdorf, Charlottenburg, Steinplatz"
+  },
+  "Bölln, Bahnhof": {
+    "lat": 48.5462097,
+    "lon": 13.3577996,
+    "display_name": "Bölln, Altenmarkt, Fürstenzell, Landkreis Passau, Bayern, 94081, Deutschland",
+    "formatted": "94081 Bayern, Landkreis Passau, Fürstenzell, Altenmarkt, Bölln"
+  },
+  "12589 Berlin, Püttbergeweg 142": {
+    "lat": 52.4413856,
+    "lon": 13.709678,
+    "display_name": "142, Püttbergeweg, Rahnsdorf-Püttberge, Rahnsdorf, Treptow-Köpenick, Berlin, 12589, Deutschland",
+    "formatted": "12589 Berlin, Treptow-Köpenick, Rahnsdorf, Rahnsdorf-Püttberge, Püttbergeweg, 142"
+  },
+  "Hungen, Marktplatz": {
+    "lat": 50.4751792,
+    "lon": 8.9009757,
+    "display_name": "Marktplatz, Hungen, Landkreis Gießen, Hessen, 35410, Deutschland",
+    "formatted": "35410 Hessen, Landkreis Gießen, Hungen, Marktplatz"
+  },
+  "13597 Berlin, Markt 1": {
+    "lat": 52.5372575,
+    "lon": 13.2038801,
+    "display_name": "1;1A, Markt, Altstadt, Spandau, Berlin, 13597, Deutschland",
+    "formatted": "13597 Berlin, Spandau, Altstadt, Markt, 1;1A"
+  },
+  "Lütjenburg, Rathaus": {
+    "lat": 54.2925874,
+    "lon": 10.5880553,
+    "display_name": "Rathaus Lütjenburg, 7, Oberstraße, Lütjenburg, Kreis Plön, Schleswig-Holstein, 24321, Deutschland",
+    "formatted": "24321 Schleswig-Holstein, Kreis Plön, Lütjenburg, Oberstraße, 7, Rathaus Lütjenburg"
+  },
+  "13349 Berlin": {
+    "lat": 52.5572937,
+    "lon": 13.3494565,
+    "display_name": "13349, Wedding, Mitte, Berlin, Deutschland",
+    "formatted": "Berlin, Mitte, Wedding, 13349"
+  },
+  "13355 Berlin, Bernauer Str. 63": {
+    "lat": 52.5409538,
+    "lon": 13.4027196,
+    "display_name": "Schönwetter, 63, Bernauer Straße, Bremer Höhe, Gesundbrunnen, Pankow, Berlin, 13355, Deutschland",
+    "formatted": "13355 Berlin, Pankow, Gesundbrunnen, Bremer Höhe, Bernauer Straße, 63, Schönwetter"
+  },
+  "10117 Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "display_name": "Bebelplatz, Friedrichswerder, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichswerder, Bebelplatz"
+  },
+  "10117 Berlin, Luisenstr. 58": {
+    "lat": 52.525685,
+    "lon": 13.3792502,
+    "display_name": "58, Luisenstraße, Charitéviertel, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Charitéviertel, Luisenstraße, 58"
+  },
+  "10557 Berlin, Kirchstr. 6": {
+    "lat": 52.5233656,
+    "lon": 13.3488922,
+    "display_name": "6, Kirchstraße, Alt-Moabit, Moabit, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Moabit, Alt-Moabit, Kirchstraße, 6"
+  },
+  "12587 Berlin, Bölschestr. 126": {
+    "lat": 52.4486538,
+    "lon": 13.6241391,
+    "display_name": "126, Bölschestraße, Friedrichshagen, Treptow-Köpenick, Berlin, 12587, Deutschland",
+    "formatted": "12587 Berlin, Treptow-Köpenick, Friedrichshagen, Bölschestraße, 126"
+  },
+  "13086 Berlin, Amalienstr. 6": {
+    "lat": 52.5553077,
+    "lon": 13.4577282,
+    "display_name": "Grundschule am Weißensee, 6, Amalienstraße, Munizipalviertel, Weißensee, Pankow, Berlin, 13086, Deutschland",
+    "formatted": "13086 Berlin, Pankow, Weißensee, Munizipalviertel, Amalienstraße, 6, Grundschule am Weißensee"
+  },
+  "Bitterfeld-Wolfen, Ort tba": {
+    "lat": 51.6425032,
+    "lon": 12.3076334,
+    "display_name": "Bitterfeld-Wolfen, Anhalt-Bitterfeld, Sachsen-Anhalt, Deutschland",
+    "formatted": "Sachsen-Anhalt, Anhalt-Bitterfeld, Bitterfeld-Wolfen"
+  },
+  "12559 Berlin, Alt-Müggelheim 22": {
+    "lat": 52.4116669,
+    "lon": 13.6629606,
+    "display_name": "Dorfkirche, 22, Alt-Müggelheim, Müggelheim, Treptow-Köpenick, Berlin, 12559, Deutschland",
+    "formatted": "12559 Berlin, Treptow-Köpenick, Müggelheim, Alt-Müggelheim, 22, Dorfkirche"
+  },
+  "12587 Berlin, Bölschestr.": {
+    "lat": 52.447557,
+    "lon": 13.6242294,
+    "display_name": "Bölschestraße, Friedrichshagen, Treptow-Köpenick, Berlin, 12587, Deutschland",
+    "formatted": "12587 Berlin, Treptow-Köpenick, Friedrichshagen, Bölschestraße"
+  },
+  "10117 Berlin, Wilhelmstr. 54": {
+    "lat": 52.5138313,
+    "lon": 13.3828262,
+    "display_name": "Bundesministerium für Landwirtschaft, Ernährung und Heimat, 54, Wilhelmstraße, Friedrichstadt, Mitte, Berlin, 10117, Deutschland",
+    "formatted": "10117 Berlin, Mitte, Friedrichstadt, Wilhelmstraße, 54, Ernährung und Heimat, Bundesministerium für Landwirtschaft"
+  },
+  "10119 Berlin, Schönhauser Allee 10": {
+    "lat": 52.5303329,
+    "lon": 13.4115551,
+    "display_name": "10, Schönhauser Allee, Kollwitzkiez, Prenzlauer Berg, Pankow, Berlin, 10119, Deutschland",
+    "formatted": "10119 Berlin, Pankow, Prenzlauer Berg, Kollwitzkiez, Schönhauser Allee, 10"
+  },
+  "Kronenplatz, Bietigheim-Bissingen,  Kronenplatz,  74321 Bietigheim-Bissingen": {
+    "lat": 48.9493243,
+    "lon": 9.1364229,
+    "display_name": "Bietigheim-Bissingen, Vereinbarte Verwaltungsgemeinschaft der Stadt Bietigheim-Bissingen, Landkreis Ludwigsburg, Baden-Württemberg, 74321, Deutschland",
+    "formatted": "74321 Baden-Württemberg, Landkreis Ludwigsburg, Vereinbarte Verwaltungsgemeinschaft der Stadt Bietigheim-Bissingen, Bietigheim-Bissingen"
+  },
+  "10243 Berlin, Mildred-Harnack-Str. 10": {
+    "lat": 52.5069577,
+    "lon": 13.4409024,
+    "display_name": "10, Mildred-Harnack-Straße, Mediaspree, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10243, Deutschland",
+    "formatted": "10243 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Mediaspree, Mildred-Harnack-Straße, 10"
+  },
+  "10557 Berlin, Paul-Löbe-Allee/ Friedrich-Ebert-Platz 1": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "Marktplatz, Rottenburg,  Marktplatz,  72108 Rottenburg": {
+    "lat": 48.4768926,
+    "lon": 8.9331808,
+    "display_name": "Wirtschaft Tourismus Gastronomie - WTG Rottenburg am Neckar, 24, Marktplatz, Rottenburg, Rottenburg am Neckar, Verwaltungsgemeinschaft Rottenburg am Neckar, Landkreis Tübingen, Baden-Württemberg, 72108, Deutschland",
+    "formatted": "72108 Baden-Württemberg, Landkreis Tübingen, Verwaltungsgemeinschaft Rottenburg am Neckar, Rottenburg am Neckar, Rottenburg, Marktplatz, 24, Wirtschaft Tourismus Gastronomie - WTG Rottenburg am Neckar"
+  },
+  "Düren, Rathaus": {
+    "lat": 50.8032895,
+    "lon": 6.4820607,
+    "display_name": "Stadt Düren, 2-4, Kaiserplatz, Düren, Kreis Düren, Nordrhein-Westfalen, 52349, Deutschland",
+    "formatted": "52349 Nordrhein-Westfalen, Kreis Düren, Düren, Kaiserplatz, 2-4, Stadt Düren"
+  },
+  "Rindermarkt, München,  Rindermarkt,  80331 München": {
+    "lat": 48.1361687,
+    "lon": 11.5747511,
+    "display_name": "Rindermarkt, Angerviertel, 1.2, Altstadt-Lehel, München, Bayern, 80331, Deutschland",
+    "formatted": "80331 Bayern, München, Altstadt-Lehel, 1.2, Angerviertel, Rindermarkt"
+  },
+  "10249 Berlin, Ernst-Zinna-Weg 1": {
+    "lat": 52.5241818,
+    "lon": 13.4366097,
+    "display_name": "Ausstellung zur Berliner Märzrevolution, 1, Ernst-Zinna-Weg, Friedrichshain, Friedrichshain-Kreuzberg, Berlin, 10249, Deutschland",
+    "formatted": "10249 Berlin, Friedrichshain-Kreuzberg, Friedrichshain, Ernst-Zinna-Weg, 1, Ausstellung zur Berliner Märzrevolution"
+  },
+  "13355 Berlin, Bernauer Str.": {
+    "lat": 52.5347515,
+    "lon": 13.3892747,
+    "display_name": "Bernauer Straße, Ernst-Reuter-Siedlung, Gesundbrunnen, Mitte, Berlin, 13355, Deutschland",
+    "formatted": "13355 Berlin, Mitte, Gesundbrunnen, Ernst-Reuter-Siedlung, Bernauer Straße"
+  },
+  "Dresden, An der Kreuzkirche": {
+    "lat": 51.0486074,
+    "lon": 13.7397653,
+    "display_name": "An der Kreuzkirche, Innere Altstadt, Altstadt, Dresden, Sachsen, 01067, Deutschland",
+    "formatted": "01067 Sachsen, Dresden, Altstadt, Innere Altstadt, An der Kreuzkirche"
+  },
+  "10551 Berlin": {
+    "lat": 52.5309135,
+    "lon": 13.3364472,
+    "display_name": "10551, Moabit, Mitte, Berlin, Deutschland",
+    "formatted": "Berlin, Mitte, Moabit, 10551"
+  },
+  "Brandenburger Tor, Berlin,  Platz des 18. März,  10117 Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "10115 Berlin, Große Hamburger Str. 24": {
+    "lat": 52.5239906,
+    "lon": 13.3996782,
+    "display_name": "24, Große Hamburger Straße, Spandauer Vorstadt, Mitte, Berlin, 10115, Deutschland",
+    "formatted": "10115 Berlin, Mitte, Spandauer Vorstadt, Große Hamburger Straße, 24"
+  },
+  "12359 Berlin, Onkel-Herse-Str. 34": {
+    "lat": 52.4480175,
+    "lon": 13.4516528,
+    "display_name": "34, Onkel-Herse-Straße, Krugpfuhlsiedlung, Britz, Neukölln, Berlin, 12359, Deutschland",
+    "formatted": "12359 Berlin, Neukölln, Britz, Krugpfuhlsiedlung, Onkel-Herse-Straße, 34"
+  },
+  "10999 Berlin, Oranienplatz": {
+    "lat": 52.5022391,
+    "lon": 13.4157144,
+    "display_name": "Oranienplatz, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10999, Deutschland",
+    "formatted": "10999 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Oranienplatz"
+  },
+  "Hamburg, Jüthornstraße 49": {
+    "lat": 53.5669042,
+    "lon": 10.0752257,
+    "display_name": "49, Jüthornstraße, Marienthal, Wandsbek, Hamburg, 22043, Deutschland",
+    "formatted": "22043 Hamburg, Wandsbek, Marienthal, Jüthornstraße, 49"
+  },
+  "13465 Berlin, Zeltinger Platz 18": {
+    "lat": 52.6339841,
+    "lon": 13.2919957,
+    "display_name": "18, Zeltinger Platz, Frohnau, Reinickendorf, Berlin, 13465, Deutschland",
+    "formatted": "13465 Berlin, Reinickendorf, Frohnau, Zeltinger Platz, 18"
+  },
+  "Nordenham, Marktplatz": {
+    "lat": 53.4858593,
+    "lon": 8.4831263,
+    "display_name": "Marktplatz, Atens, Nordenham, Landkreis Wesermarsch, Niedersachsen, 26954, Deutschland",
+    "formatted": "26954 Niedersachsen, Landkreis Wesermarsch, Nordenham, Atens, Marktplatz"
+  },
+  "Fuchseck, Ellwangen,  73479 Ellwangen": {
+    "lat": 48.9611362,
+    "lon": 10.1307158,
+    "display_name": "Brunnen am Fuchseck, Schmiedstraße, Kernstadt Ellwangen, Rotenbach, Ellwangen (Jagst), Vereinbarte Verwaltungsgemeinschaft Ellwangen (Jagst), Ostalbkreis, Baden-Württemberg, 73479, Deutschland",
+    "formatted": "73479 Baden-Württemberg, Ostalbkreis, Vereinbarte Verwaltungsgemeinschaft Ellwangen (Jagst), Ellwangen (Jagst), Rotenbach, Kernstadt Ellwangen, Schmiedstraße, Brunnen am Fuchseck"
+  },
+  "10115 Berlin, Große Hamburger Str. 27": {
+    "lat": 52.5248933,
+    "lon": 13.3995471,
+    "display_name": "Jüdisches Gymnasium Moses Mendelssohn, 27, Große Hamburger Straße, Spandauer Vorstadt, Mitte, Berlin, 10115, Deutschland",
+    "formatted": "10115 Berlin, Mitte, Spandauer Vorstadt, Große Hamburger Straße, 27, Jüdisches Gymnasium Moses Mendelssohn"
+  },
+  "10557 Berlin, Willy-Brandt-Straße 1": {
+    "lat": 52.5201616,
+    "lon": 13.3691247,
+    "display_name": "Bundeskanzleramt, 1, Willy-Brandt-Straße, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Willy-Brandt-Straße, 1, Bundeskanzleramt"
+  },
+  "12587 Berlin, Bölschestr. 100": {
+    "lat": 52.4523921,
+    "lon": 13.624615,
+    "display_name": "100, Bölschestraße, Friedrichshagen, Treptow-Köpenick, Berlin, 12587, Deutschland",
+    "formatted": "12587 Berlin, Treptow-Köpenick, Friedrichshagen, Bölschestraße, 100"
+  },
+  "12163 Berlin, Schloßstr.": {
+    "lat": 52.461481,
+    "lon": 13.3250946,
+    "display_name": "Schloßstraße, Joachim-Tiburtius-Brücke, Steglitz, Steglitz-Zehlendorf, Berlin, 12163, Deutschland",
+    "formatted": "12163 Berlin, Steglitz-Zehlendorf, Steglitz, Joachim-Tiburtius-Brücke, Schloßstraße"
+  },
+  "10551 Berlin, Bremer Str.": {
+    "lat": 52.5285963,
+    "lon": 13.3381497,
+    "display_name": "Bremer Straße, Alt-Moabit, Moabit, Mitte, Berlin, 10551, Deutschland",
+    "formatted": "10551 Berlin, Mitte, Moabit, Alt-Moabit, Bremer Straße"
+  },
+  "Karlsplatz, Stuttgart,  Karlsplatz,  70173 Stuttgart": {
+    "lat": 48.7765007,
+    "lon": 9.1808137,
+    "display_name": "Flohmarkt Karlsplatz, Karlsplatz, Rathaus, Stuttgart-Mitte, Stuttgart, Baden-Württemberg, 70173, Deutschland",
+    "formatted": "70173 Baden-Württemberg, Stuttgart, Stuttgart-Mitte, Rathaus, Karlsplatz, Flohmarkt Karlsplatz"
+  },
+  "Ev. Kirche \"Zum Guten Hirten\" Altötting,  84503 Altötting": {
+    "lat": 48.2268085,
+    "lon": 12.6757914,
+    "display_name": "Altötting, Landkreis Altötting, Bayern, 84503, Deutschland",
+    "formatted": "84503 Bayern, Landkreis Altötting, Altötting"
+  },
+  "Achern, Am Markt": {
+    "lat": 48.6279252,
+    "lon": 8.071274,
+    "display_name": "Am Markt, Achern (Kernstadt), Oberachern, Achern, Verwaltungsgemeinschaft Achern, Ortenaukreis, Baden-Württemberg, 77855, Deutschland",
+    "formatted": "77855 Baden-Württemberg, Ortenaukreis, Verwaltungsgemeinschaft Achern, Achern, Oberachern, Achern (Kernstadt), Am Markt"
+  },
+  "10178 Berlin, Karl-Liebknecht-Str. 1": {
+    "lat": 52.51944,
+    "lon": 13.4022381,
+    "display_name": "DDR-Museum, 1, Karl-Liebknecht-Straße, Nikolaiviertel, Neu-Cölln, Mitte, Berlin, 10178, Deutschland",
+    "formatted": "10178 Berlin, Mitte, Neu-Cölln, Nikolaiviertel, Karl-Liebknecht-Straße, 1, DDR-Museum"
+  },
+  "10117 Berlin": {
+    "lat": 52.5175184,
+    "lon": 13.3877686,
+    "display_name": "10117, Mitte, Berlin, Deutschland",
+    "formatted": "Berlin, Mitte, 10117"
+  },
+  "10557 Berlin, Platz der Republik": {
+    "lat": 52.5186753,
+    "lon": 13.3731249,
+    "display_name": "Platz der Republik, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Platz der Republik"
+  },
+  "Innenstadt Horb,   Horb": {
+    "lat": 48.4447943,
+    "lon": 8.6914794,
+    "display_name": "Horb am Neckar, Verwaltungsgemeinschaft Horb am Neckar, Landkreis Freudenstadt, Baden-Württemberg, Deutschland",
+    "formatted": "Baden-Württemberg, Landkreis Freudenstadt, Verwaltungsgemeinschaft Horb am Neckar, Horb am Neckar"
+  },
+  "12623 Berlin, Ullrichplatz": {
+    "lat": 52.4796249,
+    "lon": 13.604299,
+    "display_name": "Ullrichplatz, Kiekemal, Mahlsdorf, Marzahn-Hellersdorf, Berlin, 12623, Deutschland",
+    "formatted": "12623 Berlin, Marzahn-Hellersdorf, Mahlsdorf, Kiekemal, Ullrichplatz"
+  },
+  "13437 Berlin, Eichborndamm": {
+    "lat": 52.5776294,
+    "lon": 13.3166204,
+    "display_name": "Eichborndamm, Humannstraße, Reinickendorf, Berlin, 13403, Deutschland",
+    "formatted": "13403 Berlin, Reinickendorf, Humannstraße, Eichborndamm"
+  },
+  "14055 Berlin, Messedamm 26": {
+    "lat": 52.5001203,
+    "lon": 13.2707936,
+    "display_name": "CityCube Berlin, 26, Messedamm, Westend, Charlottenburg-Wilmersdorf, Berlin, 14055, Deutschland",
+    "formatted": "14055 Berlin, Charlottenburg-Wilmersdorf, Westend, Messedamm, 26, CityCube Berlin"
+  },
+  "10963 Berlin, Möckernstr. 10": {
+    "lat": 52.5016098,
+    "lon": 13.381181,
+    "display_name": "Tempodrom, 10, Möckernstraße, Zeitungsviertel, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10963, Deutschland",
+    "formatted": "10963 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Zeitungsviertel, Möckernstraße, 10, Tempodrom"
+  },
+  "Gärtnerplatz, München,  Gärtnerplatz,  80469 München": {
+    "lat": 48.1315021,
+    "lon": 11.575793,
+    "display_name": "Gärtnerplatz, 2.1, Ludwigsvorstadt-Isarvorstadt, München, Bayern, 80469, Deutschland",
+    "formatted": "80469 Bayern, München, Ludwigsvorstadt-Isarvorstadt, 2.1, Gärtnerplatz"
+  },
+  "12437 Berlin, Baumschulenstr. 79": {
+    "lat": 52.46435,
+    "lon": 13.4852866,
+    "display_name": "79, Baumschulenstraße, Baumschulenweg, Treptow-Köpenick, Berlin, 12437, Deutschland",
+    "formatted": "12437 Berlin, Treptow-Köpenick, Baumschulenweg, Baumschulenstraße, 79"
+  },
+  "10559 Berlin, Turmstr. 91": {
+    "lat": 52.5259742,
+    "lon": 13.3540779,
+    "display_name": "Landgericht Berlin Dienststelle Moabit, 91, Turmstraße, Moabit, Mitte, Berlin, 10559, Deutschland",
+    "formatted": "10559 Berlin, Mitte, Moabit, Turmstraße, 91, Landgericht Berlin Dienststelle Moabit"
+  },
+  "10179 Berlin, Märkisches Ufer 54": {
+    "lat": 52.5136105,
+    "lon": 13.4168021,
+    "display_name": "Botschaft der Volksrepublik China, 54, Märkisches Ufer, Luisenstadt, Mitte, Berlin, 10179, Deutschland",
+    "formatted": "10179 Berlin, Mitte, Luisenstadt, Märkisches Ufer, 54, Botschaft der Volksrepublik China"
+  },
+  "10551 Berlin, Siemensstr. 20": {
+    "lat": 52.5323911,
+    "lon": 13.3356627,
+    "display_name": "Theodor-Heuss-Gemeinschaftsschule (Grundstufe), 20, Siemensstraße, Beusselkiez, Moabit, Mitte, Berlin, 10551, Deutschland",
+    "formatted": "10551 Berlin, Mitte, Moabit, Beusselkiez, Siemensstraße, 20, Theodor-Heuss-Gemeinschaftsschule (Grundstufe)"
+  },
+  "Bühl, Rathausplatz": {
+    "lat": 48.4828583,
+    "lon": 8.9969185,
+    "display_name": "Bühler Rathausplatz, Bühl, Tübingen, Landkreis Tübingen, Baden-Württemberg, 72072, Deutschland",
+    "formatted": "72072 Baden-Württemberg, Landkreis Tübingen, Tübingen, Bühl, Bühler Rathausplatz"
+  },
+  "10365 Berlin, Schulze-Boysen-Str. 12": {
+    "lat": 52.5108832,
+    "lon": 13.4807497,
+    "display_name": "Mildred-Harnack-Schule, 12, Schulze-Boysen-Straße, Frankfurter Allee Süd, Lichtenberg, Berlin, 10365, Deutschland",
+    "formatted": "10365 Berlin, Lichtenberg, Frankfurter Allee Süd, Schulze-Boysen-Straße, 12, Mildred-Harnack-Schule"
+  },
+  "10785 Berlin, Straße des 17. Juni 31": {
+    "lat": 52.5142737,
+    "lon": 13.3641638,
+    "display_name": "Straßen- und Grünflächenamt Mitte, Fachbereich Grünflächen, 31, Straße des 17. Juni, Tiergarten, Mitte, Berlin, 10785, Deutschland",
+    "formatted": "10785 Berlin, Mitte, Tiergarten, Straße des 17. Juni, 31, Fachbereich Grünflächen, Straßen- und Grünflächenamt Mitte"
+  },
+  "10365 Berlin, Gudrunstr.": {
+    "lat": 52.5123734,
+    "lon": 13.5000536,
+    "display_name": "Gudrunstraße, Lichtenberg, Berlin, 10365, Deutschland",
+    "formatted": "10365 Berlin, Lichtenberg, Gudrunstraße"
+  },
+  "12351 Berlin, Rudower Str.": {
+    "lat": 52.4379902,
+    "lon": 13.4624036,
+    "display_name": "Rudower Straße, Buckow 2, Buckow, Neukölln, Berlin, 12351, Deutschland",
+    "formatted": "12351 Berlin, Neukölln, Buckow, Buckow 2, Rudower Straße"
+  },
+  "12435 Berlin, Treptower Park": {
+    "lat": 52.4938491,
+    "lon": 13.4618296,
+    "display_name": "Treptower Park, Bernhard-Langwaldt-Weg, Alt-Treptow, Treptow-Köpenick, Berlin, 12435, Deutschland",
+    "formatted": "12435 Berlin, Treptow-Köpenick, Alt-Treptow, Bernhard-Langwaldt-Weg, Treptower Park"
+  },
+  "10997 Berlin, Mariannenplatz": {
+    "lat": 52.5035914,
+    "lon": 13.425348,
+    "display_name": "Mariannenplatz, Luisenstadt, Kreuzberg, Friedrichshain-Kreuzberg, Berlin, 10997, Deutschland",
+    "formatted": "10997 Berlin, Friedrichshain-Kreuzberg, Kreuzberg, Luisenstadt, Mariannenplatz"
+  },
+  "10557 Berlin, Straße des 17. Juni": {
+    "lat": 52.5156697,
+    "lon": 13.3673785,
+    "display_name": "Straße des 17. Juni, Tiergarten, Mitte, Berlin, 10557, Deutschland",
+    "formatted": "10557 Berlin, Mitte, Tiergarten, Straße des 17. Juni"
+  },
+  "13125 Berlin, Wiltbergstr.": {
+    "lat": 52.6435714,
+    "lon": 13.4800989,
+    "display_name": "Wiltbergstraße, Ludwig-Hoffmann-Quartier, Buch, Pankow, Berlin, 13125, Deutschland",
+    "formatted": "13125 Berlin, Pankow, Buch, Ludwig-Hoffmann-Quartier, Wiltbergstraße"
+  },
+  "10437 Berlin, Mauerpark": {
+    "lat": 52.5408589,
+    "lon": 13.4048998,
+    "display_name": "Mauerpark (Friedrich-Jahn-Sportpark), Eberswalder Straße, Gleimviertel, Prenzlauer Berg, Pankow, Berlin, 10437, Deutschland",
+    "formatted": "10437 Berlin, Pankow, Prenzlauer Berg, Gleimviertel, Eberswalder Straße, Mauerpark (Friedrich-Jahn-Sportpark)"
+  },
+  "10785 Berlin, Straße des 17. Juni": {
+    "lat": 52.5157677,
+    "lon": 13.3707034,
+    "display_name": "Straße des 17. Juni, Tiergarten, Mitte, Berlin, 10785, Deutschland",
+    "formatted": "10785 Berlin, Mitte, Tiergarten, Straße des 17. Juni"
+  },
+  "10719 Berlin, Joachimsthaler Platz": {
+    "lat": 52.5033203,
+    "lon": 13.3307652,
+    "display_name": "Grünfeld-Ecke, City West, Charlottenburg, Charlottenburg-Wilmersdorf, Berlin, 10719, Deutschland",
+    "formatted": "10719 Berlin, Charlottenburg-Wilmersdorf, Charlottenburg, City West, Grünfeld-Ecke"
+  },
+  "Bremen, Lucie-Flechtmann-Platz": {
+    "lat": 53.0740986,
+    "lon": 8.7969563,
+    "display_name": "Lucie-Flechtmann-Platz, Alte Neustadt, Neustadt, Bremen-Süd, Stadtgebiet Bremen, Bremen, 28199, Deutschland",
+    "formatted": "28199 Bremen, Stadtgebiet Bremen, Bremen-Süd, Neustadt, Alte Neustadt, Lucie-Flechtmann-Platz"
+  },
+  "Uelzen, Herzogenplatz": {
+    "lat": 52.9630205,
+    "lon": 10.5592759,
+    "display_name": "Herzogenplatz, Veerßen, Uelzen, Niedersachsen, 29525, Deutschland",
+    "formatted": "29525 Niedersachsen, Uelzen, Veerßen, Herzogenplatz"
+  },
+  "10117 Berlin, Friedrichstr. 205/ Zimmerstr.": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "display_name": "Berlin, Deutschland",
+    "formatted": "Berlin"
+  },
+  "10178 Berlin, Alexanderplatz 9": {
+    "lat": 52.5224174,
+    "lon": 13.4116775,
+    "display_name": "Galeria, 9, Alexanderplatz, Stralauer Vorstadt, Mitte, Berlin, 10178, Deutschland",
+    "formatted": "10178 Berlin, Mitte, Stralauer Vorstadt, Alexanderplatz, 9, Galeria"
+  },
+  "Halle (Saale), Halle Messe": {
+    "lat": 51.4547464,
+    "lon": 12.0280095,
+    "display_name": "Halle Messe, Bahnstraße, Kanena, Kanena/Bruckdorf, Kanena, Halle (Saale), Sachsen-Anhalt, 06116, Deutschland",
+    "formatted": "06116 Sachsen-Anhalt, Halle (Saale), Kanena, Kanena/Bruckdorf, Kanena, Bahnstraße, Halle Messe"
+  },
+  "Köln, Rudolfplatz": {
+    "lat": 50.9363122,
+    "lon": 6.9396547,
+    "display_name": "Rudolfplatz, Mauritiusviertel, Altstadt-Süd, Innenstadt, Köln, Nordrhein-Westfalen, 50674, Deutschland",
+    "formatted": "50674 Nordrhein-Westfalen, Köln, Innenstadt, Altstadt-Süd, Mauritiusviertel, Rudolfplatz"
+  },
+  "10789 Berlin, Wittenbergplatz": {
+    "lat": 52.5017976,
+    "lon": 13.3430005,
+    "display_name": "Wittenbergplatz, Nollendorfkiez, Schöneberg, Tempelhof-Schöneberg, Berlin, 10789, Deutschland",
+    "formatted": "10789 Berlin, Tempelhof-Schöneberg, Schöneberg, Nollendorfkiez, Wittenbergplatz"
+  },
+  "10551 Berlin, Wiclefstr. 32": {
+    "lat": 52.5313623,
+    "lon": 13.3296189,
+    "display_name": "32, Wiclefstraße, Beusselkiez, Moabit, Mitte, Berlin, 10551, Deutschland",
+    "formatted": "10551 Berlin, Mitte, Moabit, Beusselkiez, Wiclefstraße, 32"
+  }
+}

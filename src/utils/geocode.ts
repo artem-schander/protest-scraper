@@ -14,7 +14,7 @@ export interface GeocodeCache {
   [city: string]: GeoCoordinates;
 }
 
-const GEOCODE_CACHE_FILE = path.join(process.cwd(), 'geocode-cache.json');
+const GEOCODE_CACHE_FILE = path.join(process.cwd(), 'cache/geocode.json');
 
 function loadGeocodeCache(): GeocodeCache {
   try {
