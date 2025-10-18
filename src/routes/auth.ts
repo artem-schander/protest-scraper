@@ -46,15 +46,21 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
 let apple: Apple | null = null;
 if (process.env.APPLE_CLIENT_ID && process.env.APPLE_TEAM_ID && process.env.APPLE_KEY_ID && process.env.APPLE_PRIVATE_KEY_PATH) {
   try {
-    const privateKey = readFileSync(process.env.APPLE_PRIVATE_KEY_PATH, 'utf-8');
-    const privateKeyBuffer = new TextEncoder().encode(privateKey);
-    apple = new Apple(
-      process.env.APPLE_CLIENT_ID,
-      process.env.APPLE_TEAM_ID,
-      process.env.APPLE_KEY_ID,
-      privateKeyBuffer,
-      process.env.APPLE_REDIRECT_URI || 'http://localhost:3000/api/auth/apple/callback'
-    );
+    // Skip if using placeholder path from .env.example
+    if (process.env.APPLE_PRIVATE_KEY_PATH.includes('path/to/')) {
+      console.log('Apple OAuth: Skipping initialization (placeholder path detected)');
+    } else {
+      const privateKey = readFileSync(process.env.APPLE_PRIVATE_KEY_PATH, 'utf-8');
+      const privateKeyBuffer = new TextEncoder().encode(privateKey);
+      apple = new Apple(
+        process.env.APPLE_CLIENT_ID,
+        process.env.APPLE_TEAM_ID,
+        process.env.APPLE_KEY_ID,
+        privateKeyBuffer,
+        process.env.APPLE_REDIRECT_URI || 'http://localhost:3000/api/auth/apple/callback'
+      );
+      console.log('✅ Apple OAuth initialized');
+    }
   } catch (error) {
     console.error('Failed to initialize Apple OAuth:', error);
   }

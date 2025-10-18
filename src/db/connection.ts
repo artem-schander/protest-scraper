@@ -44,7 +44,19 @@ async function initializeIndexes(database: Db): Promise<void> {
     await protests.createIndex({ geoLocation: '2dsphere' }, { sparse: true });
 
     // TTL index on start field: automatically delete protests 2 weeks (14 days) after they took place
-    // This also serves as a regular index on the start field for queries
+    // Drop existing start_1 index if it exists without TTL option
+    try {
+      const indexes = await protests.indexes();
+      const startIndex = indexes.find(idx => idx.name === 'start_1');
+      if (startIndex && !startIndex.expireAfterSeconds) {
+        console.log('Dropping old start_1 index to recreate with TTL...');
+        await protests.dropIndex('start_1');
+      }
+    } catch (e) {
+      // Index doesn't exist, that's fine
+    }
+
+    // Create or update TTL index
     await protests.createIndex(
       { start: 1 },
       { expireAfterSeconds: 14 * 24 * 60 * 60 } // 14 days in seconds
