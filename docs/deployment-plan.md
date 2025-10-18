@@ -1,6 +1,6 @@
-# Protest Service Hosting & Deployment Plan
+# Protest Listing Service Hosting & Deployment Plan
 
-This document outlines hosting and deployment options for the Protest Service API and scraper, along with recommended infrastructure, automation, and operational practices.
+This document outlines hosting and deployment options for the Protest Scraper API and scraper, along with recommended infrastructure, automation, and operational practices.
 
 ## 1. Application Overview
 
@@ -120,4 +120,4 @@ Use `docker-compose.yml` on a VM (e.g., Hetzner, DigitalOcean droplet).
 
 ---
 
-This plan provides a pragmatic path to production for the Protest Service while keeping operations maintainable and secure.
+This plan provides a pragmatic path to production for the Protest Listing Service while keeping operations maintainable and secure.

@@ -8,7 +8,7 @@ export async function connectToDatabase(): Promise<Db> {
     return db;
   }
 
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/protest-service';
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/protest-scraper';
 
   try {
     client = new MongoClient(uri);
@@ -35,7 +35,6 @@ async function initializeIndexes(database: Db): Promise<void> {
 
     await protests.createIndex({ city: 1 });
     await protests.createIndex({ country: 1 });
-    await protests.createIndex({ start: 1 });
     await protests.createIndex({ verified: 1 });
     await protests.createIndex({ source: 1 });
     await protests.createIndex({ language: 1 });
@@ -43,6 +42,13 @@ async function initializeIndexes(database: Db): Promise<void> {
 
     // Geospatial index for location-based queries (GeoJSON format)
     await protests.createIndex({ geoLocation: '2dsphere' }, { sparse: true });
+
+    // TTL index on start field: automatically delete protests 2 weeks (14 days) after they took place
+    // This also serves as a regular index on the start field for queries
+    await protests.createIndex(
+      { start: 1 },
+      { expireAfterSeconds: 14 * 24 * 60 * 60 } // 14 days in seconds
+    );
 
     // Users collection indexes
     const users = database.collection('users');

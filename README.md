@@ -1,6 +1,6 @@
-# 🪧 Protest Service API
+# 🪧 Protest Scraper API
 
-**A collaborative open-source service to collect and share upcoming protests and demonstrations.**
+**A collaborative open-source listing service to collect and share upcoming protests and demonstrations.**
 Built with **Node.js**, **Express**, and **MongoDB**, designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
 
 > **✅ Fully Functional**
@@ -15,6 +15,7 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 - JWT-based authentication for registered users
 - Role system (`USER`, `MODERATOR`, `ADMIN`)
 - Admin & Moderator routes for verifying, editing, or deleting entries
+- **Automatic cleanup** of old protests (deleted 2 weeks after event date)
 - Integration-ready with automated scrapers (import endpoint)
 - Dockerized setup with MongoDB
 - Comprehensive test suite with Vitest
@@ -41,8 +42,8 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 ### Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/protest-service.git
-cd protest-service
+git clone https://github.com/artem-schander/protest-scraper.git
+cd protest-scraper
 npm install
 cp .env.example .env
 # Edit .env and set MONGODB_URI and JWT_SECRET
@@ -74,6 +75,11 @@ This command:
 - Events edited via API (PUT) are marked as `manuallyEdited: true` and won't be overwritten
 - Events deleted via API (DELETE) are soft-deleted (`deleted: true`) and won't be re-imported
 - This prevents losing manual corrections when the scraper runs again
+
+**Automatic Cleanup:** Old protests are automatically deleted from the database:
+- MongoDB TTL index removes protests **2 weeks after the event date**
+- Keeps database size manageable without manual maintenance
+- Background cleanup runs automatically every 60 seconds
 
 **Legacy File Export:** The original scraper (`npm run scrape`) still creates CSV/JSON/ICS files if needed. See [Scraper Standalone Usage](#-scraper-standalone-usage) below.
 
@@ -505,7 +511,7 @@ EMAIL_PORT=587
 EMAIL_SECURE=false
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
-EMAIL_FROM='"Protest Service" <noreply@protest-service.com>'
+EMAIL_FROM='"Protest Scraper" <noreply@protest-scraper.com>'
 ```
 
 **Alternative Email Providers:**
@@ -746,7 +752,8 @@ The scraper includes:
 - [x] Subscribable ICS calendar feeds with custom filters
 - [x] Geolocation search ("protests near me" feature)
 - [x] Automatic geocoding of city names to coordinates
-- [x] Comprehensive API test suite with 74+ passing tests
+- [x] **Automatic cleanup of old protests (TTL index - 2 weeks after event)**
+- [x] Comprehensive API test suite with 100 passing tests
 
 #### Deployment & DevOps
 - [x] Docker Compose setup with MongoDB

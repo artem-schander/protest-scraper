@@ -16,7 +16,7 @@ export function createApp(): Application {
   // Routes
   app.get('/', (_req, res) => {
     res.json({
-      message: 'Protest Service API',
+      message: 'Protest Listing Service API',
       version: '1.0.0',
       endpoints: {
         auth: {

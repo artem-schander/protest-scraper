@@ -557,7 +557,7 @@ describe('Protests API', () => {
           country: 'DE',
           language: 'de-DE',
           title: 'Climate Protest Berlin',
-          start: new Date('2025-10-15T14:00:00Z'),
+          start: new Date('2025-10-20T14:00:00Z'),
           end: null,
           location: 'Brandenburger Tor',
           geoLocation: {
@@ -596,7 +596,7 @@ describe('Protests API', () => {
           country: 'AT',
           language: 'de-AT',
           title: 'Democracy Rally Vienna',
-          start: new Date('2025-10-20T16:00:00Z'),
+          start: new Date('2025-10-19T16:00:00Z'),
           end: null,
           location: 'Stephansplatz',
           geoLocation: {
@@ -725,7 +725,7 @@ describe('Protests API', () => {
         city: 'Test City',
         country: 'DE',
         title: 'Protest (Demo) for Climate [Action]',
-        start: new Date('2025-10-18T14:00:00Z'),
+        start: new Date('2025-10-21T14:00:00Z'),
         end: null,
         location: 'Test Location',
         url: 'https://example.com/special',
@@ -771,7 +771,7 @@ describe('Protests API', () => {
       const res = await request(app).get('/api/protests?endDate=2025-10-20');
 
       expect(res.status).toBe(200);
-      expect(res.body.protests.length).toBe(2); // Berlin (Oct 15) and Vienna (Oct 20)
+      expect(res.body.protests.length).toBe(2); // Berlin (Oct 20) and Vienna (Oct 19)
       expect(res.body.protests.every((p: any) => {
         const start = new Date(p.start);
         return start <= new Date('2025-10-20T23:59:59.999Z');
@@ -1132,7 +1132,7 @@ describe('Export API', () => {
           country: 'DE',
           language: 'de-DE',
           title: 'Berlin Climate Protest',
-          start: new Date('2025-10-15T14:00:00Z'),
+          start: new Date('2025-10-20T14:00:00Z'),
           end: null,
           location: 'Brandenburger Tor',
           geoLocation: {
@@ -1166,7 +1166,7 @@ describe('Export API', () => {
           country: 'AT',
           language: 'de-AT',
           title: 'Vienna Democracy Rally',
-          start: new Date('2025-10-20T16:00:00Z'),
+          start: new Date('2025-10-19T16:00:00Z'),
           end: null,
           location: 'Stephansplatz',
           url: 'https://example.com/vienna1',

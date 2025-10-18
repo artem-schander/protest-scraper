@@ -45,10 +45,10 @@ export async function sendVerificationEmail(
   const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Protest Service" <noreply@protest-service.com>',
+    from: process.env.EMAIL_FROM || '"Protest Scraper" <noreply@protest-scraper.com>',
     to,
     subject: 'Verify your email address',
-    text: `Welcome to Protest Service!
+    text: `Welcome to Protest Listing Service!
 
 Please verify your email address by clicking the link below:
 
@@ -59,7 +59,7 @@ This link will expire in 24 hours.
 If you didn't create an account, please ignore this email.
 
 Best regards,
-Protest Service Team`,
+Protest Listing Service Team`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -82,7 +82,7 @@ Protest Service Team`,
         </head>
         <body>
           <div class="container">
-            <h2>Welcome to Protest Service!</h2>
+            <h2>Welcome to Protest Listing Service!</h2>
             <p>Thank you for registering. Please verify your email address to activate your account.</p>
             <a href="${verificationUrl}" class="button">Verify Email Address</a>
             <p>Or copy and paste this link into your browser:</p>
@@ -90,7 +90,7 @@ Protest Service Team`,
             <p><strong>This link will expire in 24 hours.</strong></p>
             <div class="footer">
               <p>If you didn't create an account, please ignore this email.</p>
-              <p>&copy; 2025 Protest Service</p>
+              <p>&copy; 2025 Protest Listing Service</p>
             </div>
           </div>
         </body>
@@ -113,9 +113,9 @@ Protest Service Team`,
  */
 export async function sendWelcomeEmail(to: string): Promise<void> {
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Protest Service" <noreply@protest-service.com>',
+    from: process.env.EMAIL_FROM || '"Protest Listing Service" <noreply@protest-scraper.com>',
     to,
-    subject: 'Welcome to Protest Service!',
+    subject: 'Welcome to Protest Listing Service!',
     text: `Your email has been verified successfully!
 
 You can now:
@@ -123,10 +123,10 @@ You can now:
 - Export protest data in various formats
 - Subscribe to protest calendars
 
-Thank you for joining the Protest Service community.
+Thank you for joining the Protest Listing Service community.
 
 Best regards,
-Protest Service Team`,
+Protest Listing Service Team`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -141,7 +141,7 @@ Protest Service Team`,
         </head>
         <body>
           <div class="container">
-            <h2>Welcome to Protest Service!</h2>
+            <h2>Welcome to Protest Listing Service!</h2>
             <p>Your email has been verified successfully! 🎉</p>
             <p>You can now:</p>
             <ul>
@@ -149,9 +149,9 @@ Protest Service Team`,
               <li>Export protest data in various formats (CSV, JSON, ICS)</li>
               <li>Subscribe to protest calendars</li>
             </ul>
-            <p>Thank you for joining the Protest Service community.</p>
+            <p>Thank you for joining the Protest Listing Service community.</p>
             <div class="footer">
-              <p>&copy; 2025 Protest Service</p>
+              <p>&copy; 2025 Protest Listing Service</p>
             </div>
           </div>
         </body>

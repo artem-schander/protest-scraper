@@ -1,25 +1,26 @@
 services:
   mongodb:
     image: mongo:8
-    container_name: protest-service-mongodb
+    container_name: protest-scraper-mongodb
     ports:
       - 27017:27017
     environment:
-      MONGO_INITDB_DATABASE: protest-service
+      MONGO_INITDB_DATABASE: protest-scraper
     volumes:
       - mongodb_data:/data/db
     networks:
       - protest-network
+    restart: unless-stopped
 
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: protest-service-api
+    container_name: protest-scraper-api
     ports:
       - 3000:3000
     environment:
-      MONGODB_URI: mongodb://mongodb:27017/protest-service
+      MONGODB_URI: mongodb://mongodb:27017/protest-scraper
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-this-in-production}
       JWT_EXPIRES_IN: 7d
       PORT: 3000
