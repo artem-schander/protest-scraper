@@ -90,6 +90,7 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<
       end: protestData.end || null,
       language: protestData.language || null,
       location: protestData.location || null,
+      geoLocation: protestData.geoLocation || undefined,
       url: protestData.url || '',
       attendees: protestData.attendees || null,
       verified,

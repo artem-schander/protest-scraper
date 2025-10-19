@@ -37,6 +37,7 @@ export interface ProtestInput {
   end?: Date | null;
   language?: string | null; // e.g., "de-DE"
   location?: string | null;
+  geoLocation?: GeoLocation; // GeoJSON Point for geospatial queries
   url?: string;
   attendees?: number | null;
 }
