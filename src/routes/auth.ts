@@ -6,10 +6,23 @@ import { Google, Apple } from 'arctic';
 import { getDatabase } from '../db/connection.js';
 import { User, UserRole, UserLoginInput, UserRegistrationInput } from '../types/user.js';
 import { hashPassword, comparePassword } from '../utils/password.js';
-import { generateToken } from '../utils/jwt.js';
+import { generateToken, verifyRefreshToken } from '../utils/jwt.js';
 import { sendVerificationEmail, sendWelcomeEmail, isEmailConfigured } from '../services/email.js';
+import { authenticate, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
+
+// Helper function to set auth cookie
+function setAuthCookie(res: Response, token: string): void {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('auth-token', token, {
+    httpOnly: true, // Prevents JavaScript access (XSS protection)
+    secure: isProduction, // HTTPS only in production
+    sameSite: 'lax', // CSRF protection
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds (matches refresh period)
+    path: '/',
+  });
+}
 
 // Rate limiters for spam protection
 // In test environment, use shorter window to allow rate limit tests to work without interference
@@ -140,10 +153,20 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
       );
     }
 
+    // Generate JWT token and set cookie
+    const token = generateToken({
+      userId: result.insertedId.toString(),
+      email,
+      role: newUser.role,
+    });
+
+    setAuthCookie(res, token);
+
     res.status(201).json({
       message: isEmailConfigured()
         ? 'User registered successfully. Please check your email to verify your account.'
         : 'User registered successfully. Email verification is currently disabled.',
+      token, // Include token in response for backwards compatibility
       user: {
         id: result.insertedId.toString(),
         email,
@@ -204,9 +227,12 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
       role: user.role,
     });
 
+    // Set HTTP-only cookie
+    setAuthCookie(res, token);
+
     res.json({
       message: 'Login successful',
-      token,
+      token, // Include token in response for backwards compatibility
       user: {
         id: user._id!.toString(),
         email: user.email,
@@ -466,24 +492,17 @@ router.get('/google/callback', async (req: Request, res: Response): Promise<void
       role: user.role,
     });
 
-    // For development: return token in JSON
-    // For production: set as HTTP-only cookie and redirect to frontend
-    if (process.env.NODE_ENV === 'development') {
-      res.json({
-        message: 'Google login successful',
-        token,
-        user: {
-          id: user._id!.toString(),
-          email: user.email,
-          role: user.role,
-          emailVerified: user.emailVerified,
-        },
-      });
-    } else {
-      // Production: redirect to frontend with token in query or set cookie
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
-    }
+    // Set HTTP-only cookie
+    setAuthCookie(res, token);
+
+    // Redirect to frontend with user info in query string
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const userParam = encodeURIComponent(JSON.stringify({
+      id: user._id!.toString(),
+      email: user.email,
+      role: user.role,
+    }));
+    res.redirect(`${frontendUrl}/auth/callback?user=${userParam}`);
   } catch (error) {
     console.error('Google OAuth callback error:', error);
     res.status(500).json({ error: 'Google login failed' });
@@ -605,27 +624,92 @@ router.post('/apple/callback', async (req: Request, res: Response): Promise<void
       role: user.role,
     });
 
-    // For development: return token in JSON
-    // For production: set as HTTP-only cookie and redirect to frontend
-    if (process.env.NODE_ENV === 'development') {
-      res.json({
-        message: 'Apple login successful',
-        token,
-        user: {
-          id: user._id!.toString(),
-          email: user.email,
-          role: user.role,
-          emailVerified: user.emailVerified,
-        },
-      });
-    } else {
-      // Production: redirect to frontend with token in query or set cookie
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
-      res.redirect(`${frontendUrl}/auth/callback?token=${token}`);
-    }
+    // Set HTTP-only cookie
+    setAuthCookie(res, token);
+
+    // Redirect to frontend with user info in query string
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const userParam = encodeURIComponent(JSON.stringify({
+      id: user._id!.toString(),
+      email: user.email,
+      role: user.role,
+    }));
+    res.redirect(`${frontendUrl}/auth/callback?user=${userParam}`);
   } catch (error) {
     console.error('Apple OAuth callback error:', error);
     res.status(500).json({ error: 'Apple login failed' });
+  }
+});
+
+// POST /api/auth/logout - Clear auth cookie
+router.post('/logout', (_req: Request, res: Response): void => {
+  res.clearCookie('auth-token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  });
+  res.json({ message: 'Logged out successfully' });
+});
+
+// GET /api/auth/me - Get current user from token
+router.get('/me', authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const db = getDatabase();
+    const users = db.collection<User>('users');
+
+    const user = await users.findOne({ _id: new (await import('mongodb')).ObjectId(req.user!.userId) });
+
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    res.json({
+      user: {
+        id: user._id!.toString(),
+        email: user.email,
+        role: user.role,
+        emailVerified: user.emailVerified
+      }
+    });
+  } catch (error) {
+    console.error('Get user error:', error);
+    res.status(500).json({ error: 'Failed to get user' });
+  }
+});
+
+// POST /api/auth/refresh - Refresh auth token
+router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get token from cookie
+    const token = req.cookies && req.cookies['auth-token'];
+
+    if (!token) {
+      res.status(401).json({ error: 'No token provided' });
+      return;
+    }
+
+    // Verify refresh token (checks refreshUntil, ignores exp)
+    const payload = verifyRefreshToken(token);
+
+    // Generate new token with same user info
+    const newToken = generateToken({
+      userId: payload.userId,
+      email: payload.email,
+      role: payload.role,
+    });
+
+    // Set new cookie
+    setAuthCookie(res, newToken);
+
+    res.json({
+      message: 'Token refreshed successfully',
+      token: newToken // Include in response for backwards compatibility
+    });
+  } catch (error) {
+    console.error('Token refresh error:', error);
+    res.status(401).json({ error: error instanceof Error ? error.message : 'Failed to refresh token' });
   }
 });
 

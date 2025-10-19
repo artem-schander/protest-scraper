@@ -47,4 +47,5 @@ export interface JWTPayload {
   userId: string;
   email: string;
   role: UserRole;
+  refreshUntil?: number; // Unix timestamp - token can be refreshed until this time
 }

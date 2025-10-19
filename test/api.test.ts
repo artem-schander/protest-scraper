@@ -148,6 +148,217 @@ describe('Auth API', () => {
       expect(res.body.error).toBe('Invalid credentials');
     });
   });
+
+  describe('Cookie-based Authentication', () => {
+    beforeEach(async () => {
+      // Create test user
+      await db.collection('users').insertOne({
+        email: 'cookie-test@example.com',
+        password: await hashPassword('password123'),
+        role: UserRole.USER,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    });
+
+    it('should set auth-token cookie on login', async () => {
+      const res = await request(app).post('/api/auth/login').send({
+        email: 'cookie-test@example.com',
+        password: 'password123',
+      });
+
+      expect(res.status).toBe(200);
+      expect(res.headers['set-cookie']).toBeDefined();
+
+      const cookies = res.headers['set-cookie'];
+      const authCookie = cookies.find((c: string) => c.startsWith('auth-token='));
+
+      expect(authCookie).toBeDefined();
+      expect(authCookie).toContain('HttpOnly');
+      expect(authCookie).toContain('SameSite=Lax');
+    });
+
+    it('should set auth-token cookie on registration', async () => {
+      const res = await request(app).post('/api/auth/register').send({
+        email: 'new-cookie-user@example.com',
+        password: 'password123',
+      });
+
+      expect(res.status).toBe(201);
+      expect(res.headers['set-cookie']).toBeDefined();
+
+      const cookies = res.headers['set-cookie'];
+      const authCookie = cookies.find((c: string) => c.startsWith('auth-token='));
+
+      expect(authCookie).toBeDefined();
+      expect(authCookie).toContain('HttpOnly');
+    });
+
+    it('should accept token from cookie for authenticated endpoints', async () => {
+      // Login to get cookie
+      const loginRes = await request(app).post('/api/auth/login').send({
+        email: 'cookie-test@example.com',
+        password: 'password123',
+      });
+
+      const cookies = loginRes.headers['set-cookie'];
+
+      // Use cookie to access authenticated endpoint
+      const res = await request(app)
+        .get('/api/auth/me')
+        .set('Cookie', cookies);
+
+      expect(res.status).toBe(200);
+      expect(res.body.user.email).toBe('cookie-test@example.com');
+    });
+  });
+
+  describe('GET /api/auth/me', () => {
+    let authToken: string;
+
+    beforeEach(async () => {
+      // Create and login test user
+      await db.collection('users').insertOne({
+        email: 'me-test@example.com',
+        password: await hashPassword('password123'),
+        role: UserRole.USER,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const loginRes = await request(app).post('/api/auth/login').send({
+        email: 'me-test@example.com',
+        password: 'password123',
+      });
+
+      authToken = loginRes.body.token;
+    });
+
+    it('should return current user with valid token', async () => {
+      const res = await request(app)
+        .get('/api/auth/me')
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.user).toBeDefined();
+      expect(res.body.user.email).toBe('me-test@example.com');
+      expect(res.body.user.role).toBe('USER');
+      expect(res.body.user.emailVerified).toBe(true);
+    });
+
+    it('should reject request without token', async () => {
+      const res = await request(app).get('/api/auth/me');
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toContain('No token provided');
+    });
+
+    it('should reject request with invalid token', async () => {
+      const res = await request(app)
+        .get('/api/auth/me')
+        .set('Authorization', 'Bearer invalid-token');
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toContain('Invalid or expired token');
+    });
+  });
+
+  describe('POST /api/auth/refresh', () => {
+    let cookies: string[];
+
+    beforeEach(async () => {
+      // Create and login test user
+      await db.collection('users').insertOne({
+        email: 'refresh-test@example.com',
+        password: await hashPassword('password123'),
+        role: UserRole.USER,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const loginRes = await request(app).post('/api/auth/login').send({
+        email: 'refresh-test@example.com',
+        password: 'password123',
+      });
+
+      cookies = loginRes.headers['set-cookie'];
+    });
+
+    it('should refresh token with valid cookie', async () => {
+      const res = await request(app)
+        .post('/api/auth/refresh')
+        .set('Cookie', cookies);
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toContain('Token refreshed successfully');
+      expect(res.body.token).toBeDefined();
+
+      // Should set new cookie
+      expect(res.headers['set-cookie']).toBeDefined();
+      const newCookies = res.headers['set-cookie'];
+      const authCookie = newCookies.find((c: string) => c.startsWith('auth-token='));
+      expect(authCookie).toBeDefined();
+    });
+
+    it('should reject refresh without cookie', async () => {
+      const res = await request(app).post('/api/auth/refresh');
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toContain('No token provided');
+    });
+
+    it('should reject refresh with invalid cookie', async () => {
+      const res = await request(app)
+        .post('/api/auth/refresh')
+        .set('Cookie', 'auth-token=invalid-token');
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBeDefined();
+    });
+  });
+
+  describe('POST /api/auth/logout', () => {
+    let cookies: string[];
+
+    beforeEach(async () => {
+      // Create and login test user
+      await db.collection('users').insertOne({
+        email: 'logout-test@example.com',
+        password: await hashPassword('password123'),
+        role: UserRole.USER,
+        emailVerified: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const loginRes = await request(app).post('/api/auth/login').send({
+        email: 'logout-test@example.com',
+        password: 'password123',
+      });
+
+      cookies = loginRes.headers['set-cookie'];
+    });
+
+    it('should clear auth cookie on logout', async () => {
+      const res = await request(app)
+        .post('/api/auth/logout')
+        .set('Cookie', cookies);
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toContain('Logged out successfully');
+
+      // Should clear cookie (either Max-Age=0 or Expires in the past)
+      expect(res.headers['set-cookie']).toBeDefined();
+      const clearedCookies = res.headers['set-cookie'];
+      const authCookie = clearedCookies.find((c: string) => c.startsWith('auth-token='));
+      expect(authCookie).toBeDefined();
+      // Cookie should be cleared (empty value and expired)
+      expect(authCookie).toMatch(/auth-token=;/);
+    });
+  });
 });
 
 describe('Auth API - Rate Limiting', () => {
