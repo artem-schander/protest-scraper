@@ -6,8 +6,7 @@ import delay from "./delay.js";
 export interface GeoCoordinates {
   lat: number;
   lon: number;
-  display_name?: string; // Original address from Nominatim
-  formatted?: string; // Formatted user-friendly address
+  address: string; // Normalized address from Nominatim address components
 }
 
 export interface GeocodeCache {
@@ -37,56 +36,42 @@ function saveGeocodeCache(cache: GeocodeCache): void {
 }
 
 /**
- * Formats a Nominatim display_name into a more user-friendly format
+ * Normalize address from Nominatim address components
+ * Format: {road} {house_number}, {postcode} {village/city/town}, {state} {county}
  *
- * Example transformations:
- * "Am Treptower Park, Plänterwald, Treptow-Köpenick, Berlin, 12435, Deutschland"
- * -> "12435 Berlin, Treptow-Köpenick, Plänterwald, Am Treptower Park"
- *
- * "Berlin, Deutschland"
- * -> "Berlin"
- *
- * @param displayName - The display_name from Nominatim
- * @returns Formatted location string
+ * @param address - Address object from Nominatim (with addressdetails=1)
+ * @returns Normalized address string
  */
-export function formatLocationDetails(displayName: string | undefined): string | null {
-  if (!displayName) {
-    return null;
+export function normalizeAddress(address: any): string {
+  if (!address) return '';
+
+  const parts: string[] = [];
+
+  // Part 1: road + house_number
+  const streetParts: string[] = [];
+  if (address.road) streetParts.push(address.road);
+  if (address.house_number) streetParts.push(address.house_number);
+  if (streetParts.length > 0) {
+    parts.push(streetParts.join(' '));
   }
 
-  // Split by comma and trim each part
-  const parts = displayName.split(',').map(p => p.trim()).filter(p => p.length > 0);
-
-  if (parts.length === 0) {
-    return null;
+  // Part 2: postcode + village/city/town
+  const cityParts: string[] = [];
+  if (address.postcode) cityParts.push(address.postcode);
+  const locality = address.village || address.city || address.town || address.municipality;
+  if (locality) cityParts.push(locality);
+  if (cityParts.length > 0) {
+    parts.push(cityParts.join(' '));
   }
 
-  // Reverse the array (country is now first)
-  parts.reverse();
-
-  // Remove the first element (country)
-  if (parts.length > 1) {
-    parts.shift();
+  // Part 3: state + county
+  const regionParts: string[] = [];
+  if (address.state) regionParts.push(address.state);
+  if (address.county) regionParts.push(address.county);
+  if (regionParts.length > 0) {
+    parts.push(regionParts.join(' '));
   }
 
-  // Postal code patterns for European countries
-  // DE, FR: 5 digits (12435, 75001)
-  // AT, CH: 4 digits (1010, 8001)
-  // NL: 4 digits + space + 2 letters (1012 AB)
-  // UK: Complex (SW1A 1AA, EC1A 1BB)
-  // PL: 2 digits + dash + 3 digits (00-001)
-  const postalCodePattern = /^(\d{4,5}|\d{4}\s?[A-Z]{2}|[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}|\d{2}-\d{3})$/;
-
-  // Check if the first element (after removing country) is a postal code
-  if (parts.length >= 2 && postalCodePattern.test(parts[0])) {
-    // Combine postal code with city
-    const postalCode = parts[0];
-    const city = parts[1];
-    parts[0] = `${postalCode} ${city}`;
-    parts.splice(1, 1); // Remove the separate city element
-  }
-
-  // Join remaining parts with comma
   return parts.join(', ');
 }
 
@@ -122,7 +107,7 @@ export async function geocodeLocation(
   try {
     // Use Nominatim (OpenStreetMap) - free, no API key required
     // Rate limit: 1 request per second
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=1`;
 
     const response = await axios.get(url, {
       headers: {
@@ -137,12 +122,11 @@ export async function geocodeLocation(
 
     if (response.data && response.data.length > 0) {
       const result = response.data[0];
-      const displayName = result.display_name || undefined;
+      const normalizedAddress = normalizeAddress(result.address);
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
-        display_name: displayName,
-        formatted: formatLocationDetails(displayName) || undefined,
+        address: normalizedAddress,
       };
 
       // Cache the result
@@ -159,7 +143,7 @@ export async function geocodeLocation(
 
       console.error(`[geocode] No results for "${query}", retrying with: "${fallbackQuery}"`);
 
-      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&limit=1`;
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&addressdetails=1&limit=1`;
 
       const fallbackResponse = await axios.get(fallbackUrl, {
         headers: {
@@ -174,12 +158,11 @@ export async function geocodeLocation(
 
       if (fallbackResponse.data && fallbackResponse.data.length > 0) {
         const result = fallbackResponse.data[0];
-        const displayName = result.display_name || undefined;
+        const normalizedAddress = normalizeAddress(result.address);
         const coords: GeoCoordinates = {
           lat: parseFloat(result.lat),
           lon: parseFloat(result.lon),
-          display_name: displayName,
-          formatted: formatLocationDetails(displayName) || undefined,
+          address: normalizedAddress,
         };
 
         // Cache using the original cache key

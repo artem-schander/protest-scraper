@@ -107,16 +107,15 @@ async function importProtests(days: number): Promise<void> {
     if (!locationKey) continue;
 
     const geoData = coordsMap.get(locationKey);
-    if (!geoData || !geoData.display_name) continue;
+    if (!geoData || !geoData.address) continue;
 
     // Preserve original location in originalLocation
     if (event.location) {
       event.originalLocation = event.location;
     }
 
-    // Replace location with formatted address (user-friendly)
-    // Fallback to display_name if formatting fails
-    event.location = geoData.formatted || geoData.display_name;
+    // Replace location with normalized address
+    event.location = geoData.address;
   }
 
   // Import to database

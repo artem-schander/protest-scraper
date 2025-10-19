@@ -17,7 +17,7 @@ import timezone from "dayjs/plugin/timezone.js";
 import utc from "dayjs/plugin/utc.js";
 import { program } from "commander";
 import { createEvents } from "ics";
-import { formatLocationDetails } from "../utils/geocode.js";
+import { normalizeAddress } from "../utils/geocode.js";
 import delay from "../utils/delay.js";
 
 // Initialize dayjs plugins
@@ -56,8 +56,7 @@ interface ScrapeResult {
 interface GeoCoordinates {
   lat: number;
   lon: number;
-  display_name?: string; // Original address from Nominatim
-  formatted?: string; // Formatted user-friendly address
+  address: string; // Normalized address from Nominatim address components
 }
 
 interface GeocodeCache {
@@ -274,7 +273,7 @@ async function geocodeLocation(
   try {
     // Use Nominatim (OpenStreetMap) - free, no API key required
     // Rate limit: 1 request per second (enforced by caller)
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1&limit=1`;
 
     const response = await axios.get(url, {
       headers: {
@@ -285,12 +284,11 @@ async function geocodeLocation(
 
     if (response.data && response.data.length > 0) {
       const result = response.data[0];
-      const displayName = result.display_name || undefined;
+      const normalizedAddress = normalizeAddress(result.address);
       const coords: GeoCoordinates = {
         lat: parseFloat(result.lat),
         lon: parseFloat(result.lon),
-        display_name: displayName,
-        formatted: formatLocationDetails(displayName) || undefined,
+        address: normalizedAddress,
       };
 
       // Cache the result
@@ -307,7 +305,7 @@ async function geocodeLocation(
 
       // console.error(`[geocode] No results for "${query}", retrying with: "${fallbackQuery}"`);
 
-      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&limit=1`;
+      const fallbackUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(fallbackQuery)}&format=json&addressdetails=1&limit=1`;
 
       const fallbackResponse = await axios.get(fallbackUrl, {
         headers: {
@@ -321,12 +319,11 @@ async function geocodeLocation(
 
       if (fallbackResponse.data && fallbackResponse.data.length > 0) {
         const result = fallbackResponse.data[0];
-        const displayName = result.display_name || undefined;
+        const normalizedAddress = normalizeAddress(result.address);
         const coords: GeoCoordinates = {
           lat: parseFloat(result.lat),
           lon: parseFloat(result.lon),
-          display_name: displayName,
-          formatted: formatLocationDetails(displayName) || undefined,
+          address: normalizedAddress,
         };
 
         // Cache using the original cache key
@@ -352,16 +349,15 @@ function normalizeEventLocations(events: ProtestEvent[], coordsMap: Map<string, 
     if (!locationKey) continue;
 
     const geoData = coordsMap.get(locationKey);
-    if (!geoData || !geoData.display_name) continue;
+    if (!geoData || !geoData.address) continue;
 
     // Preserve original location in originalLocation
     if (event.location) {
       event.originalLocation = event.location;
     }
 
-    // Replace location with formatted address (user-friendly)
-    // Fallback to display_name if formatting fails
-    event.location = geoData.formatted || geoData.display_name;
+    // Replace location with normalized address
+    event.location = geoData.address;
   }
 }
 
