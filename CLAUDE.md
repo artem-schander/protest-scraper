@@ -95,6 +95,7 @@ src/
 ├── scripts/                    # CLI utilities
 │   └── set-user-role.ts        # Promote/demote user roles
 ├── routes/                     # Express route handlers
+│   ├── admin-users.ts          # Admin-only user management
 │   ├── auth.ts                 # Authentication (/api/auth/*)
 │   ├── protests.ts             # Protest CRUD (/api/protests/*)
 │   └── export.ts               # Exports (/api/export/*)
@@ -119,6 +120,7 @@ src/
 └── server.ts                   # HTTP server entry point
 
 test/
+├── admin-users.test.ts         # Admin user management API
 ├── api.test.ts                 # API endpoints (67 tests)
 ├── scraper/
 │   └── scrape-protests.test.ts # Scraper logic (17 tests)
@@ -156,6 +158,13 @@ test/
 - Generated in `src/utils/jwt.ts` using `jsonwebtoken`
 - Validated via `authenticate` middleware in `src/middleware/auth.ts`
 - Default expiry: 7 days (configurable via `JWT_EXPIRES_IN`)
+
+**Email Verification:**
+- Registration issues a 6-character short code (not a link). The plain code is sent via `sendVerificationEmail(to, code)` and only a SHA-256 hash is stored in MongoDB (`verificationCodeHash`, `verificationCodeExpires`).
+- Users must call `POST /api/auth/verify-email` with `{ email, code }` before they can log in (unless `REQUIRE_EMAIL_VERIFICATION=false`).
+- `POST /api/auth/resend-verification` re-issues a new code, resets attempt counters, and enforces a rate limit (3 per 15 minutes by default).
+- Failed verification attempts increment `verificationCodeAttempts`; hitting the limit returns HTTP 429 and requires requesting a new code.
+- Email templates live in `src/services/email.ts`; HTML and plain-text bodies emphasise copy/paste of the six-character code.
 
 **OAuth Providers:**
 - Google OAuth 2.0 with PKCE (Proof Key for Code Exchange)

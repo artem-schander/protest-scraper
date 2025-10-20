@@ -6,6 +6,7 @@ import type { Transporter } from 'nodemailer';
  */
 
 let transporter: Transporter | null = null;
+const CODE_EXPIRY_MINUTES = parseInt(process.env.EMAIL_VERIFICATION_EXPIRY_MINUTES || '30', 10);
 
 /**
  * Initialize email transporter (SMTP or SendGrid)
@@ -39,27 +40,23 @@ function getTransporter(): Transporter {
  */
 export async function sendVerificationEmail(
   to: string,
-  verificationToken: string
+  verificationCode: string
 ): Promise<void> {
-  const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-  const verificationUrl = `${baseUrl}/api/auth/verify-email?token=${verificationToken}`;
 
   const mailOptions = {
     from: process.env.EMAIL_FROM || '"Protest Scraper" <noreply@protest-scraper.com>',
     to,
-    subject: 'Verify your email address',
-    text: `Welcome to Protest Listing Service!
+    subject: 'Verify your email for Protest Listing',
+    text: `Welcome to Protest Listing!
 
-Please verify your email address by clicking the link below:
+Your verification code is: ${verificationCode}
 
-${verificationUrl}
-
-This link will expire in 24 hours.
+Enter this code in the verification screen to activate your account. The code expires in ${CODE_EXPIRY_MINUTES} minutes.
 
 If you didn't create an account, please ignore this email.
 
 Best regards,
-Protest Listing Service Team`,
+Protest Listing Team`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -82,12 +79,10 @@ Protest Listing Service Team`,
         </head>
         <body>
           <div class="container">
-            <h2>Welcome to Protest Listing Service!</h2>
+            <h2>Welcome to Protest Listing!</h2>
             <p>Thank you for registering. Please verify your email address to activate your account.</p>
-            <a href="${verificationUrl}" class="button">Verify Email Address</a>
-            <p>Or copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; color: #007bff;">${verificationUrl}</p>
-            <p><strong>This link will expire in 24 hours.</strong></p>
+            <p style="font-size: 32px; letter-spacing: 8px; font-weight: bold; color: #000;">${verificationCode}</p>
+            <p>Enter this code on the verification screen. It will expire in ${CODE_EXPIRY_MINUTES} minutes.</p>
             <div class="footer">
               <p>If you didn't create an account, please ignore this email.</p>
               <p>&copy; 2025 Protest Listing Service</p>

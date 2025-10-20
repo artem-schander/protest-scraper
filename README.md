@@ -12,7 +12,7 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 
 - **Automated scraping** of official protest data from different sources
 - Public REST API for upcoming protests (filter by city or date range)
-- JWT-based authentication for registered users
+- JWT-based authentication with **6-character email verification codes**
 - Role system (`USER`, `MODERATOR`, `ADMIN`)
 - Admin & Moderator routes for verifying, editing, or deleting entries
 - **Automatic cleanup** of old protests (deleted 2 weeks after event date)
@@ -43,17 +43,17 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 
 ```bash
 git clone https://github.com/artem-schander/protest-scraper.git
-cd protest-scraper
-npm install
+cd protest-scraper/scraper
+yarn install
 cp .env.example .env
-# Edit .env and set MONGODB_URI and JWT_SECRET
+# Edit .env and set MONGODB_URI, JWT_SECRET, EMAIL_* credentials
 docker compose up -d
 ```
 
 ### Running in Dev Mode
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 ### Importing Protest Data
@@ -61,8 +61,8 @@ npm run dev
 The scraper fetches protests from official sources and imports them directly into MongoDB:
 
 ```bash
-npm run import                    # Import protests (default: next 40 days)
-npm run import -- --days 60       # Import protests for next 60 days
+yarn import                    # Import protests (default: next 40 days)
+yarn import -- --days 60       # Import protests for next 60 days
 ```
 
 This command:
@@ -86,13 +86,14 @@ This command:
 ### Running Tests
 
 ```bash
-npm test                          # Run tests once
-npm run test:watch                # Run tests in watch mode
+yarn test             # Run tests once (MongoDB Memory Server)
+yarn test:watch       # Run tests in watch mode
 ```
 
 ### Running in Production
 
 ```bash
+yarn build
 docker compose up -d --build
 ```
 
@@ -104,10 +105,10 @@ docker compose up -d --build
 
 | Method | Endpoint | Rate Limit | Description |
 |--------|----------|------------|-------------|
-| `POST` | `/api/auth/register` | 5/15min | Register new user (sends verification email) |
-| `POST` | `/api/auth/login` | 10/15min | Obtain JWT token |
-| `GET` | `/api/auth/verify-email` | - | Verify email with token |
-| `POST` | `/api/auth/resend-verification` | 3/15min | Resend verification email |
+| `POST` | `/api/auth/register` | 5/15min | Register new user (sends 6-character code) |
+| `POST` | `/api/auth/login` | 10/15min | Obtain JWT token (requires verified email) |
+| `POST` | `/api/auth/verify-email` | 10/15min | Submit `{ email, code }` to mark email verified |
+| `POST` | `/api/auth/resend-verification` | 3/15min | Resend verification code |
 | `GET` | `/api/auth/google` | - | Initiate Google OAuth flow |
 | `GET` | `/api/auth/google/callback` | - | Google OAuth callback |
 | `GET` | `/api/auth/apple` | - | Initiate Apple OAuth flow |
@@ -141,15 +142,37 @@ curl -X POST http://localhost:3000/api/auth/register \
 Response:
 ```json
 {
-  "message": "User registered successfully",
+  "message": "Registration successful. Enter the verification code sent to your email address.",
+  "requiresVerification": true,
+  "email": "user@example.com"
+}
+```
+
+#### Verify the email
+
+```bash
+curl -X POST http://localhost:3000/api/auth/verify-email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "code": "AB42QH"
+  }'
+```
+
+Response:
+```json
+{
+  "message": "Email verified successfully.",
   "user": {
     "id": "507f1f77bcf86cd799439011",
     "email": "user@example.com",
     "role": "USER",
-    "createdAt": "2025-10-12T10:30:00.000Z"
+    "emailVerified": true
   }
 }
 ```
+
+If the code is incorrect or expired, the API returns HTTP 400/410 with guidance on requesting a new code. After too many wrong attempts the server responds with HTTP 429 until `/api/auth/resend-verification` is called.
 
 #### Login
 
@@ -170,8 +193,18 @@ Response:
   "user": {
     "id": "507f1f77bcf86cd799439011",
     "email": "user@example.com",
-    "role": "USER"
+    "role": "USER",
+    "emailVerified": true
   }
+}
+```
+
+Unverified accounts receive HTTP 403:
+```json
+{
+  "error": "Email not verified. Please enter the verification code that was sent to you.",
+  "requiresVerification": true,
+  "emailVerified": false
 }
 ```
 

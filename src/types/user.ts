@@ -14,8 +14,13 @@ export interface User {
 
   // Email verification
   emailVerified: boolean;
-  verificationToken?: string;
-  verificationTokenExpires?: Date;
+  verificationCodeHash?: string;
+  verificationCodeExpires?: Date;
+  verificationCodeAttempts?: number;
+
+  // Account restrictions
+  bannedUntil?: Date | null;
+  bannedReason?: string;
 
   // OAuth
   oauthProvider?: 'google' | 'apple';
@@ -41,6 +46,9 @@ export interface UserResponse {
   email: string;
   role: UserRole;
   createdAt: Date;
+  emailVerified?: boolean;
+  bannedUntil?: Date | null;
+  bannedReason?: string;
 }
 
 export interface JWTPayload {

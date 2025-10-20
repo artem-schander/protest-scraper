@@ -5,6 +5,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import protestRoutes from './routes/protests.js';
 import exportRoutes from './routes/export.js';
+import adminUsersRoutes from './routes/admin-users.js';
 
 export function createApp(): Application {
   const app: Application = express();
@@ -39,6 +40,15 @@ export function createApp(): Application {
           json: 'GET /api/export/json?city=Berlin&days=30',
           ics: 'GET /api/export/ics?city=Berlin&days=30 (subscribable!)',
         },
+        admin: {
+          listUsers: 'GET /api/admin/users',
+          createUser: 'POST /api/admin/users',
+          updateUser: 'PATCH /api/admin/users/:id',
+          deleteUser: 'DELETE /api/admin/users/:id',
+          banUser: 'POST /api/admin/users/:id/ban',
+          unbanUser: 'POST /api/admin/users/:id/unban',
+          resendVerification: 'POST /api/admin/users/:id/resend-verification'
+        }
       },
     });
   });
@@ -46,6 +56,7 @@ export function createApp(): Application {
   app.use('/api/auth', authRoutes);
   app.use('/api/protests', protestRoutes);
   app.use('/api/export', exportRoutes);
+  app.use('/api/admin/users', adminUsersRoutes);
 
   // Error handler (must be last)
   app.use(errorHandler);

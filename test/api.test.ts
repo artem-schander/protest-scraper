@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vites
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db } from 'mongodb';
+import crypto from 'crypto';
 import { createApp } from '../src/app.js';
 import { hashPassword } from '../src/utils/password.js';
 import { UserRole } from '../src/types/user.js';
@@ -14,6 +15,9 @@ let client: MongoClient;
 let db: Db;
 const app = createApp();
 const FIXED_DATE = new Date('2025-10-01T00:00:00Z');
+
+let lastVerificationEmail: string | null = null;
+let lastVerificationCode: string | null = null;
 
 // Mock database connection
 beforeAll(async () => {
@@ -34,7 +38,10 @@ beforeAll(async () => {
   vi.spyOn(dbConnection, 'getDatabase').mockReturnValue(db);
 
   // Mock email service to prevent actual emails being sent in tests
-  vi.spyOn(emailService, 'sendVerificationEmail').mockResolvedValue();
+  vi.spyOn(emailService, 'sendVerificationEmail').mockImplementation(async (to: string, code: string) => {
+    lastVerificationEmail = to;
+    lastVerificationCode = code;
+  });
   vi.spyOn(emailService, 'sendWelcomeEmail').mockResolvedValue();
   vi.spyOn(emailService, 'isEmailConfigured').mockReturnValue(true);
 
@@ -54,6 +61,8 @@ beforeEach(async () => {
   // Clear collections before each test
   await db.collection('users').deleteMany({});
   await db.collection('protests').deleteMany({});
+  lastVerificationEmail = null;
+  lastVerificationCode = null;
 });
 
 describe('Auth API', () => {
@@ -67,10 +76,10 @@ describe('Auth API', () => {
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.message).toContain('User registered successfully');
-      expect(res.body.user.email).toBe('test@example.com');
-      expect(res.body.user.role).toBe('USER');
-      expect(res.body.user.emailVerified).toBe(false);
+      expect(res.body.requiresVerification).toBe(true);
+      expect(res.body.email).toBe('test@example.com');
+      expect(lastVerificationEmail).toBe('test@example.com');
+      expect(lastVerificationCode).toHaveLength(6);
     });
 
     it('should reject duplicate email', async () => {
@@ -116,6 +125,7 @@ describe('Auth API', () => {
         email: 'test@example.com',
         password: await hashPassword('password123'),
         role: UserRole.USER,
+        emailVerified: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -131,6 +141,7 @@ describe('Auth API', () => {
       expect(res.body.message).toBe('Login successful');
       expect(res.body.token).toBeDefined();
       expect(res.body.user.email).toBe('test@example.com');
+      expect(res.body.user.bannedUntil).toBeNull();
     });
 
     it('should reject invalid credentials', async () => {
@@ -151,6 +162,29 @@ describe('Auth API', () => {
 
       expect(res.status).toBe(401);
       expect(res.body.error).toBe('Invalid credentials');
+    });
+
+    it('should reject banned users', async () => {
+      const bannedEmail = 'banned@example.com';
+      await db.collection('users').insertOne({
+        email: bannedEmail,
+        password: await hashPassword('password123'),
+        role: UserRole.USER,
+        emailVerified: true,
+        bannedUntil: new Date(Date.now() + 60 * 60 * 1000),
+        bannedReason: 'Testing',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const res = await request(app).post('/api/auth/login').send({
+        email: bannedEmail,
+        password: 'password123',
+      });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toContain('banned');
+      expect(res.body.bannedUntil).toBeDefined();
     });
   });
 
@@ -184,20 +218,16 @@ describe('Auth API', () => {
       expect(authCookie).toContain('SameSite=Lax');
     });
 
-    it('should set auth-token cookie on registration', async () => {
+    it('should not set auth-token cookie on registration before verification', async () => {
       const res = await request(app).post('/api/auth/register').send({
         email: 'new-cookie-user@example.com',
         password: 'password123',
       });
 
       expect(res.status).toBe(201);
-      expect(res.headers['set-cookie']).toBeDefined();
-
-      const cookies = res.headers['set-cookie'];
+      const cookies = res.headers['set-cookie'] || [];
       const authCookie = cookies.find((c: string) => c.startsWith('auth-token='));
-
-      expect(authCookie).toBeDefined();
-      expect(authCookie).toContain('HttpOnly');
+      expect(authCookie).toBeUndefined();
     });
 
     it('should accept token from cookie for authenticated endpoints', async () => {
@@ -490,16 +520,14 @@ describe('Auth API - Email Verification', () => {
       });
 
     expect(res.status).toBe(201);
-    expect(res.body.user.emailVerified).toBe(false);
-    expect(emailService.sendVerificationEmail).toHaveBeenCalledWith(
-      email,
-      expect.any(String)
-    );
+    expect(res.body.requiresVerification).toBe(true);
+    expect(lastVerificationEmail).toBe(email);
+    expect(lastVerificationCode).toHaveLength(6);
   });
 
-  it('should verify email with valid token', async () => {
-    // Register user
+  it('should verify email with valid code', async () => {
     const email = `verifyt${Date.now()}@example.com`;
+
     await request(app)
       .post('/api/auth/register')
       .send({
@@ -507,54 +535,64 @@ describe('Auth API - Email Verification', () => {
         password: 'password123',
       });
 
-    // Get verification token from database
-    const user = await db.collection('users').findOne({ email });
-    expect(user?.verificationToken).toBeDefined();
+    expect(lastVerificationCode).toBeTruthy();
 
-    // Verify email
-    const res = await request(app).get(
-      `/api/auth/verify-email?token=${user?.verificationToken}`
-    );
+    const res = await request(app)
+      .post('/api/auth/verify-email')
+      .send({ email, code: lastVerificationCode });
 
     expect(res.status).toBe(200);
-    expect(res.body.verified).toBe(true);
-    expect(res.body.message).toContain('verified successfully');
+    expect(res.body.user.emailVerified).toBe(true);
+    expect(res.body.user.email).toBe(email);
 
-    // Check user in database
     const verifiedUser = await db.collection('users').findOne({ email });
     expect(verifiedUser?.emailVerified).toBe(true);
-    expect(verifiedUser?.verificationToken).toBeUndefined();
+    expect(verifiedUser?.verificationCodeHash).toBeUndefined();
   });
 
-  it('should reject invalid verification token', async () => {
-    const res = await request(app).get(
-      '/api/auth/verify-email?token=invalid-token-123'
-    );
+  it('should reject invalid verification code', async () => {
+    const email = `invalid${Date.now()}@example.com`;
+
+    await request(app)
+      .post('/api/auth/register')
+      .send({
+        email,
+        password: 'password123',
+      });
+
+    const res = await request(app)
+      .post('/api/auth/verify-email')
+      .send({ email, code: 'AAAAAA' });
 
     expect(res.status).toBe(400);
-    expect(res.body.error).toContain('Invalid or expired');
+    expect(res.body.error).toContain('Invalid verification code');
   });
 
-  it('should reject expired verification token', async () => {
+  it('should reject expired verification code', async () => {
     const email = `expired${Date.now()}@example.com`;
 
-    // Create user with expired token
     const hashedPassword = await hashPassword('password123');
+    const code = 'ABC123';
+    const codeHash = crypto.createHash('sha256').update(code).digest('hex');
+
     await db.collection('users').insertOne({
       email,
       password: hashedPassword,
       role: UserRole.USER,
       emailVerified: false,
-      verificationToken: 'expired-token',
-      verificationTokenExpires: new Date(Date.now() - 1000), // Expired 1 second ago
+      verificationCodeHash: codeHash,
+      verificationCodeExpires: new Date(Date.now() - 1000),
+      verificationCodeAttempts: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
 
-    const res = await request(app).get('/api/auth/verify-email?token=expired-token');
+    const res = await request(app)
+      .post('/api/auth/verify-email')
+      .send({ email, code });
 
-    expect(res.status).toBe(400);
-    expect(res.body.error).toContain('Invalid or expired');
+    expect(res.status).toBe(410);
+    expect(res.body.error).toContain('expired');
   });
 
   it('should resend verification email', async () => {
@@ -570,7 +608,7 @@ describe('Auth API - Email Verification', () => {
 
     // Get the user to verify they have a token
     const user = await db.collection('users').findOne({ email });
-    expect(user?.verificationToken).toBeDefined();
+    expect(user?.verificationCodeHash).toBeDefined();
 
     // Clear mock to track new call
     vi.mocked(emailService.sendVerificationEmail).mockClear();
@@ -581,13 +619,13 @@ describe('Auth API - Email Verification', () => {
       .send({ email });
 
     expect(res.status).toBe(200);
-    expect(res.body.message).toContain('Verification email sent');
+    expect(res.body.message).toContain('verification code');
     expect(emailService.sendVerificationEmail).toHaveBeenCalledTimes(1);
 
     // Verify token was updated
     const updatedUser = await db.collection('users').findOne({ email });
-    expect(updatedUser?.verificationToken).toBeDefined();
-    expect(updatedUser?.verificationToken).not.toBe(user?.verificationToken); // New token generated
+    expect(updatedUser?.verificationCodeHash).toBeDefined();
+    expect(updatedUser?.verificationCodeHash).not.toBe(user?.verificationCodeHash);
   });
 
   it('should not reveal if user exists when resending', async () => {
@@ -621,6 +659,126 @@ describe('Auth API - Email Verification', () => {
 
     expect(res.status).toBe(400);
     expect(res.body.error).toContain('already verified');
+  });
+});
+
+describe('Admin User Management', () => {
+  let adminToken: string;
+
+  beforeEach(async () => {
+    const hashedPassword = await hashPassword('AdminPass123!');
+    await db.collection('users').insertOne({
+      email: 'admin@example.com',
+      password: hashedPassword,
+      role: UserRole.ADMIN,
+      emailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    const loginRes = await request(app).post('/api/auth/login').send({
+      email: 'admin@example.com',
+      password: 'AdminPass123!'
+    });
+
+    adminToken = loginRes.body.token;
+    expect(adminToken).toBeDefined();
+  });
+
+  it('should list users', async () => {
+    const res = await request(app)
+      .get('/api/admin/users')
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.users)).toBe(true);
+    expect(res.body.users.length).toBeGreaterThan(0);
+  });
+
+  it('should create a user', async () => {
+    const res = await request(app)
+      .post('/api/admin/users')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        email: 'newuser@example.com',
+        password: 'Password123!',
+        role: UserRole.MODERATOR,
+        emailVerified: true
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body.user.email).toBe('newuser@example.com');
+    expect(res.body.user.role).toBe(UserRole.MODERATOR);
+    expect(res.body.user.emailVerified).toBe(true);
+  });
+
+  it('should update a user role', async () => {
+    const createRes = await request(app)
+      .post('/api/admin/users')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        email: 'rolechange@example.com',
+        password: 'Password123!',
+        role: UserRole.USER,
+        emailVerified: true
+      });
+
+    const userId = createRes.body.user.id;
+
+    const res = await request(app)
+      .patch(`/api/admin/users/${userId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ role: UserRole.MODERATOR });
+
+    expect(res.status).toBe(200);
+    expect(res.body.user.role).toBe(UserRole.MODERATOR);
+  });
+
+  it('should ban and unblock a user', async () => {
+    const createRes = await request(app)
+      .post('/api/admin/users')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        email: 'banme@example.com',
+        password: 'Password123!',
+        role: UserRole.USER,
+        emailVerified: true
+      });
+
+    const userId = createRes.body.user.id;
+
+    const banRes = await request(app)
+      .post(`/api/admin/users/${userId}/ban`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ hours: 1, reason: 'Testing ban' });
+
+    expect(banRes.status).toBe(200);
+    expect(new Date(banRes.body.user.bannedUntil).getTime()).toBeGreaterThan(Date.now());
+
+    const unbanRes = await request(app)
+      .post(`/api/admin/users/${userId}/unban`)
+      .set('Authorization', `Bearer ${adminToken}`);
+
+    expect(unbanRes.status).toBe(200);
+    expect(unbanRes.body.user.bannedUntil).toBeNull();
+  });
+
+  it('should not change other admin roles', async () => {
+    const otherAdminId = (await db.collection('users').insertOne({
+      email: 'otheradmin@example.com',
+      password: await hashPassword('Password123!'),
+      role: UserRole.ADMIN,
+      emailVerified: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })).insertedId.toString();
+
+    const res = await request(app)
+      .patch(`/api/admin/users/${otherAdminId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ role: UserRole.USER });
+
+    expect(res.status).toBe(403);
   });
 });
 

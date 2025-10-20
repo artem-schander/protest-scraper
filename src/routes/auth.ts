@@ -9,6 +9,7 @@ import { hashPassword, comparePassword } from '../utils/password.js';
 import { generateToken, verifyRefreshToken } from '../utils/jwt.js';
 import { sendVerificationEmail, sendWelcomeEmail, isEmailConfigured } from '../services/email.js';
 import { authenticate, AuthRequest } from '../middleware/auth.js';
+import { generateVerificationCode, hashVerificationCode, VERIFICATION_CODE_EXPIRY_MINUTES } from '../utils/verification.js';
 
 const router = Router();
 
@@ -23,6 +24,8 @@ function setAuthCookie(res: Response, token: string): void {
     path: '/',
   });
 }
+
+const MAX_VERIFICATION_ATTEMPTS = 5;
 
 // Rate limiters for spam protection
 // In test environment, use shorter window to allow rate limit tests to work without interference
@@ -115,11 +118,13 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
       return;
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     const db = getDatabase();
     const users = db.collection<User>('users');
 
     // Check if user already exists
-    const existingUser = await users.findOne({ email });
+    const existingUser = await users.findOne({ email: normalizedEmail });
     if (existingUser) {
       res.status(409).json({ error: 'User already exists' });
       return;
@@ -128,18 +133,22 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Generate email verification token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    // Generate email verification code
+    const verificationCode = generateVerificationCode();
+    const verificationCodeHash = hashVerificationCode(verificationCode);
+    const verificationCodeExpires = new Date(
+      Date.now() + VERIFICATION_CODE_EXPIRY_MINUTES * 60 * 1000
+    );
 
     // Create user
     const newUser: Omit<User, '_id'> = {
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       role: role || UserRole.USER,
       emailVerified: false,
-      verificationToken,
-      verificationTokenExpires,
+      verificationCodeHash,
+      verificationCodeExpires,
+      verificationCodeAttempts: 0,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -148,33 +157,25 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
 
     // Send verification email (non-blocking)
     if (isEmailConfigured()) {
-      sendVerificationEmail(email, verificationToken).catch((error) =>
+      sendVerificationEmail(normalizedEmail, verificationCode).catch((error) =>
         console.error('Failed to send verification email:', error)
       );
     }
 
-    // Generate JWT token and set cookie
-    const token = generateToken({
-      userId: result.insertedId.toString(),
-      email,
-      role: newUser.role,
-    });
+    const responseBody: Record<string, unknown> = {
+      message: 'Registration successful. Enter the verification code sent to your email address.',
+      requiresVerification: true,
+      email: normalizedEmail,
+    };
 
-    setAuthCookie(res, token);
+    if (!isEmailConfigured() || process.env.NODE_ENV !== 'production') {
+      responseBody.debugVerificationCode = verificationCode;
+    }
 
-    res.status(201).json({
-      message: isEmailConfigured()
-        ? 'User registered successfully. Please check your email to verify your account.'
-        : 'User registered successfully. Email verification is currently disabled.',
-      token, // Include token in response for backwards compatibility
-      user: {
-        id: result.insertedId.toString(),
-        email,
-        role: newUser.role,
-        emailVerified: newUser.emailVerified,
-        createdAt: newUser.createdAt,
-      },
-    });
+    // Include generated user id for client-side reference if needed
+    responseBody.userId = result.insertedId.toString();
+
+    res.status(201).json(responseBody);
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ error: 'Registration failed' });
@@ -191,11 +192,13 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
       return;
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     const db = getDatabase();
     const users = db.collection<User>('users');
 
     // Find user
-    const user = await users.findOne({ email });
+    const user = await users.findOne({ email: normalizedEmail });
     if (!user) {
       res.status(401).json({ error: 'Invalid credentials' });
       return;
@@ -210,12 +213,25 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
       }
     }
 
-    // Check email verification (optional - can be enforced by setting env var)
-    const requireEmailVerification = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
+    // Check ban status before allowing login
+    if (user.bannedUntil && user.bannedUntil > new Date()) {
+      res.status(403).json({
+        error: 'Account is currently banned.',
+        bannedUntil: user.bannedUntil,
+        bannedReason: user.bannedReason || undefined,
+        banned: true
+      });
+      return;
+    }
+
+    // Enforce email verification unless explicitly disabled
+    const requireEmailVerification = process.env.REQUIRE_EMAIL_VERIFICATION !== 'false';
     if (requireEmailVerification && !user.emailVerified) {
       res.status(403).json({
-        error: 'Email not verified. Please check your email for the verification link.',
+        error: 'Email not verified. Please enter the verification code that was sent to you.',
         emailVerified: false,
+        requiresVerification: true,
+        email: normalizedEmail
       });
       return;
     }
@@ -238,6 +254,8 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
         email: user.email,
         role: user.role,
         emailVerified: user.emailVerified,
+        bannedUntil: user.bannedUntil ?? null,
+        bannedReason: user.bannedReason,
       },
     });
   } catch (error) {
@@ -246,31 +264,96 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
   }
 });
 
-// GET /api/auth/verify-email - Verify email with token
-router.get('/verify-email', async (req: Request, res: Response): Promise<void> => {
+// POST /api/auth/verify-email - Verify email with 6-character code
+router.post('/verify-email', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { token } = req.query;
+    const { email, code }: { email?: string; code?: string } = req.body || {};
 
-    if (!token || typeof token !== 'string') {
-      res.status(400).json({ error: 'Verification token is required' });
+    if (!email || !code) {
+      res.status(400).json({ error: 'Email and verification code are required.' });
       return;
     }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedCode = code.trim().toUpperCase();
 
     const db = getDatabase();
     const users = db.collection<User>('users');
 
-    // Find user with this verification token
-    const user = await users.findOne({
-      verificationToken: token,
-      verificationTokenExpires: { $gt: new Date() }, // Token not expired
-    });
+    const user = await users.findOne({ email: normalizedEmail });
 
     if (!user) {
-      res.status(400).json({ error: 'Invalid or expired verification token' });
+      res.status(400).json({ error: 'Invalid verification code.' });
       return;
     }
 
-    // Mark email as verified and clear verification token
+    if (user.emailVerified) {
+      // Already verified – just issue a fresh token to keep UX simple
+      const token = generateToken({
+        userId: user._id!.toString(),
+        email: user.email,
+        role: user.role,
+      });
+      setAuthCookie(res, token);
+      res.json({
+        message: 'Email already verified.',
+        user: {
+          id: user._id!.toString(),
+          email: user.email,
+          role: user.role,
+          emailVerified: true,
+        },
+      });
+      return;
+    }
+
+    if (!user.verificationCodeHash || !user.verificationCodeExpires) {
+      res.status(400).json({
+        error: 'No verification code is registered for this account. Please request a new code.',
+        requiresResend: true,
+      });
+      return;
+    }
+
+    if (user.verificationCodeExpires < new Date()) {
+      res.status(410).json({
+        error: 'Verification code has expired. Please request a new code.',
+        expired: true,
+        requiresResend: true,
+      });
+      return;
+    }
+
+    const attempts = (user.verificationCodeAttempts || 0) + 1;
+    const codeMatches = hashVerificationCode(normalizedCode) === user.verificationCodeHash;
+
+    if (!codeMatches) {
+      await users.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            verificationCodeAttempts: attempts,
+            updatedAt: new Date(),
+          },
+        }
+      );
+
+      if (attempts >= MAX_VERIFICATION_ATTEMPTS) {
+        res.status(429).json({
+          error: 'Too many incorrect attempts. Please request a new verification code.',
+          locked: true,
+          requiresResend: true,
+        });
+        return;
+      }
+
+      res.status(400).json({
+        error: 'Invalid verification code. Please try again.',
+        attemptsRemaining: Math.max(MAX_VERIFICATION_ATTEMPTS - attempts, 0),
+      });
+      return;
+    }
+
     await users.updateOne(
       { _id: user._id },
       {
@@ -279,22 +362,36 @@ router.get('/verify-email', async (req: Request, res: Response): Promise<void> =
           updatedAt: new Date(),
         },
         $unset: {
-          verificationToken: '',
-          verificationTokenExpires: '',
+          verificationCodeHash: '',
+          verificationCodeExpires: '',
+          verificationCodeAttempts: '',
         },
       }
     );
 
-    // Send welcome email (non-blocking)
     if (isEmailConfigured()) {
       sendWelcomeEmail(user.email).catch((error) =>
         console.error('Failed to send welcome email:', error)
       );
     }
 
+    const token = generateToken({
+      userId: user._id!.toString(),
+      email: user.email,
+      role: user.role,
+    });
+    setAuthCookie(res, token);
+
     res.json({
-      message: 'Email verified successfully! You can now log in.',
-      verified: true,
+      message: 'Email verified successfully.',
+      user: {
+        id: user._id!.toString(),
+        email: user.email,
+        role: user.role,
+        emailVerified: true,
+        bannedUntil: user.bannedUntil ?? null,
+        bannedReason: user.bannedReason,
+      },
     });
   } catch (error) {
     console.error('Email verification error:', error);
@@ -320,16 +417,13 @@ router.post('/resend-verification', resendVerificationLimiter, async (req: Reque
       return;
     }
 
-    if (!isEmailConfigured()) {
-      res.status(503).json({ error: 'Email service not configured' });
-      return;
-    }
+    const normalizedEmail = email.trim().toLowerCase();
 
     const db = getDatabase();
     const users = db.collection<User>('users');
 
     // Find user
-    const user = await users.findOne({ email });
+    const user = await users.findOne({ email: normalizedEmail });
     if (!user) {
       // Don't reveal if user exists - security best practice
       res.json({ message: 'If an account exists with this email, a verification email has been sent.' });
@@ -342,28 +436,40 @@ router.post('/resend-verification', resendVerificationLimiter, async (req: Reque
       return;
     }
 
-    // Generate new verification token
-    const verificationToken = crypto.randomBytes(32).toString('hex');
-    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const verificationCode = generateVerificationCode();
+    const verificationCodeHash = hashVerificationCode(verificationCode);
+    const verificationCodeExpires = new Date(
+      Date.now() + VERIFICATION_CODE_EXPIRY_MINUTES * 60 * 1000
+    );
 
     // Update user with new token
     await users.updateOne(
       { _id: user._id },
       {
         $set: {
-          verificationToken,
-          verificationTokenExpires,
+          verificationCodeHash,
+          verificationCodeExpires,
+          verificationCodeAttempts: 0,
           updatedAt: new Date(),
         },
       }
     );
 
-    // Send verification email
-    await sendVerificationEmail(email, verificationToken);
+    if (isEmailConfigured()) {
+      await sendVerificationEmail(normalizedEmail, verificationCode);
+    }
 
-    res.json({
-      message: 'Verification email sent. Please check your inbox.',
-    });
+    const responseBody: Record<string, unknown> = {
+      message: 'A new verification code has been issued. Please check your inbox.',
+      requiresVerification: true,
+      email: normalizedEmail,
+    };
+
+    if (!isEmailConfigured() || process.env.NODE_ENV !== 'production') {
+      responseBody.debugVerificationCode = verificationCode;
+    }
+
+    res.json(responseBody);
   } catch (error) {
     console.error('Resend verification error:', error);
     res.status(500).json({ error: 'Failed to resend verification email' });
