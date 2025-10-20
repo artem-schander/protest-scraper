@@ -1,96 +1,62 @@
 import { describe, it, expect } from 'vitest';
-import { formatLocationDetails } from '../../src/utils/geocode.js';
+import { normalizeAddress } from '../../src/utils/geocode.js';
 
-describe('formatLocationDetails', () => {
-  it('should format German address with postal code and city', () => {
-    const input = 'Am Treptower Park, Plänterwald, Treptow-Köpenick, Berlin, 12435, Deutschland';
-    const expected = '12435 Berlin, Treptow-Köpenick, Plänterwald, Am Treptower Park';
-    expect(formatLocationDetails(input)).toBe(expected);
+describe('normalizeAddress', () => {
+  it('returns empty string when address object missing', () => {
+    expect(normalizeAddress(undefined)).toBe('');
+    expect(normalizeAddress(null)).toBe('');
   });
 
-  it('should format simple city and country', () => {
-    const input = 'Berlin, Deutschland';
-    const expected = 'Berlin';
-    expect(formatLocationDetails(input)).toBe(expected);
+  it('formats street, postcode, and locality', () => {
+    const address = {
+      road: 'Am Treptower Park',
+      suburb: 'Plänterwald', // ignored by normalizeAddress
+      postcode: '12435',
+      city: 'Berlin',
+    };
+
+    expect(normalizeAddress(address)).toBe('Am Treptower Park, 12435 Berlin');
   });
 
-  it('should format Austrian address (4-digit postal code)', () => {
-    const input = 'Stephansplatz, Innere Stadt, Vienna, 1010, Austria';
-    const expected = '1010 Vienna, Innere Stadt, Stephansplatz';
-    expect(formatLocationDetails(input)).toBe(expected);
+  it('includes house number when provided', () => {
+    const address = {
+      road: 'Reeperbahn',
+      house_number: '1A',
+      postcode: '20359',
+      city: 'Hamburg',
+      state: 'Hamburg',
+    };
+
+    expect(normalizeAddress(address)).toBe('Reeperbahn 1A, 20359 Hamburg, Hamburg');
   });
 
-  it('should format Swiss address (4-digit postal code)', () => {
-    const input = 'Bahnhofstrasse, Zürich, 8001, Switzerland';
-    const expected = '8001 Zürich, Bahnhofstrasse';
-    expect(formatLocationDetails(input)).toBe(expected);
+  it('falls back to village or town when city missing', () => {
+    const address = {
+      road: 'Stephansplatz',
+      postcode: '1010',
+      town: 'Vienna',
+      county: 'Innere Stadt',
+    };
+
+    expect(normalizeAddress(address)).toBe('Stephansplatz, 1010 Vienna, Innere Stadt');
   });
 
-  it('should format French address (5-digit postal code)', () => {
-    const input = 'Champs-Élysées, 8th arrondissement, Paris, 75008, France';
-    const expected = '75008 Paris, 8th arrondissement, Champs-Élysées';
-    expect(formatLocationDetails(input)).toBe(expected);
+  it('omits missing sections gracefully', () => {
+    const address = {
+      city: 'Berlin',
+    };
+
+    expect(normalizeAddress(address)).toBe('Berlin');
   });
 
-  it('should format Dutch address (postal code with letters)', () => {
-    const input = 'Dam Square, Centrum, Amsterdam, 1012 AB, Netherlands';
-    const expected = '1012 AB Amsterdam, Centrum, Dam Square';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
+  it('returns joined region parts when available', () => {
+    const address = {
+      postcode: '75008',
+      city: 'Paris',
+      state: 'Île-de-France',
+      county: 'Paris',
+    };
 
-  it('should format UK address (complex postal code)', () => {
-    const input = 'Downing Street, Westminster, London, SW1A 1AA, United Kingdom';
-    const expected = 'SW1A 1AA London, Westminster, Downing Street';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should format Polish address (dash-separated postal code)', () => {
-    const input = 'Market Square, Old Town, Warsaw, 00-001, Poland';
-    const expected = '00-001 Warsaw, Old Town, Market Square';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should handle address without postal code', () => {
-    const input = 'Central Square, District, City, Country';
-    const expected = 'City, District, Central Square';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should handle single element', () => {
-    const input = 'Berlin';
-    const expected = 'Berlin';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should return null for undefined', () => {
-    expect(formatLocationDetails(undefined)).toBe(null);
-  });
-
-  it('should return null for empty string', () => {
-    expect(formatLocationDetails('')).toBe(null);
-  });
-
-  it('should handle address with extra whitespace', () => {
-    const input = '  Am Treptower Park  ,  Plänterwald  ,  Berlin  ,  12435  ,  Deutschland  ';
-    const expected = '12435 Berlin, Plänterwald, Am Treptower Park';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should format Dresden address', () => {
-    const input = 'Altmarkt, Innere Altstadt, Dresden, 01067, Germany';
-    const expected = '01067 Dresden, Innere Altstadt, Altmarkt';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should format Munich address', () => {
-    const input = 'Marienplatz, Altstadt-Lehel, Munich, 80331, Germany';
-    const expected = '80331 Munich, Altstadt-Lehel, Marienplatz';
-    expect(formatLocationDetails(input)).toBe(expected);
-  });
-
-  it('should format Hamburg address', () => {
-    const input = 'Reeperbahn, St. Pauli, Hamburg, 20359, Germany';
-    const expected = '20359 Hamburg, St. Pauli, Reeperbahn';
-    expect(formatLocationDetails(input)).toBe(expected);
+    expect(normalizeAddress(address)).toBe('75008 Paris, Île-de-France Paris');
   });
 });

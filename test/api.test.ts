@@ -13,9 +13,13 @@ let mongoServer: MongoMemoryServer;
 let client: MongoClient;
 let db: Db;
 const app = createApp();
+const FIXED_DATE = new Date('2025-10-01T00:00:00Z');
 
 // Mock database connection
 beforeAll(async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(FIXED_DATE);
+
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
 
@@ -42,6 +46,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await client.close();
   await mongoServer.stop();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -311,12 +316,20 @@ describe('Auth API', () => {
     });
 
     it('should reject refresh with invalid cookie', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementationOnce(() => {
+          // Suppress expected token refresh warning during test
+        });
+
       const res = await request(app)
         .post('/api/auth/refresh')
         .set('Cookie', 'auth-token=invalid-token');
 
       expect(res.status).toBe(401);
       expect(res.body.error).toBeDefined();
+
+      consoleErrorSpy.mockRestore();
     });
   });
 

@@ -81,13 +81,17 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<
     const verified =
       req.user?.role === UserRole.MODERATOR || req.user?.role === UserRole.ADMIN;
 
+    // Normalize date fields so Mongo stores real Date objects instead of ISO strings
+    const startDate = protestData.start !== undefined && protestData.start !== null ? new Date(protestData.start) : null;
+    const endDate = protestData.end !== undefined && protestData.end !== null ? new Date(protestData.end) : null;
+
     const newProtest: Omit<Protest, '_id'> = {
       source: protestData.source || 'Manual Submission',
       city: protestData.city || null,
       country: protestData.country || null,
       title: protestData.title,
-      start: protestData.start || null,
-      end: protestData.end || null,
+      start: startDate && !Number.isNaN(startDate.getTime()) ? startDate : null,
+      end: endDate && !Number.isNaN(endDate.getTime()) ? endDate : null,
       language: protestData.language || null,
       location: protestData.location || null,
       geoLocation: protestData.geoLocation || undefined,
@@ -139,6 +143,18 @@ router.put(
         manuallyEdited: true, // Mark as manually edited to prevent scraper overwrites
         updatedAt: new Date(),
       };
+
+      if (updates.start !== undefined) {
+        const parsedStart =
+          updates.start !== null ? new Date(updates.start as Date | string) : null;
+        updateData.start =
+          parsedStart && !Number.isNaN(parsedStart.getTime()) ? parsedStart : null;
+      }
+
+      if (updates.end !== undefined) {
+        const parsedEnd = updates.end !== null ? new Date(updates.end as Date | string) : null;
+        updateData.end = parsedEnd && !Number.isNaN(parsedEnd.getTime()) ? parsedEnd : null;
+      }
 
       const result = await protests.findOneAndUpdate(
         { _id: new ObjectId(id) },
