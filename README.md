@@ -544,7 +544,7 @@ EMAIL_PORT=587
 EMAIL_SECURE=false
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
-EMAIL_FROM='"Protest Scraper" <noreply@protest-scraper.com>'
+EMAIL_FROM='"Protest Listing" <noreply@protest-listing.com>'
 ```
 
 **Alternative Email Providers:**

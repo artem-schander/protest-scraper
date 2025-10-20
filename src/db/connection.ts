@@ -8,7 +8,7 @@ export async function connectToDatabase(): Promise<Db> {
     return db;
   }
 
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/protest-scraper';
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/protest-listing';
 
   try {
     client = new MongoClient(uri);

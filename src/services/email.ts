@@ -44,7 +44,7 @@ export async function sendVerificationEmail(
 ): Promise<void> {
 
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Protest Scraper" <noreply@protest-scraper.com>',
+    from: process.env.EMAIL_FROM || '"Protest Listing" <noreply@protest-listing.com>',
     to,
     subject: 'Verify your email for Protest Listing',
     text: `Welcome to Protest Listing!
@@ -108,7 +108,7 @@ Protest Listing Team`,
  */
 export async function sendWelcomeEmail(to: string): Promise<void> {
   const mailOptions = {
-    from: process.env.EMAIL_FROM || '"Protest Listing Service" <noreply@protest-scraper.com>',
+    from: process.env.EMAIL_FROM || '"Protest Listing" <noreply@protest-listing.com>',
     to,
     subject: 'Welcome to Protest Listing Service!',
     text: `Your email has been verified successfully!
