@@ -46,6 +46,17 @@ yarn scrape                       # Dev mode: export to output/ folder
 yarn scrape:prod --days 90        # Production: export to files
 ```
 
+### User Management
+```bash
+# Promote user to moderator or admin
+yarn set-role -e user@example.com -r MODERATOR
+yarn set-role -e user@example.com -r ADMIN
+yarn set-role -e user@example.com -r USER      # Demote back to regular user
+
+# Production
+yarn set-role:prod -e user@example.com -r MODERATOR
+```
+
 ### Docker
 ```bash
 docker compose up -d --build      # Build and start all services
@@ -81,6 +92,8 @@ src/
 ├── scraper/                    # Data scraping & import
 │   ├── scrape-protests.ts      # Standalone scraper (outputs files)
 │   └── import-to-db.ts         # MongoDB import script
+├── scripts/                    # CLI utilities
+│   └── set-user-role.ts        # Promote/demote user roles
 ├── routes/                     # Express route handlers
 │   ├── auth.ts                 # Authentication (/api/auth/*)
 │   ├── protests.ts             # Protest CRUD (/api/protests/*)
