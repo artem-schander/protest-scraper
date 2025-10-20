@@ -16,13 +16,20 @@ const router = Router();
 // Helper function to set auth cookie
 function setAuthCookie(res: Response, token: string): void {
   const isProduction = process.env.NODE_ENV === 'production';
-  res.cookie('auth-token', token, {
-    httpOnly: true, // Prevents JavaScript access (XSS protection)
-    secure: isProduction, // HTTPS only in production
-    sameSite: 'lax', // CSRF protection
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds (matches refresh period)
+  const cookieOptions: any = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'lax',
+    maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/',
-  });
+  };
+
+  // Set domain for production if configured (for cross-subdomain auth)
+  if (isProduction && process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  res.cookie('auth-token', token, cookieOptions);
 }
 
 const MAX_VERIFICATION_ATTEMPTS = 5;
@@ -749,12 +756,19 @@ router.post('/apple/callback', async (req: Request, res: Response): Promise<void
 
 // POST /api/auth/logout - Clear auth cookie
 router.post('/logout', (_req: Request, res: Response): void => {
-  res.clearCookie('auth-token', {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const cookieOptions: any = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProduction,
     sameSite: 'lax',
     path: '/',
-  });
+  };
+
+  if (isProduction && process.env.COOKIE_DOMAIN) {
+    cookieOptions.domain = process.env.COOKIE_DOMAIN;
+  }
+
+  res.clearCookie('auth-token', cookieOptions);
   res.json({ message: 'Logged out successfully' });
 });
 
