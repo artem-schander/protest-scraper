@@ -618,7 +618,11 @@ router.get('/google/callback', async (req: Request, res: Response): Promise<void
     res.redirect(`${frontendUrl}/auth/callback?user=${userParam}`);
   } catch (error) {
     console.error('Google OAuth callback error:', error);
-    res.status(500).json({ error: 'Google login failed' });
+
+    // Redirect to frontend with error instead of returning JSON
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const errorMessage = error instanceof Error ? error.message : 'Google login failed';
+    res.redirect(`${frontendUrl}/auth/callback?error=${encodeURIComponent(errorMessage)}`);
   }
 });
 
@@ -750,7 +754,11 @@ router.post('/apple/callback', async (req: Request, res: Response): Promise<void
     res.redirect(`${frontendUrl}/auth/callback?user=${userParam}`);
   } catch (error) {
     console.error('Apple OAuth callback error:', error);
-    res.status(500).json({ error: 'Apple login failed' });
+
+    // Redirect to frontend with error instead of returning JSON
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const errorMessage = error instanceof Error ? error.message : 'Apple login failed';
+    res.redirect(`${frontendUrl}/auth/callback?error=${encodeURIComponent(errorMessage)}`);
   }
 });
 
