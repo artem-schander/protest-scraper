@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import protestRoutes from './routes/protests.js';
 import exportRoutes from './routes/export.js';
 import adminUsersRoutes from './routes/admin-users.js';
+import contactRoutes from './routes/contact.js';
 
 export function createApp(): Application {
   const app: Application = express();
@@ -57,6 +58,7 @@ export function createApp(): Application {
   app.use('/api/protests', protestRoutes);
   app.use('/api/export', exportRoutes);
   app.use('/api/admin/users', adminUsersRoutes);
+  app.use('/api/contact', contactRoutes);
 
   // Error handler (must be last)
   app.use(errorHandler);

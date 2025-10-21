@@ -369,6 +369,171 @@ Protest Listing Service Team`,
 }
 
 /**
+ * Send contact form email to admin and user
+ */
+export async function sendContactFormEmails(
+  name: string,
+  email: string,
+  topic: string,
+  customTopic: string | undefined,
+  message: string
+): Promise<void> {
+  const finalTopic = topic === 'Other' && customTopic ? customTopic : topic;
+  const adminEmail = process.env.CONTACT_EMAIL || 'info@protest-listing.com';
+
+  // Email to admin
+  const adminContent = `
+    <h2 style="margin: 0 0 24px 0; font-size: 28px; font-weight: 700; color: #111827; line-height: 1.2;">
+      New Contact Form Submission
+    </h2>
+
+    <div style="background-color: #f9fafb; border-radius: 8px; padding: 24px; margin: 24px 0;">
+      <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+            <strong style="color: #6b7280; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">From</strong>
+          </td>
+          <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+            <span style="color: #111827; font-size: 15px;">${name}</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+            <strong style="color: #6b7280; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Email</strong>
+          </td>
+          <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right;">
+            <a href="mailto:${email}" style="color: #E10600; font-size: 15px;">${email}</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0;">
+            <strong style="color: #6b7280; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Topic</strong>
+          </td>
+          <td style="padding: 8px 0; text-align: right;">
+            <span style="color: #111827; font-size: 15px;">${finalTopic}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin: 32px 0;">
+      <h3 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px;">
+        Message
+      </h3>
+      <div style="background-color: #ffffff; border: 2px solid #e5e7eb; border-radius: 8px; padding: 20px;">
+        <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
+      <p style="margin: 0; font-size: 14px; color: #6b7280;">
+        Reply to this message by responding to ${email}
+      </p>
+    </div>
+  `;
+
+  // Email to user (confirmation)
+  const userContent = `
+    <h2 style="margin: 0 0 16px 0; font-size: 28px; font-weight: 700; color: #111827; line-height: 1.2; text-align: center;">
+      Thank You for Contacting Us
+    </h2>
+    <p style="margin: 0 0 32px 0; font-size: 16px; color: #6b7280; line-height: 1.6; text-align: center;">
+      We've received your message and will get back to you soon.
+    </p>
+
+    <div style="background-color: #fef3f2; border-left: 4px solid #E10600; border-radius: 8px; padding: 24px; margin: 32px 0;">
+      <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #1f2937;">
+        Your Message Summary
+      </h3>
+      <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding: 6px 0;">
+            <strong style="color: #6b7280; font-size: 14px;">Topic:</strong>
+          </td>
+          <td style="padding: 6px 0;">
+            <span style="color: #111827; font-size: 14px;">${finalTopic}</span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="padding: 12px 0 0 0;">
+            <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-top: 32px; text-align: center;">
+      <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; line-height: 1.6;">
+        We typically respond within 24-48 hours.
+      </p>
+      <p style="margin: 0; font-size: 14px; color: #6b7280;">
+        If you have an urgent matter, please mention it in your message.
+      </p>
+    </div>
+  `;
+
+  const mailOptionsAdmin = {
+    from: process.env.EMAIL_FROM || '"Protest Listing" <noreply@protest-listing.com>',
+    to: adminEmail,
+    replyTo: email,
+    subject: `Contact Form: ${finalTopic} - from ${name}`,
+    text: `New contact form submission
+
+From: ${name}
+Email: ${email}
+Topic: ${finalTopic}
+
+Message:
+${message}
+
+---
+Reply to this email to respond directly to ${email}`,
+    html: getEmailTemplate({
+      title: 'New Contact Form Submission',
+      preheader: `${finalTopic} - from ${name}`,
+      content: adminContent
+    }),
+  };
+
+  const mailOptionsUser = {
+    from: process.env.EMAIL_FROM || '"Protest Listing" <noreply@protest-listing.com>',
+    to: email,
+    subject: 'Thank you for contacting Protest Listing',
+    text: `Thank you for contacting us!
+
+We've received your message about: ${finalTopic}
+
+Your message:
+${message}
+
+We typically respond within 24-48 hours. If you have an urgent matter, please mention it in your message.
+
+Best regards,
+Protest Listing Team`,
+    html: getEmailTemplate({
+      title: 'Message Received',
+      preheader: 'We\'ve received your message and will get back to you soon.',
+      content: userContent
+    }),
+  };
+
+  try {
+    const transport = getTransporter();
+
+    // Send both emails
+    await Promise.all([
+      transport.sendMail(mailOptionsAdmin),
+      transport.sendMail(mailOptionsUser)
+    ]);
+
+    console.log(`Contact form emails sent: admin=${adminEmail}, user=${email}`);
+  } catch (error) {
+    console.error('Failed to send contact form emails:', error);
+    throw new Error('Failed to send contact form emails');
+  }
+}
+
+/**
  * Check if email service is configured
  */
 export function isEmailConfigured(): boolean {

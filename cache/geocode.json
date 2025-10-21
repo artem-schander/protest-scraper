@@ -928,5 +928,180 @@
     "lat": 52.5150919,
     "lon": 13.3601863,
     "address": "Straße des 17. Juni, 10785 Berlin"
+  },
+  "12435 Berlin, Am Treptower Park 14": {
+    "lat": 52.4905787,
+    "lon": 13.457278,
+    "address": "Am Treptower Park 14, 12435 Berlin"
+  },
+  "12165 Berlin, Hermann-Ehlers-Platz": {
+    "lat": 52.456963,
+    "lon": 13.3214274,
+    "address": "12165 Berlin"
+  },
+  "Schwäbisch Gmünd, Oberer Marktplatz": {
+    "lat": 48.7999036,
+    "lon": 9.7977584,
+    "address": "Schwäbisch Gmünd, Baden-Württemberg Ostalbkreis"
+  },
+  "Kiel, Stresemannplatz": {
+    "lat": 54.3178392,
+    "lon": 10.1349524,
+    "address": "Stresemannplatz, 24103 Kiel, Schleswig-Holstein"
+  },
+  "10719 Berlin, Grünfeld-Ecke": {
+    "lat": 52.5033203,
+    "lon": 13.3307652,
+    "address": "10719 Berlin"
+  },
+  "10178 Berlin": {
+    "lat": 52.520286,
+    "lon": 13.4047307,
+    "address": "10178 Berlin"
+  },
+  "Uhingen, Vorplatz Uditorium": {
+    "lat": 48.7042331,
+    "lon": 9.5856424,
+    "address": "73066 Uhingen, Baden-Württemberg Landkreis Göppingen"
+  },
+  "Heidelberg, Schwanenteichanlage": {
+    "lat": 49.4067512,
+    "lon": 8.6871452,
+    "address": "69115 Heidelberg, Baden-Württemberg"
+  },
+  "Bielefeld, Hauptbahnhof": {
+    "lat": 52.028585,
+    "lon": 8.5349373,
+    "address": "Herbert-Hinnendahl-Straße, 33602 Bielefeld, Nordrhein-Westfalen"
+  },
+  "München, Münchener Freiheit": {
+    "lat": 48.1657073,
+    "lon": 11.5897472,
+    "address": "Ungererstraße 44, 80802 München, Bayern"
+  },
+  "München, U-Bahnhof Dietlindenstraße": {
+    "lat": 48.1371079,
+    "lon": 11.5753822,
+    "address": "München, Bayern"
+  },
+  "Leverkusen, Rathaus (Wiesdorf)": {
+    "lat": 51.0324743,
+    "lon": 6.9881194,
+    "address": "Leverkusen, Nordrhein-Westfalen"
+  },
+  "Hamburg, S-Bahnhof Harburg Rathaus": {
+    "lat": 53.550341,
+    "lon": 10.000654,
+    "address": "Hamburg"
+  },
+  "Gelsenkirchen, Bahnhofstraße": {
+    "lat": 51.5078403,
+    "lon": 7.0987503,
+    "address": "Bahnhofstraße, 45879 Gelsenkirchen, Nordrhein-Westfalen"
+  },
+  "Nürnberg, Willy-Prölß-Platz": {
+    "lat": 49.4440485,
+    "lon": 11.0778634,
+    "address": "Willy-Prölß-Platz, 90459 Nürnberg, Bayern"
+  },
+  "Köln, Bahnhofsvorplatz": {
+    "lat": 50.9423104,
+    "lon": 6.9579837,
+    "address": "Bahnhofsvorplatz, 50667 Köln, Nordrhein-Westfalen"
+  },
+  "13353 Berlin, Leopoldplatz": {
+    "lat": 52.5463833,
+    "lon": 13.3591672,
+    "address": "Schulstraße, 13353 Berlin"
+  },
+  "10117 Berlin, Unter den Linden 6": {
+    "lat": 52.5183402,
+    "lon": 13.3929202,
+    "address": "Unter den Linden 6, 10117 Berlin"
+  },
+  "10178 Berlin, Am Lustgarten": {
+    "lat": 52.5191384,
+    "lon": 13.4001379,
+    "address": "Am Lustgarten, 10178 Berlin"
+  },
+  "10117 Berlin, Bebelplatz 2": {
+    "lat": 52.5164723,
+    "lon": 13.3930752,
+    "address": "Bebelplatz 2, 10117 Berlin"
+  },
+  "10117 Berlin, Friedrichstr. 96": {
+    "lat": 52.5195662,
+    "lon": 13.3887176,
+    "address": "Friedrichstraße 96, 10117 Berlin"
+  },
+  "Hannover, Opernplatz": {
+    "lat": 52.3731502,
+    "lon": 9.7400705,
+    "address": "Opernplatz, 30159 Hannover, Niedersachsen Region Hannover"
+  },
+  "10243 Berlin, Uber Platz": {
+    "lat": 52.5055537,
+    "lon": 13.4434752,
+    "address": "Uber Platz, 10243 Berlin"
+  },
+  "Wismar, Marktplatz": {
+    "lat": 53.8909832,
+    "lon": 11.4647932,
+    "address": "Wismar, Mecklenburg-Vorpommern Nordwestmecklenburg"
+  },
+  "12589 Berlin, Püttbergeweg 143": {
+    "lat": 52.4417,
+    "lon": 13.7097064,
+    "address": "Püttbergeweg 143, 12589 Berlin"
+  },
+  "10967 Berlin, Hermannplatz": {
+    "lat": 52.4862857,
+    "lon": 13.4245531,
+    "address": "Karl-Marx-Straße, 10967 Berlin"
+  },
+  "Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "address": "10117 Berlin"
+  },
+  "Bitterfeld-Wolfen, Marktplatz": {
+    "lat": 51.6425032,
+    "lon": 12.3076334,
+    "address": "Bitterfeld-Wolfen, Sachsen-Anhalt Anhalt-Bitterfeld"
+  },
+  "10249 Berlin, Richard-Sorge-Str.": {
+    "lat": 52.5248467,
+    "lon": 13.4440834,
+    "address": "Richard-Sorge-Straße, 10249 Berlin"
+  },
+  "14053 Berlin, Olympischer Platz 1": {
+    "lat": 52.5152552,
+    "lon": 13.2458452,
+    "address": "14053 Berlin"
+  },
+  "10117 Berlin, Gendarmenmarkt": {
+    "lat": 52.5135698,
+    "lon": 13.392297,
+    "address": "Charlottenstraße, 10117 Berlin"
+  },
+  "10243 Berlin, Mühlenstr. 71": {
+    "lat": 52.565697,
+    "lon": 13.4065424,
+    "address": "Mühlenstraße 71, 13187 Berlin"
+  },
+  "Kiel, Hauptbahnhof": {
+    "lat": 54.315959,
+    "lon": 10.1312341,
+    "address": "Sophienblatt, 24103 Kiel, Schleswig-Holstein"
+  },
+  "10967 Berlin": {
+    "lat": 52.4896057,
+    "lon": 13.4164085,
+    "address": "10967 Berlin"
+  },
+  "10785 Berlin, Tiergartenstr. 15": {
+    "lat": 52.5092875,
+    "lon": 13.3627188,
+    "address": "Tiergartenstraße 15, 10785 Berlin"
   }
 }
