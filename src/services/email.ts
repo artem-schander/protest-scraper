@@ -269,67 +269,53 @@ export async function sendWelcomeEmail(to: string): Promise<void> {
       Your email has been verified successfully. You're now part of our community.
     </p>
 
-    <div style="background-color: #fef3f2; border-left: 4px solid #E10600; border-radius: 8px; padding: 24px; margin: 32px 0;">
-      <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #1f2937;">
-        What you can do now:
-      </h3>
+    <table style="width: 100%; border-spacing: 0; margin: 32px 0;" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="background-color: #fef3f2; padding: 24px; border-radius: 12px;">
+          <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #1f2937;">
+            What you can do now:
+          </h3>
 
-      <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding-bottom: 16px;">
-            <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="width: 32px; vertical-align: top; padding-top: 2px;">
-                  <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
-                </td>
-                <td style="padding-left: 8px; vertical-align: top;">
-                  <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
-                    <strong style="color: #111827;">Submit new protests</strong><br>
-                    Share events with the community and help keep everyone informed
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding-bottom: 16px;">
-            <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="width: 32px; vertical-align: top; padding-top: 2px;">
-                  <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
-                </td>
-                <td style="padding-left: 8px; vertical-align: top;">
-                  <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
-                    <strong style="color: #111827;">Edit and manage events</strong><br>
-                    Update protest details and keep information accurate
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="width: 32px; vertical-align: top; padding-top: 2px;">
-                  <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
-                </td>
-                <td style="padding-left: 8px; vertical-align: top;">
-                  <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
-                    <strong style="color: #111827;">Build your profile</strong><br>
-                    Contribute to the movement and connect with others
-                  </p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </div>
+          <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="width: 32px; vertical-align: top; padding-top: 2px; padding-bottom: 16px;">
+                <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
+              </td>
+              <td style="padding-left: 8px; vertical-align: top; padding-bottom: 16px;">
+                <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                  <strong style="color: #111827;">Submit new protests</strong><br>
+                  Share events with the community and help keep everyone informed
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 32px; vertical-align: top; padding-top: 2px; padding-bottom: 16px;">
+                <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
+              </td>
+              <td style="padding-left: 8px; vertical-align: top; padding-bottom: 16px;">
+                <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                  <strong style="color: #111827;">Edit and manage events</strong><br>
+                  Update protest details and keep information accurate
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 32px; vertical-align: top; padding-top: 2px;">
+                <span style="display: inline-block; width: 24px; height: 24px; background-color: #E10600; border-radius: 50%; text-align: center; line-height: 24px; color: white; font-size: 14px; font-weight: bold;">✓</span>
+              </td>
+              <td style="padding-left: 8px; vertical-align: top;">
+                <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
+                  <strong style="color: #111827;">Build your profile</strong><br>
+                  Contribute to the movement and connect with others
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
-    <div style="margin-top: 40px; text-align: center;">
+    <div style="margin-top: 32px; text-align: center;">
       <p style="margin: 0; font-size: 16px; color: #374151; line-height: 1.6;">
         Thank you for joining our community. Together, we amplify voices and organize for change.
       </p>
@@ -441,26 +427,29 @@ export async function sendContactFormEmails(
       We've received your message and will get back to you soon.
     </p>
 
-    <div style="background-color: #fef3f2; border-left: 4px solid #E10600; border-radius: 8px; padding: 24px; margin: 32px 0;">
-      <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #1f2937;">
-        Your Message Summary
-      </h3>
-      <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="padding: 6px 0;">
-            <strong style="color: #6b7280; font-size: 14px;">Topic:</strong>
-          </td>
-          <td style="padding: 6px 0;">
-            <span style="color: #111827; font-size: 14px;">${finalTopic}</span>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2" style="padding: 12px 0 0 0;">
-            <p style="margin: 0; font-size: 14px; color: #374151; line-height: 1.6; white-space: pre-wrap;">${message}</p>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <table style="width: 100%; border-spacing: 0; margin: 32px 0;" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="background-color: #fef3f2; padding: 24px; border-radius: 12px;">
+          <h3 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600; color: #1f2937;">
+            Your Message Summary
+          </h3>
+          <table style="width: 100%; border-spacing: 0;" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-bottom: 12px;">
+                <p style="margin: 0 0 4px 0; font-weight: 600; color: #6b7280; font-size: 14px;">Topic:</p>
+                <p style="margin: 0; color: #111827; font-size: 14px;">${finalTopic}</p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p style="margin: 0 0 4px 0; font-weight: 600; color: #6b7280; font-size: 14px;">Message:</p>
+                <p style="margin: 0; color: #374151; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
     <div style="margin-top: 32px; text-align: center;">
       <p style="margin: 0 0 8px 0; font-size: 16px; color: #374151; line-height: 1.6;">

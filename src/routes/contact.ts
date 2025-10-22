@@ -1,8 +1,26 @@
 import { Router, Request, Response } from 'express';
 import { rateLimit } from 'express-rate-limit';
+import { createHash } from 'crypto';
 import { sendContactFormEmails, isEmailConfigured } from '../services/email.js';
 
 const router = Router();
+
+/**
+ * Verify proof-of-work challenge
+ * Client must find a nonce where SHA-256(challenge + nonce) starts with '000'
+ */
+function verifyProofOfWork(pow: ProofOfWork): boolean {
+  if (!pow || !pow.challenge || typeof pow.nonce !== 'number' || !pow.hash) {
+    return false;
+  }
+
+  // Recreate the hash
+  const text = pow.challenge + pow.nonce;
+  const hash = createHash('sha256').update(text).digest('hex');
+
+  // Verify hash matches and starts with required difficulty
+  return hash === pow.hash && hash.startsWith('000');
+}
 
 // Rate limiter for contact form (prevent spam)
 const contactLimiter = rateLimit({
@@ -13,12 +31,19 @@ const contactLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+interface ProofOfWork {
+  challenge: string;
+  nonce: number;
+  hash: string;
+}
+
 interface ContactFormInput {
   name: string;
   email: string;
   topic: string;
   customTopic?: string;
   message: string;
+  proofOfWork?: ProofOfWork;
 }
 
 // Valid topic options
@@ -42,11 +67,17 @@ router.post('/', contactLimiter, async (req: Request, res: Response): Promise<vo
       return;
     }
 
-    const { name, email, topic, customTopic, message }: ContactFormInput = req.body;
+    const { name, email, topic, customTopic, message, proofOfWork }: ContactFormInput = req.body;
 
     // Validation
     if (!name || !email || !topic || !message) {
       res.status(400).json({ error: 'Name, email, topic, and message are required' });
+      return;
+    }
+
+    // Validate proof-of-work (anti-spam)
+    if (!proofOfWork || !verifyProofOfWork(proofOfWork)) {
+      res.status(400).json({ error: 'Invalid security verification. Please reload the page and try again.' });
       return;
     }
 
