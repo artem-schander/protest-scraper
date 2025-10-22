@@ -16,10 +16,13 @@ const router = Router();
 // Helper function to set auth cookie
 function setAuthCookie(res: Response, token: string): void {
   const isProduction = process.env.NODE_ENV === 'production';
+
+  // For cross-origin OAuth (backend on scraper.protest-listing.com, frontend on protest-listing.com),
+  // we need SameSite=None with Secure=true to allow cookies in OAuth redirects
   const cookieOptions: any = {
     httpOnly: true,
-    secure: isProduction,
-    sameSite: 'lax',
+    secure: isProduction, // Always true in production (HTTPS required for SameSite=None)
+    sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin in production, 'lax' for dev
     maxAge: 30 * 24 * 60 * 60 * 1000,
     path: '/',
   };
