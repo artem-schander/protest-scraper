@@ -785,6 +785,11 @@ router.post('/logout', (_req: Request, res: Response): void => {
 
 // GET /api/auth/me - Get current user from token
 router.get('/me', authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
+  // Prevent caching of authentication responses
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+
   try {
     const db = getDatabase();
     const users = db.collection<User>('users');

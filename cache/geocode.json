@@ -1103,5 +1103,120 @@
     "lat": 52.5092875,
     "lon": 13.3627188,
     "address": "Tiergartenstraße 15, 10785 Berlin"
+  },
+  "Ilmenau, Apothekerbrunnen": {
+    "lat": 50.6852316,
+    "lon": 10.9143882,
+    "address": "Straße des Friedens, 98693 Ilmenau, Thüringen Ilm-Kreis"
+  },
+  "10117 Berlin, Taubenstr. 20": {
+    "lat": 52.5131962,
+    "lon": 13.3943609,
+    "address": "Taubenstraße 20, 10117 Berlin"
+  },
+  "Köln, Alter Markt": {
+    "lat": 50.9385436,
+    "lon": 6.9600193,
+    "address": "Alter Markt, 50667 Köln, Nordrhein-Westfalen"
+  },
+  "Münster, Stadthaus 2": {
+    "lat": 51.9550596,
+    "lon": 7.6268247,
+    "address": "Ludgeriplatz 4a, 48151 Münster, Nordrhein-Westfalen"
+  },
+  "10551 Berlin, Mathilde-Jacob-Platz": {
+    "lat": 52.5268223,
+    "lon": 13.338451,
+    "address": "10551 Berlin"
+  },
+  "Dresden, Rathausplatz": {
+    "lat": 51.047741,
+    "lon": 13.742087,
+    "address": "01067 Dresden, Sachsen"
+  },
+  "ruruHaus documenta fifteen, Kassel,  Ob. Königsstr. 43,  34117 Kassel": {
+    "lat": 51.3157833,
+    "lon": 9.4978479,
+    "address": "Kassel, Hessen"
+  },
+  "Fürth, Kohlenmarkt": {
+    "lat": 49.4765308,
+    "lon": 10.9888388,
+    "address": "Kohlenmarkt, 90762 Fürth, Bayern Fürth"
+  },
+  "Brake, Braker Kakje": {
+    "lat": 53.3256109,
+    "lon": 8.4806296,
+    "address": "26919 Brake, Niedersachsen Landkreis Wesermarsch"
+  },
+  "Hildesheim, Bahnhof": {
+    "lat": 52.2002988,
+    "lon": 10.1978736,
+    "address": "L 474, 31185 Groß Himstedt, Niedersachsen Landkreis Hildesheim"
+  },
+  "Hamburg, Rathausmarkt": {
+    "lat": 53.550861,
+    "lon": 9.9928917,
+    "address": "Rathausmarkt, 20095 Hamburg"
+  },
+  "Magdeburg, Alter Markt": {
+    "lat": 52.1315933,
+    "lon": 11.6389043,
+    "address": "39104 Magdeburg, Sachsen-Anhalt"
+  },
+  "10117 Berlin, Dorotheenstr. 79": {
+    "lat": 52.5183215,
+    "lon": 13.3842214,
+    "address": "Dorotheenstraße 79, 10117 Berlin"
+  },
+  "Bremen, Domshof": {
+    "lat": 53.076353,
+    "lon": 8.8093198,
+    "address": "Domshof, 28195 Stadtgebiet Bremen, Bremen"
+  },
+  "Ravensburg, Marienplatz": {
+    "lat": 47.781317,
+    "lon": 9.6137002,
+    "address": "88212 Ravensburg, Baden-Württemberg Landkreis Ravensburg"
+  },
+  "10245 Berlin, Rotherstr. 11": {
+    "lat": 52.5043415,
+    "lon": 13.4507893,
+    "address": "Rotherstraße 11, 10245 Berlin"
+  },
+  "10178 Berlin, Lustgarten": {
+    "lat": 52.5178907,
+    "lon": 13.399106,
+    "address": "Schloßplatz, 10178 Berlin"
+  },
+  "10557 Berlin, Moabiter Brücke": {
+    "lat": 52.5216409,
+    "lon": 13.348294,
+    "address": "Bartningallee, 10557 Berlin"
+  },
+  "Brandenburg an der Havel, Hauptbahnhof": {
+    "lat": 52.4017348,
+    "lon": 12.5659454,
+    "address": "Am Hauptbahnhof, 14776 Brandenburg an der Havel, Brandenburg"
+  },
+  "10623 Berlin, Straße des 17. Juni 110": {
+    "lat": 52.5138916,
+    "lon": 13.3342751,
+    "address": "Straße des 17. Juni 110, 10623 Berlin"
+  },
+  "Marktbrunnen, Aalen,  Marktplatz 4,  73430 Aalen": {
+    "lat": 48.8375607,
+    "lon": 10.0929593,
+    "address": "Aalen, Baden-Württemberg Ostalbkreis"
+  },
+  "10711 Berlin, Joachim-Friedrich-Str. 29": {
+    "lat": 52.5010358,
+    "lon": 13.2968933,
+    "address": "Joachim-Friedrich-Straße 29, 10711 Berlin"
+  },
+  "10365 Berlin, Gudrunstr. 20": {
+    "lat": 52.5150725,
+    "lon": 13.5093641,
+    "address": "Gudrunstraße 20, 10315 Berlin"
   }
 }
