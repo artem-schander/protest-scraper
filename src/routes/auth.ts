@@ -111,20 +111,20 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
     const { email, password, role }: UserRegistrationInput = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: 'Email and password are required' });
+      res.status(400).json({ error: 'Email and password are required', code: 'EMAIL_PASSWORD_REQUIRED' });
       return;
     }
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      res.status(400).json({ error: 'Invalid email format' });
+      res.status(400).json({ error: 'Invalid email format', code: 'INVALID_EMAIL_FORMAT' });
       return;
     }
 
     // Validate password strength
     if (password.length < 8) {
-      res.status(400).json({ error: 'Password must be at least 8 characters long' });
+      res.status(400).json({ error: 'Password must be at least 8 characters long', code: 'PASSWORD_TOO_SHORT' });
       return;
     }
 
@@ -136,7 +136,7 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
     // Check if user already exists
     const existingUser = await users.findOne({ email: normalizedEmail });
     if (existingUser) {
-      res.status(409).json({ error: 'User already exists' });
+      res.status(409).json({ error: 'User already exists', code: 'USER_ALREADY_EXISTS' });
       return;
     }
 
@@ -188,7 +188,7 @@ router.post('/register', registerLimiter, async (req: Request, res: Response): P
     res.status(201).json(responseBody);
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Registration failed' });
+    res.status(500).json({ error: 'Registration failed', code: 'REGISTRATION_FAILED' });
   }
 });
 
@@ -198,7 +198,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     const { email, password }: UserLoginInput = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ error: 'Email and password are required' });
+      res.status(400).json({ error: 'Email and password are required', code: 'EMAIL_PASSWORD_REQUIRED' });
       return;
     }
 
@@ -210,7 +210,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     // Find user
     const user = await users.findOne({ email: normalizedEmail });
     if (!user) {
-      res.status(401).json({ error: 'Invalid credentials' });
+      res.status(401).json({ error: 'Invalid credentials', code: 'INVALID_CREDENTIALS' });
       return;
     }
 
@@ -218,7 +218,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     if (user.password) {
       const isValidPassword = await comparePassword(password, user.password);
       if (!isValidPassword) {
-        res.status(401).json({ error: 'Invalid credentials' });
+        res.status(401).json({ error: 'Invalid credentials', code: 'INVALID_CREDENTIALS' });
         return;
       }
     }
@@ -227,6 +227,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     if (user.bannedUntil && user.bannedUntil > new Date()) {
       res.status(403).json({
         error: 'Account is currently banned.',
+        code: 'ACCOUNT_BANNED',
         bannedUntil: user.bannedUntil,
         bannedReason: user.bannedReason || undefined,
         banned: true
@@ -239,6 +240,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     if (requireEmailVerification && !user.emailVerified) {
       res.status(403).json({
         error: 'Email not verified. Please enter the verification code that was sent to you.',
+        code: 'EMAIL_NOT_VERIFIED',
         emailVerified: false,
         requiresVerification: true,
         email: normalizedEmail
@@ -270,7 +272,7 @@ router.post('/login', loginLimiter, async (req: Request, res: Response): Promise
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed' });
+    res.status(500).json({ error: 'Login failed', code: 'LOGIN_FAILED' });
   }
 });
 

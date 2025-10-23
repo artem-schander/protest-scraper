@@ -64,6 +64,61 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// GET /api/protests/:id - Get single protest by ID
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (!ObjectId.isValid(id)) {
+      res.status(400).json({ error: 'Invalid protest ID' });
+      return;
+    }
+
+    const db = getDatabase();
+    const protests = db.collection<Protest>('protests');
+
+    const protest = await protests.findOne({ _id: new ObjectId(id) });
+
+    if (!protest) {
+      res.status(404).json({ error: 'Protest not found' });
+      return;
+    }
+
+    // Don't expose deleted events to public
+    if (protest.deleted) {
+      res.status(404).json({ error: 'Protest not found' });
+      return;
+    }
+
+    res.json({
+      id: protest._id?.toString(),
+      source: protest.source,
+      city: protest.city,
+      country: protest.country,
+      language: protest.language,
+      title: protest.title,
+      start: protest.start,
+      end: protest.end,
+      location: protest.location,
+      originalLocation: protest.originalLocation,
+      coordinates: protest.geoLocation?.coordinates
+        ? { lat: protest.geoLocation.coordinates[1], lon: protest.geoLocation.coordinates[0] }
+        : null,
+      url: protest.url,
+      attendees: protest.attendees,
+      categories: protest.categories,
+      verified: protest.verified,
+      createdBy: protest.createdBy,
+      editedBy: protest.editedBy,
+      createdAt: protest.createdAt,
+      updatedAt: protest.updatedAt,
+    });
+  } catch (error) {
+    console.error('Error fetching protest:', error);
+    res.status(500).json({ error: 'Failed to fetch protest' });
+  }
+});
+
 // POST /api/protests - Add new protest (authenticated)
 router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -141,6 +196,7 @@ router.put(
       const updateData: any = {
         ...updates,
         manuallyEdited: true, // Mark as manually edited to prevent scraper overwrites
+        editedBy: req.user?.userId, // Track who edited
         updatedAt: new Date(),
       };
 

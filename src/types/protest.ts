@@ -22,6 +22,7 @@ export interface Protest {
   categories?: string[]; // Event categories (e.g., "Demonstration", "Vigil", "Blockade")
   verified: boolean;
   createdBy?: string; // User ID who created (if manual submission)
+  editedBy?: string; // User ID who last edited (if manually edited)
   manuallyEdited?: boolean; // Set to true when moderator/admin edits via API
   deleted?: boolean; // Soft delete flag - prevents scraper from re-importing
   createdAt: Date;

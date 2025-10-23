@@ -139,7 +139,7 @@ router.patch('/:id', async (req: AuthRequest, res: Response): Promise<void> => {
       if (normalizedEmail !== targetUser.email) {
         const duplicate = await usersCollection.findOne({ email: normalizedEmail, _id: { $ne: objectId } });
         if (duplicate) {
-          res.status(409).json({ error: 'Another user already uses this email' });
+          res.status(409).json({ error: 'Another user already uses this email', code: 'EMAIL_ALREADY_EXISTS' });
           return;
         }
         updates.email = normalizedEmail;
