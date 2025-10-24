@@ -1,6 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import delay from "@/utils/delay.js";
 
 export interface GeoCoordinates {
@@ -13,7 +14,23 @@ export interface GeocodeCache {
   [city: string]: GeoCoordinates;
 }
 
-const GEOCODE_CACHE_FILE = path.join(process.cwd(), 'cache/geocode.json');
+// Get project root relative to this file (src/utils/geocode.ts)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PROJECT_ROOT = path.resolve(__dirname, '../..');
+const GEOCODE_CACHE_FILE = path.join(PROJECT_ROOT, 'cache/geocode.json');
+const CACHE_DIR = path.dirname(GEOCODE_CACHE_FILE);
+
+// Ensure cache directory exists
+function ensureCacheDir(): void {
+  try {
+    if (!fs.existsSync(CACHE_DIR)) {
+      fs.mkdirSync(CACHE_DIR, { recursive: true });
+    }
+  } catch (e) {
+    console.error('[geocode cache] Failed to create cache directory:', (e as Error).message);
+  }
+}
 
 function loadGeocodeCache(): GeocodeCache {
   try {
@@ -29,6 +46,7 @@ function loadGeocodeCache(): GeocodeCache {
 
 function saveGeocodeCache(cache: GeocodeCache): void {
   try {
+    ensureCacheDir();
     fs.writeFileSync(GEOCODE_CACHE_FILE, JSON.stringify(cache, null, 2), 'utf8');
   } catch (e) {
     console.error('[geocode cache] Failed to save cache:', (e as Error).message);

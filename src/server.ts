@@ -10,9 +10,20 @@ async function startServer(): Promise<void> {
   try {
     await connectToDatabase();
 
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 API: http://localhost:${PORT}`);
+    });
+
+    server.on('error', (error: NodeJS.ErrnoException) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${PORT} is already in use`);
+        console.error(`💡 Try: lsof -ti:${PORT} | xargs kill`);
+        process.exit(1);
+      } else {
+        console.error('Server error:', error);
+        process.exit(1);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
