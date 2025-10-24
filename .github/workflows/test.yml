@@ -1,0 +1,75 @@
+name: Tests (Unit + Integration)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scraper/**'
+      - '.github/workflows/test.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'scraper/**'
+
+jobs:
+  test:
+    name: Run Unit and Integration Tests
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: scraper
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          cache-dependency-path: scraper/yarn.lock
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build project
+        run: yarn build
+
+      - name: Run unit tests
+        run: yarn test:unit
+
+      - name: Run integration tests
+        run: yarn test:integration
+
+      - name: Generate coverage report
+        run: yarn coverage
+        continue-on-error: true
+
+      - name: Upload coverage to Codecov (optional)
+        uses: codecov/codecov-action@v4
+        if: always()
+        continue-on-error: true
+        with:
+          files: ./scraper/coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+
+  # This job ensures the workflow fails if tests fail
+  # Prevents webhooks/deployments from triggering
+  gate:
+    name: Test Gate
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+      - name: Check test results
+        run: |
+          if [ "${{ needs.test.result }}" != "success" ]; then
+            echo "❌ Tests failed - blocking deployment"
+            exit 1
+          fi
+          echo "✅ All tests passed"

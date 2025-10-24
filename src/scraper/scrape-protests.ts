@@ -42,6 +42,8 @@ export interface ProtestEvent {
   url: string;
   attendees: number | null; // Expected/announced number of attendees
   categories?: string[]; // Event categories (e.g., "Demonstration", "Vigil", "Blockade")
+  verified?: boolean; // True if event is officially verified/approved by authorities
+  shouldDelete?: boolean; // True if event should be removed from database (e.g., cancelled/rejected)
 }
 
 interface ScraperOptions {

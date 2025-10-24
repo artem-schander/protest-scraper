@@ -86,9 +86,29 @@ This command:
 ### Running Tests
 
 ```bash
-yarn test             # Run tests once (MongoDB Memory Server)
-yarn test:watch       # Run tests in watch mode
+yarn test              # Run unit + integration tests (default)
+yarn test:unit         # Only unit tests (mocked dependencies)
+yarn test:integration  # Only integration tests (in-memory DB)
+yarn test:e2e          # Only E2E tests (real external API calls)
+yarn test:all          # All tests including E2E
+yarn test:watch        # Watch mode for development
+yarn coverage          # Generate coverage report
 ```
+
+**Test Organization:**
+- **Unit tests** (`test/unit/`) - Mocked external dependencies, fast
+- **Integration tests** (`test/integration/`) - In-memory DB, mocked network
+- **E2E tests** (`test/e2e/`) - Real API calls, validates parsers still work
+
+**IMPORTANT:** Every scraper parser MUST have both:
+1. Unit test with mocked API (fast, deterministic)
+2. E2E test with real API (validates against live source)
+
+Example:
+- `test/unit/scraper/sources/germany/dresden.test.ts` (mocked)
+- `test/e2e/scraper/sources/germany/dresden.e2e.test.ts` (real API)
+
+This ensures reliable development (unit) and early detection of upstream changes (E2E in CI).
 
 ### Running in Production
 
@@ -96,6 +116,30 @@ yarn test:watch       # Run tests in watch mode
 yarn build
 docker compose up -d --build
 ```
+
+---
+
+## 🔄 CI/CD & GitHub Actions
+
+Automated testing workflows are configured in `.github/workflows/`:
+
+### Continuous Integration
+**Runs on:** Every push/PR to `main` branch
+- ✅ Unit tests (mocked dependencies)
+- ✅ Integration tests (in-memory DB)
+- ❌ **Blocks deployment** if tests fail
+
+**Setup:** Enable branch protection for `main` and require the "Test Gate" check to pass.
+
+### Nightly E2E Tests
+**Runs on:** 2 AM UTC daily (cron schedule)
+- 🌐 Tests parsers against **real external APIs**
+- 🔍 Detects when upstream sources change
+- 📝 **Auto-creates GitHub issue** on failure
+
+**Manual trigger:** Go to Actions tab → E2E Tests → Run workflow
+
+See [`.github/workflows/README.md`](.github/workflows/README.md) for setup instructions and customization.
 
 ---
 

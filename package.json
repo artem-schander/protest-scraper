@@ -14,9 +14,13 @@
     "import:prod": "node dist/scraper/import-to-db.js",
     "set-role": "tsx src/scripts/set-user-role.ts",
     "set-role:prod": "node dist/scripts/set-user-role.js",
-    "test": "vitest run",
-    "coverage": "vitest run --coverage",
-    "test:watch": "vitest"
+    "test": "vitest run test/unit test/integration",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "test:e2e": "vitest run test/e2e",
+    "test:all": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [
     "protest",

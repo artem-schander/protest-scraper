@@ -227,4 +227,117 @@ describe('Dresden City Parser', () => {
       expect(event.source).toBe('www.dresden.de');
     });
   });
+
+  describe('Dresden Status Handling', () => {
+    it('should mark "beschieden" events as verified', async () => {
+      const mockJSON = {
+        Versammlungen: [
+          {
+            Datum: '2025-10-23',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Approved Demo',
+            Ort: 'Altmarkt',
+            Status: 'beschieden',
+          },
+        ],
+      };
+
+      mock.onGet('https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json').reply(200, mockJSON);
+
+      const events = await parseDresdenCity();
+
+      expect(events[0].verified).toBe(true);
+      expect(events[0].shouldDelete).toBe(false);
+    });
+
+    it('should mark "angemeldet" events as unverified', async () => {
+      const mockJSON = {
+        Versammlungen: [
+          {
+            Datum: '2025-10-23',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Registered Demo',
+            Ort: 'Altmarkt',
+            Status: 'angemeldet',
+          },
+        ],
+      };
+
+      mock.onGet('https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json').reply(200, mockJSON);
+
+      const events = await parseDresdenCity();
+
+      expect(events[0].verified).toBe(false);
+      expect(events[0].shouldDelete).toBe(false);
+    });
+
+    it('should mark events with unknown status for deletion', async () => {
+      const mockJSON = {
+        Versammlungen: [
+          {
+            Datum: '2025-10-23',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Cancelled Demo',
+            Ort: 'Altmarkt',
+            Status: 'abgelehnt',
+          },
+        ],
+      };
+
+      mock.onGet('https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json').reply(200, mockJSON);
+
+      const events = await parseDresdenCity();
+
+      expect(events[0].verified).toBe(false);
+      expect(events[0].shouldDelete).toBe(true);
+    });
+
+    it('should handle missing status as unverified', async () => {
+      const mockJSON = {
+        Versammlungen: [
+          {
+            Datum: '2025-10-23',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Demo without status',
+            Ort: 'Altmarkt',
+          },
+        ],
+      };
+
+      mock.onGet('https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json').reply(200, mockJSON);
+
+      const events = await parseDresdenCity();
+
+      expect(events[0].verified).toBe(false);
+      expect(events[0].shouldDelete).toBe(false);
+    });
+
+    it('should handle case-insensitive status values', async () => {
+      const mockJSON = {
+        Versammlungen: [
+          {
+            Datum: '2025-10-23',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Demo 1',
+            Ort: 'Altmarkt',
+            Status: 'BESCHIEDEN',
+          },
+          {
+            Datum: '2025-10-24',
+            Zeit: '11.00 - 14.00 Uhr',
+            Thema: 'Demo 2',
+            Ort: 'Altmarkt',
+            Status: 'Angemeldet',
+          },
+        ],
+      };
+
+      mock.onGet('https://www.dresden.de/data_ext/versammlungsuebersicht/Versammlungen.json').reply(200, mockJSON);
+
+      const events = await parseDresdenCity();
+
+      expect(events[0].verified).toBe(true);
+      expect(events[1].verified).toBe(false);
+    });
+  });
 });

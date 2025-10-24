@@ -26,10 +26,47 @@ interface DresdenEvent {
   Ort?: string;
   Startpunkt?: string;
   Teilnehmer?: string;
+  Status?: string; // "beschieden" (granted), "angemeldet" (registered), etc.
+  Veranstalter?: string; // Organizer name
 }
 
 interface DresdenResponse {
   Versammlungen?: DresdenEvent[];
+}
+
+/**
+ * Dresden status mapping
+ *
+ * Status indicators from Dresden API:
+ * - "beschieden" (green) = granted/approved by authorities
+ * - "angemeldet" (yellow) = registered but not yet approved
+ * - Other statuses (grey/red) = rejected/cancelled, should be removed
+ *
+ * @param status - Status string from Dresden API
+ * @returns Object with verified and shouldDelete flags
+ */
+function mapDresdenStatus(status?: string): { verified: boolean; shouldDelete: boolean } {
+  if (!status) {
+    // No status info - assume unverified but keep
+    return { verified: false, shouldDelete: false };
+  }
+
+  const normalizedStatus = status.toLowerCase().trim();
+
+  switch (normalizedStatus) {
+    case 'beschieden':
+      // Granted/approved - verified event
+      return { verified: true, shouldDelete: false };
+
+    case 'angemeldet':
+      // Registered but not approved - keep but unverified
+      return { verified: false, shouldDelete: false };
+
+    default:
+      // Unknown status (potentially rejected/cancelled) - mark for deletion
+      console.warn(`[Dresden] Unknown status "${status}" - marking for deletion`);
+      return { verified: false, shouldDelete: true };
+  }
 }
 
 /**
@@ -102,6 +139,9 @@ export async function parseDresdenCity(days: number = 90): Promise<ProtestEvent[
         location += ', ' + (v.Ort || v.Startpunkt);
       }
 
+      // Map Dresden status to verification flags
+      const statusMapping = mapDresdenStatus(v.Status);
+
       events.push({
         source: 'www.dresden.de',
         city: 'Dresden',
@@ -115,6 +155,8 @@ export async function parseDresdenCity(days: number = 90): Promise<ProtestEvent[
         location,
         url: 'https://www.dresden.de/de/rathaus/dienstleistungen/versammlungsuebersicht.php',
         attendees,
+        verified: statusMapping.verified,
+        shouldDelete: statusMapping.shouldDelete,
       });
     }
 

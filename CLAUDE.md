@@ -29,10 +29,19 @@ yarn dev                          # Start dev server with watch mode
 yarn build                        # Compile TypeScript to dist/ and resolve path aliases
 
 # Testing
-yarn test                         # Run all tests once
+yarn test                         # Run unit and integration tests (default)
+yarn test:unit                    # Run only unit tests
+yarn test:integration             # Run only integration tests
+yarn test:e2e                     # Run only E2E tests (parser validation)
+yarn test:all                     # Run all tests including E2E
 yarn test:watch                   # Run tests in watch mode
-npx vitest test/api.test.ts       # Run specific test file
+yarn coverage                     # Run tests with coverage report
 ```
+
+**Test Organization:**
+- `test/unit/` - Pure logic tests (no DB, no network)
+- `test/integration/` - Tests with in-memory DB or mocked network
+- `test/e2e/` - Real external API calls (for CI validation)
 
 **Build Process:** The build uses `tsc` to compile TypeScript, then `tsc-alias` to replace path aliases (`@/` → relative paths) so Node.js can run the compiled code. Dev mode uses `tsx` which handles aliases natively.
 
@@ -314,7 +323,11 @@ All indexes created automatically on startup in `src/db/connection.ts`:
 
 **Current Data Sources (Germany):**
 1. **Berlin Police** (`sources/germany/berlin.ts`): HTML table scraping with postal codes
-2. **Dresden City** (`sources/germany/dresden.ts`): JSON API
+2. **Dresden City** (`sources/germany/dresden.ts`): JSON API with status-based verification
+   - Status "beschieden" (granted) → `verified: true`
+   - Status "angemeldet" (registered) → `verified: false`
+   - Unknown status (e.g., rejected/cancelled) → `shouldDelete: true`
+   - Import script automatically marks events with `shouldDelete: true` as deleted in database
 3. **Friedenskooperative** (`sources/germany/friedenskooperative.ts`): POST API + HTML parsing, loops through 5 categories (Demonstration, Vigil, Government Event, Counter-Demo, Blockade)
 4. **DemokraTEAM** (`sources/germany/demokrateam.ts`): POST API for 3 months forward, filters by label 4324 (Demo/Protest)
 
@@ -408,11 +421,60 @@ Earth radius: 6378.1 km (for radians conversion)
 - **Filter Behavior**: `endDate` is inclusive (set to 23:59:59.999 of that day)
 
 ### Testing
+
+**Test Organization:**
+
+Tests are organized by type in separate directories:
+
+- **Unit Tests** (`test/unit/`): Pure logic tests with mocked external dependencies
+  - Utils: filter-builder, export, robots, JWT
+  - Scraper utils: date-parser, attendee-parser
+  - **Parser tests with mocked APIs** (uses `axios-mock-adapter`)
+    - Example: `test/unit/scraper/sources/germany/dresden.test.ts`
+    - Fast, deterministic, test parsing logic in isolation
+  - Run with: `yarn test:unit`
+
+- **Integration Tests** (`test/integration/`): Tests with in-memory DB + mocked network
+  - API endpoints (API, admin-users) with mongodb-memory-server
+  - Geocoding with cached responses
+  - Scraper with dedupe/filtering logic
+  - Run with: `yarn test:integration`
+
+- **E2E Tests** (`test/e2e/`): Real external API calls for parser validation
+  - **Parser tests WITHOUT mocks** - call real external APIs
+    - Example: `test/e2e/scraper/sources/germany/dresden.e2e.test.ts`
+    - Validates parsers still work against live sources
+    - May fail if external service is down or changes structure
+  - Used for CI validation (scheduled, not on every commit)
+  - NOT run by default with `yarn test` (only with `yarn test:e2e` or `yarn test:all`)
+  - Run with: `yarn test:e2e` or `yarn test:all`
+
+**IMPORTANT: Every parser MUST have both test types:**
+1. **Unit test** with mocked API responses (in `test/unit/scraper/sources/`)
+2. **E2E test** calling the real API (in `test/e2e/scraper/sources/`)
+
+This ensures:
+- Fast, reliable tests for development (unit tests with mocks)
+- Validation that parsers work with real APIs (E2E tests without mocks)
+- Early detection when external APIs change structure (CI runs E2E tests)
+
+**Test Infrastructure:**
 - Uses `mongodb-memory-server` for isolated MongoDB instances
 - Each test suite creates its own database (no shared state)
 - No mocking - real database operations for integration testing
 - Rate limiters use 1-second windows in tests (vs 15 min production)
 - All tests clean up connections in `afterAll()` hooks
+
+**Running Tests:**
+```bash
+yarn test              # Unit + integration (default for PR checks)
+yarn test:unit         # Only unit tests
+yarn test:integration  # Only integration tests
+yarn test:e2e          # Only E2E tests (parser validation)
+yarn test:all          # All tests including E2E
+yarn test:watch        # Watch mode for active development
+yarn coverage          # Generate coverage report
+```
 
 ## Common Development Patterns
 

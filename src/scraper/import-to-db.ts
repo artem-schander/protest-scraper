@@ -114,6 +114,7 @@ async function importProtests(days: number): Promise<void> {
   let imported = 0;
   let updated = 0;
   let skipped = 0;
+  let deleted = 0;
 
   for (const event of filtered) {
     try {
@@ -122,6 +123,26 @@ async function importProtests(days: number): Promise<void> {
         url: event.url,
         start: event.start ? new Date(event.start) : null,
       });
+
+      // Handle events marked for deletion (e.g., rejected/cancelled in source)
+      if (event.shouldDelete) {
+        if (existing && !existing.deleted) {
+          // Mark existing event as deleted
+          await protests.updateOne(
+            { _id: existing._id },
+            {
+              $set: {
+                deleted: true,
+                updatedAt: new Date(),
+              },
+            }
+          );
+          deleted++;
+        }
+        // Skip importing/updating events marked for deletion
+        skipped++;
+        continue;
+      }
 
       // Get coordinates for the location
       let geoLocation: GeoLocation | undefined;
@@ -150,7 +171,7 @@ async function importProtests(days: number): Promise<void> {
         url: event.url,
         attendees: event.attendees,
         categories: event.categories, // Event categories (e.g., Demonstration, Vigil)
-        verified: true, // Scraper imports are auto-verified
+        verified: event.verified ?? true, // Use event's verified status, default to true for backwards compatibility
         createdAt: existing?.createdAt || new Date(),
         updatedAt: new Date(),
       };
@@ -188,6 +209,7 @@ async function importProtests(days: number): Promise<void> {
   console.error(`[scrape] Import complete:`);
   console.error(`  - New: ${imported}`);
   console.error(`  - Updated: ${updated}`);
+  console.error(`  - Deleted: ${deleted}`);
   console.error(`  - Skipped: ${skipped}`);
 
   await closeConnection();
@@ -198,6 +220,7 @@ async function importProtests(days: number): Promise<void> {
       {
         imported,
         updated,
+        deleted,
         skipped,
         total: filtered.length,
         range: days,
