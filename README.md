@@ -671,12 +671,20 @@ node dist/scraper/scrape-protests.js \
 
 ### Data Sources
 
-The scraper automatically collects protest/demonstration data from:
+The scraper uses a **registry-based architecture** designed for internationalization. Currently supports German sources:
 
 - **Berlin Police** (Versammlungsbehörde) - Official assembly registrations
 - **Dresden City** (Versammlungsübersicht) - Official assembly list
-- **Friedenskooperative** - Peace movement actions
+- **Friedenskooperative** - Peace movement actions (5 categories)
 - **DemokraTEAM** - Anti-fascist & democracy events (filtered for demos/protests only)
+
+**Architecture Highlights:**
+- Locale-aware date and number parsing
+- Easy addition of new countries (see `src/scraper/sources/registry.ts`)
+- Sources organized by country in `src/scraper/sources/<country>/`
+- Generic utilities support multiple languages and date formats
+- **robots.txt compliance** - Uses `robots-parser` library to respect Allow/Disallow directives before scraping
+- **Time presence tracking** - Distinguishes between "no time provided" vs "midnight" using `startTimeKnown`/`endTimeKnown` flags
 
 ### Output Format
 
@@ -712,7 +720,9 @@ Standard iCalendar format compatible with Google Calendar, Apple Calendar, Outlo
 | `city` | string \| null | City where event takes place |
 | `title` | string | Event title/theme |
 | `start` | ISO 8601 string \| null | Event start date/time (UTC) |
+| `startTimeKnown` | boolean | Whether the source provided a specific time (false = defaults to 00:00, show as "TBA") |
 | `end` | ISO 8601 string \| null | Event end date/time (UTC) |
+| `endTimeKnown` | boolean | Whether the source provided an end time |
 | `location` | string \| null | Normalized location description |
 | `url` | string | Source URL for event details |
 | `attendees` | number \| null | Expected/announced number of attendees |
@@ -737,22 +747,24 @@ The scraper includes:
 - [x] Friedenskooperative scraper (hybrid POST API + HTML parsing)
 - [x] DemokraTEAM scraper (hybrid POST API + HTML parsing with label filtering)
 - [x] German date parser (supports multiple formats: DD.MM.YYYY, DD.MM HH:mm, etc.)
+- [x] **Time presence detection** (distinguishes "no time" from "midnight" via `startTimeKnown`/`endTimeKnown`)
 - [x] Attendee number extraction from German text patterns
 - [x] Duplicate detection and removal
 - [x] Command-line interface with options
 - [x] Geocoding addresses to coordinates
-- [x] Date range filtering
+- [x] Date range filtering (respects `--days` parameter across all parsers)
+- [x] **robots.txt compliance** (uses `robots-parser` library to respect Allow/Disallow rules)
 - [x] CSV export (file-based and API endpoint)
 - [x] JSON export (file-based and API endpoint)
 - [x] ICS (iCalendar) export (file-based and API endpoint)
 - [x] MongoDB import script with deduplication
-- [x] Comprehensive test suite (date parsing, deduplication, filtering)
+- [x] Comprehensive test suite (350 tests: parsing, deduplication, filtering, robots.txt)
 
 #### Data Model
 - [x] Source tracking
 - [x] City extraction and normalization
 - [x] Location details
-- [x] Start/end time support
+- [x] Start/end time support with time presence tracking (`startTimeKnown`/`endTimeKnown`)
 - [x] Event URLs
 - [x] Optional attendee count field
 

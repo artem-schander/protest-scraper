@@ -2,11 +2,11 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vites
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db } from 'mongodb';
-import { createApp } from '../src/app.js';
-import { hashPassword } from '../src/utils/password.js';
-import { UserRole } from '../src/types/user.js';
-import * as dbConnection from '../src/db/connection.js';
-import * as emailService from '../src/services/email.js';
+import { createApp } from '@/app.js';
+import { hashPassword } from '@/utils/password.js';
+import { UserRole } from '@/types/user.js';
+import * as dbConnection from '@/db/connection.js';
+import * as emailService from '@/services/email.js';
 
 const app = createApp();
 const FIXED_DATE = new Date('2024-01-01T12:00:00Z');

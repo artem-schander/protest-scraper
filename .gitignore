@@ -12,14 +12,17 @@ dist/
 # Output files
 output/
 
-# Geocode Cache
-geocode-cache.json
+# Test coverage
+coverage/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+
+# Git
+*.orig
 
 # OS
 .DS_Store

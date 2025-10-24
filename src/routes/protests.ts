@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { getDatabase } from '../db/connection.js';
-import { Protest, ProtestInput, ProtestQueryFilters, ProtestUpdateInput } from '../types/protest.js';
-import { UserRole } from '../types/user.js';
-import { authenticate, authorize, AuthRequest } from '../middleware/auth.js';
-import { buildProtestFilter } from '../utils/filter-builder.js';
+import { getDatabase } from '@/db/connection.js';
+import { Protest, ProtestInput, ProtestQueryFilters, ProtestUpdateInput } from '@/types/protest.js';
+import { UserRole } from '@/types/user.js';
+import { authenticate, authorize, AuthRequest } from '@/middleware/auth.js';
+import { buildProtestFilter } from '@/utils/filter-builder.js';
 
 const router = Router();
 
@@ -40,7 +40,9 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
         language: p.language,
         title: p.title,
         start: p.start,
+        startTimeKnown: p.startTimeKnown,
         end: p.end,
+        endTimeKnown: p.endTimeKnown,
         location: p.location,
         originalLocation: p.originalLocation,
         coordinates: p.geoLocation?.coordinates
@@ -98,7 +100,9 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
       language: protest.language,
       title: protest.title,
       start: protest.start,
+      startTimeKnown: protest.startTimeKnown,
       end: protest.end,
+      endTimeKnown: protest.endTimeKnown,
       location: protest.location,
       originalLocation: protest.originalLocation,
       coordinates: protest.geoLocation?.coordinates

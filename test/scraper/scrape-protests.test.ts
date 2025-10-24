@@ -1,14 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import timezone from "dayjs/plugin/timezone.js";
 import utc from "dayjs/plugin/utc.js";
+import fs from "fs";
 import {
   parseGermanDate,
   dedupe,
   withinNextDays,
+  parseAttendees,
+  saveCSV,
+  saveJSON,
   type ProtestEvent,
-} from "../../src/scraper/scrape-protests.js";
+} from "@/scraper/scrape-protests.js";
 
 // Initialize dayjs plugins
 dayjs.extend(customParseFormat);
@@ -213,5 +217,167 @@ describe("dedupe", () => {
   it("should return empty array for empty input", () => {
     const result = dedupe([]);
     expect(result).toHaveLength(0);
+  });
+});
+
+describe("parseAttendees", () => {
+  it("should parse simple attendee count", () => {
+    expect(parseAttendees("500 Teilnehmer")).toBe(500);
+    expect(parseAttendees("1000 Personen")).toBe(1000);
+    expect(parseAttendees("2000 Menschen")).toBe(2000);
+  });
+
+  it("should parse approximate attendee counts", () => {
+    expect(parseAttendees("ca. 500 Teilnehmer")).toBe(500);
+    expect(parseAttendees("etwa 1000 Personen")).toBe(1000);
+    expect(parseAttendees("bis zu 2000 Menschen")).toBe(2000);
+  });
+
+  it("should parse attendee ranges (use higher number)", () => {
+    expect(parseAttendees("500-1000 Teilnehmer")).toBe(1000);
+    expect(parseAttendees("1000–2000 Personen")).toBe(2000);
+  });
+
+  it("should parse numbers with thousand separators", () => {
+    expect(parseAttendees("1.000 Teilnehmer")).toBe(1000);
+    expect(parseAttendees("10 000 Personen")).toBe(10000);
+    expect(parseAttendees("5.000-10.000 Menschen")).toBe(10000);
+  });
+
+  it("should handle gender-inclusive forms", () => {
+    expect(parseAttendees("1000 Teilnehmer*innen")).toBe(1000);
+    expect(parseAttendees("500 Leute")).toBe(500);
+  });
+
+  it("should return null for text without attendee info", () => {
+    expect(parseAttendees("Demo für Klimaschutz")).toBeNull();
+    expect(parseAttendees("")).toBeNull();
+    expect(parseAttendees("Some random text")).toBeNull();
+  });
+
+  it("should handle multiple matches (return first)", () => {
+    const text = "Erwartet werden ca. 500 Teilnehmer, bis zu 1000 Personen möglich";
+    const result = parseAttendees(text);
+    expect(result).toBe(500);
+  });
+});
+
+describe("saveCSV", () => {
+  afterEach(() => {
+    // Clean up test files
+    if (fs.existsSync("output/test.csv")) {
+      fs.unlinkSync("output/test.csv");
+    }
+  });
+
+  it("should save events to CSV file", () => {
+    const events: ProtestEvent[] = [
+      {
+        source: "test-source",
+        city: "Berlin",
+        country: "DE",
+        title: "Test Event",
+        start: "2025-10-15T14:00:00.000Z",
+        end: null,
+        location: "Test Location",
+        url: "https://example.com",
+        attendees: 500,
+      },
+    ];
+
+    saveCSV(events, "test.csv");
+
+    expect(fs.existsSync("output/test.csv")).toBe(true);
+    const content = fs.readFileSync("output/test.csv", "utf8");
+    expect(content).toContain("Test Event");
+    expect(content).toContain("Berlin");
+  });
+
+  it("should handle empty events array gracefully", () => {
+    saveCSV([], "empty.csv");
+    // Should not create file or should handle gracefully
+    expect(fs.existsSync("output/empty.csv")).toBe(false);
+  });
+
+  it("should escape quotes in CSV values", () => {
+    const events: ProtestEvent[] = [
+      {
+        source: "test",
+        city: "Berlin",
+        country: "DE",
+        title: 'Event with "quotes"',
+        start: "2025-10-15T14:00:00.000Z",
+        end: null,
+        location: "Test",
+        url: "https://example.com",
+        attendees: null,
+      },
+    ];
+
+    saveCSV(events, "test-quotes.csv");
+
+    const content = fs.readFileSync("output/test-quotes.csv", "utf8");
+    expect(content).toContain('""quotes""'); // Quotes should be escaped
+  });
+});
+
+describe("saveJSON", () => {
+  afterEach(() => {
+    if (fs.existsSync("output/test.json")) {
+      fs.unlinkSync("output/test.json");
+    }
+  });
+
+  it("should save events to JSON file", () => {
+    const events: ProtestEvent[] = [
+      {
+        source: "test-source",
+        city: "Berlin",
+        country: "DE",
+        title: "Test Event",
+        start: "2025-10-15T14:00:00.000Z",
+        end: null,
+        location: "Test Location",
+        url: "https://example.com",
+        attendees: 500,
+      },
+    ];
+
+    saveJSON(events, "test.json");
+
+    expect(fs.existsSync("output/test.json")).toBe(true);
+    const content = fs.readFileSync("output/test.json", "utf8");
+    const parsed = JSON.parse(content);
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].title).toBe("Test Event");
+  });
+
+  it("should create output directory if it doesn't exist", () => {
+    // Remove output directory if it exists
+    if (fs.existsSync("output")) {
+      fs.rmSync("output", { recursive: true });
+    }
+
+    const events: ProtestEvent[] = [
+      {
+        source: "test",
+        city: "Berlin",
+        country: "DE",
+        title: "Test",
+        start: "2025-10-15T14:00:00.000Z",
+        end: null,
+        location: "Test",
+        url: "https://example.com",
+        attendees: null,
+      },
+    ];
+
+    saveJSON(events, "test-create-dir.json");
+
+    expect(fs.existsSync("output")).toBe(true);
+    expect(fs.existsSync("output/test-create-dir.json")).toBe(true);
+
+    // Clean up
+    fs.unlinkSync("output/test-create-dir.json");
   });
 });

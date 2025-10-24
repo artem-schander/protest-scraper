@@ -17,8 +17,9 @@ import timezone from "dayjs/plugin/timezone.js";
 import utc from "dayjs/plugin/utc.js";
 import { program } from "commander";
 import { createEvents } from "ics";
-import { normalizeAddress } from "../utils/geocode.js";
-import delay from "../utils/delay.js";
+import { normalizeAddress } from "@/utils/geocode.js";
+import delay from "@/utils/delay.js";
+import { COUNTRY_NAMES } from "@/scraper/config/countries.js";
 
 // Initialize dayjs plugins
 dayjs.extend(customParseFormat);
@@ -32,7 +33,9 @@ export interface ProtestEvent {
   country: string | null; // ISO 3166-1 alpha-2 e.g., "DE"
   title: string;
   start: string | null;
+  startTimeKnown?: boolean; // False when source doesn't specify time
   end: string | null;
+  endTimeKnown?: boolean; // False when source doesn't specify end time
   location: string | null;
   originalLocation?: string | null; // Original location from source (before normalization)
   language?: string; // e.g., "de-DE"
@@ -194,21 +197,6 @@ function saveGeocodeCache(cache: GeocodeCache): void {
     console.error("[geocode cache] Failed to save cache:", (e as Error).message);
   }
 }
-
-// Map ISO 3166-1 alpha-2 country codes to full country names for geocoding
-const COUNTRY_NAMES: Record<string, string> = {
-  'DE': 'Germany',
-  'AT': 'Austria',
-  'CH': 'Switzerland',
-  'FR': 'France',
-  'IT': 'Italy',
-  'NL': 'Netherlands',
-  'BE': 'Belgium',
-  'PL': 'Poland',
-  'CZ': 'Czech Republic',
-  'DK': 'Denmark',
-  // Add more as needed
-};
 
 async function geocodeEvents(events: ProtestEvent[]): Promise<Map<string, GeoCoordinates>> {
   const cache = loadGeocodeCache();
@@ -932,25 +920,22 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const opt = program.opts<ScraperOptions>();
   const DAYS = parseInt(opt.days);
 
-  const sources = [
-    parseBerlin,
-    parseDresden,
-    parseFriedenskooperative,
-    parseDemokrateam,
-  ];
+  // Import source registry
+  const { getEnabledSources } = await import('./sources/registry.js');
+  const sources = getEnabledSources();
 
   (async (): Promise<void> => {
     console.error("[scrape] Fetching sources …");
     const all: ProtestEvent[] = [];
 
-    for (const fn of sources) {
+    for (const source of sources) {
       try {
-        const ev = await fn();
-        console.error(`[${fn.name}] ${ev.length}`);
+        const ev = await source.parser();
+        console.error(`[${source.name}] ${ev.length}`);
         all.push(...ev);
       } catch (e) {
         const error = e as Error;
-        console.error(`[${fn.name}] failed:`, error.message);
+        console.error(`[${source.name}] failed:`, error.message);
       }
     }
 

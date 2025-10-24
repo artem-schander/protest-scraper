@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { rateLimit } from 'express-rate-limit';
 import { createHash } from 'crypto';
-import { sendContactFormEmails, isEmailConfigured } from '../services/email.js';
+import { sendContactFormEmails, isEmailConfigured } from '@/services/email.js';
 
 const router = Router();
 

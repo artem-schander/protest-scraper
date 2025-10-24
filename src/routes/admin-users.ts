@@ -1,11 +1,11 @@
 import { Router, Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { getDatabase } from '../db/connection.js';
-import { authenticate, authorize, AuthRequest } from '../middleware/auth.js';
-import { User, UserRole } from '../types/user.js';
-import { hashPassword } from '../utils/password.js';
-import { generateVerificationCode, hashVerificationCode, VERIFICATION_CODE_EXPIRY_MINUTES } from '../utils/verification.js';
-import { sendVerificationEmail, isEmailConfigured } from '../services/email.js';
+import { getDatabase } from '@/db/connection.js';
+import { authenticate, authorize, AuthRequest } from '@/middleware/auth.js';
+import { User, UserRole } from '@/types/user.js';
+import { hashPassword } from '@/utils/password.js';
+import { generateVerificationCode, hashVerificationCode, VERIFICATION_CODE_EXPIRY_MINUTES } from '@/utils/verification.js';
+import { sendVerificationEmail, isEmailConfigured } from '@/services/email.js';
 
 const router = Router();
 

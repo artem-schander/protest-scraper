@@ -72,9 +72,30 @@ docker build .                    # Test Docker build
 
 **ESM Modules:** The project uses `"type": "module"` in package.json. All imports must use `.js` extensions even for TypeScript files:
 ```typescript
-import { foo } from './bar.js';  // Correct
-import { foo } from './bar';     // Wrong - will fail at runtime
+import { foo } from '@/utils/bar.js';  // Correct - aliased path
+import { foo } from './bar.js';        // Wrong - use aliased paths instead
+import { foo } from './bar';           // Wrong - missing .js extension
 ```
+
+**Import Path Aliases:** ALWAYS use aliased paths with `@/` prefix, never relative paths:
+```typescript
+// ✅ CORRECT - Aliased imports
+import { ProtestEvent } from '@/scraper/scrape-protests.js';
+import { connectToDatabase } from '@/db/connection.js';
+import delay from '@/utils/delay.js';
+
+// ❌ WRONG - Relative imports (don't use these)
+import { ProtestEvent } from './scrape-protests.js';
+import { connectToDatabase } from '../../db/connection.js';
+import delay from '../utils/delay.js';
+
+// ✅ CORRECT - Use aliased paths instead
+import { ProtestEvent } from '@/scraper/scrape-protests.js';
+import { connectToDatabase } from '@/db/connection.js';
+import delay from '@/utils/delay.js';
+```
+
+The `@/` alias maps to the `src/` directory (configured in `tsconfig.json`).
 
 **CLI Script Pattern:** Scripts that can be both imported and run directly wrap execution in:
 ```typescript
@@ -90,6 +111,20 @@ This prevents CLI setup from running when the file is imported (avoiding command
 ```
 src/
 ├── scraper/                    # Data scraping & import
+│   ├── config/                 # Configuration system
+│   │   ├── countries.ts        # ISO country code mappings
+│   │   └── locales.ts          # Locale configs (timezone, formats, etc.)
+│   ├── sources/                # Scraper sources registry
+│   │   ├── registry.ts         # Central source registration
+│   │   └── germany/            # German sources
+│   │       ├── index.ts        # Exports all German parsers
+│   │       ├── berlin.ts       # Berlin Police parser
+│   │       ├── dresden.ts      # Dresden City parser
+│   │       ├── friedenskooperative.ts  # Friedenskooperative parser
+│   │       └── demokrateam.ts  # DemokraTEAM parser
+│   ├── utils/                  # Scraper utilities
+│   │   ├── date-parser.ts      # Locale-aware date parsing
+│   │   └── attendee-parser.ts  # Locale-aware attendee parsing
 │   ├── scrape-protests.ts      # Standalone scraper (outputs files)
 │   └── import-to-db.ts         # MongoDB import script
 ├── scripts/                    # CLI utilities
@@ -108,6 +143,7 @@ src/
 │   ├── jwt.ts                  # JWT token generation
 │   ├── password.ts             # bcrypt hashing
 │   ├── export.ts               # CSV/JSON/ICS generation
+│   ├── robots.ts               # robots.txt compliance checking
 │   └── delay.ts                # Rate limiting helper
 ├── services/
 │   └── email.ts                # Email verification (nodemailer)
@@ -128,11 +164,49 @@ test/
     └── geocode.test.ts         # Location formatting (16 tests)
 ```
 
+### Scraper Architecture (Internationalization System)
+
+**Registry-Based Multi-Country Support:**
+
+The scraper is architected for easy internationalization with locale-aware parsing:
+
+1. **Configuration Layer** (`src/scraper/config/`):
+   - `countries.ts`: ISO 3166-1 alpha-2 country code mappings
+   - `locales.ts`: Locale configurations (DE, AT, FR, US) with:
+     - Timezone (IANA format)
+     - Language tags (BCP 47)
+     - Month name mappings (local → numeric)
+     - Date format patterns (for dayjs parsing)
+     - Number format patterns (approximate, ranges, thousands)
+
+2. **Utilities Layer** (`src/scraper/utils/`):
+   - `date-parser.ts`: Generic `parseDate(str, locale)` replaces German-specific parsing
+   - `attendee-parser.ts`: Generic `parseAttendees(text, locale, keywords)` with language-specific helpers
+
+3. **Sources Layer** (`src/scraper/sources/`):
+   - `registry.ts`: Central source registration with metadata
+   - `<country>/`: Organized by country (e.g., `germany/`, `france/`)
+   - Each parser imports locale config and uses generic utilities
+
+4. **Entry Points**:
+   - `scrape-protests.ts`: File export (CSV/JSON/ICS)
+   - `import-to-db.ts`: Database import
+   - Both automatically load sources from registry
+
+**Example Flow:**
+```
+Source Parser (berlin.ts)
+  → Get locale: LOCALES['DE']
+  → Parse date: parseDate("23. Oktober 2025 14:30", locale)
+  → Parse attendees: parseGermanAttendees("ca. 1000 Teilnehmer", locale)
+  → Return standardized ProtestEvent[]
+```
+
 ### Data Flow
 
 **Scraping → Database Import:**
-1. `import-to-db.ts` calls scraper functions from `scrape-protests.ts`
-2. Each parser fetches from source, normalizes dates/locations
+1. `import-to-db.ts` loads enabled sources from registry
+2. Each source parser fetches and normalizes data using locale-aware utilities
 3. Events deduplicated by `title + start + city + source`
 4. `geocode.ts` adds coordinates and formats addresses
 5. Database import checks for existing events by `url + start`
@@ -236,15 +310,24 @@ All indexes created automatically on startup in `src/db/connection.ts`:
 1. **File Export** (`yarn scrape`): Outputs CSV/JSON/ICS files to `output/` folder (legacy, standalone)
 2. **Database Import** (`yarn import`): Scrapes and imports directly to MongoDB (preferred)
 
-**Four Data Sources:**
-1. **Berlin Police** (`parseBerlin`): HTML table scraping with postal codes
-2. **Dresden City** (`parseDresden`): JSON API
-3. **Friedenskooperative** (`parseFriedenskooperative`): POST API + HTML parsing, loops through 5 categories (Demonstration, Vigil, Government Event, Counter-Demo, Blockade)
-4. **DemokraTEAM** (`parseDemokrateam`): POST API for 3 months forward, filters by label 4324 (Demo/Protest)
+**Current Data Sources (Germany):**
+1. **Berlin Police** (`sources/germany/berlin.ts`): HTML table scraping with postal codes
+2. **Dresden City** (`sources/germany/dresden.ts`): JSON API
+3. **Friedenskooperative** (`sources/germany/friedenskooperative.ts`): POST API + HTML parsing, loops through 5 categories (Demonstration, Vigil, Government Event, Counter-Demo, Blockade)
+4. **DemokraTEAM** (`sources/germany/demokrateam.ts`): POST API for 3 months forward, filters by label 4324 (Demo/Protest)
 
-**Key Functions:**
-- `parseGermanDate()`: Handles DD.MM.YYYY, DD.MM HH:mm, DD. MM HH:mm YYYY, etc.
-- `parseAttendees()`: Extracts numbers from German text ("ca. 1000 Teilnehmer", "5000-10000 Personen")
+All sources registered in `sources/registry.ts` with metadata (country, city, description).
+
+**Key Utilities:**
+- `parseDate(str, locale)`: Generic date parsing with locale-specific formats and month names
+  - Returns `ParsedDate` with `date` and `hasTime` flag when `returnDetails: true`
+  - Detects time patterns to distinguish "no time" from "midnight"
+- `parseAttendees(text, locale, keywords)`: Generic attendee extraction with language-specific patterns
+- `parseGermanAttendees()`: Helper for German keywords ("Teilnehmer", "Personen", etc.)
+- `isAllowedByRobots(url, userAgent)`: Checks robots.txt compliance using `robots-parser` library
+  - Properly handles Allow/Disallow precedence (more specific rules win)
+  - 1-hour cache to avoid repeated fetches
+  - Allows everything if robots.txt is missing or fetch fails
 - `dedupe()`: Removes duplicates by `title.toLowerCase() + start + city + source`
 - `withinNextDays()`: Filters events within date range
 
@@ -303,10 +386,23 @@ Earth radius: 6378.1 km (for radians conversion)
 - **Fallback Strategy**: If detailed address fails, retry with "city, country"
 - **Country Mapping**: ISO 3166-1 alpha-2 codes → full names (e.g., "DE" → "Germany")
 
+### robots.txt Compliance
+- **Library**: Uses `robots-parser` (3M+ weekly downloads) for spec-compliant parsing
+- **Implementation**: `isAllowedByRobots(url, userAgent)` in `src/utils/robots.ts`
+- **Precedence**: Properly handles Allow/Disallow rules (most specific path wins)
+- **Caching**: 1-hour TTL to avoid repeated fetches of robots.txt
+- **Graceful Degradation**: Allows everything if robots.txt is missing or fetch fails
+- **Usage**: All scrapers check robots.txt before fetching data
+- **Example**: DemokraTEAM's `/wp-admin/admin-ajax.php` is allowed despite `/wp-admin/` being disallowed
+
 ### Date Handling
 - **Storage**: UTC `Date` objects in MongoDB
 - **API Input**: ISO 8601 strings (e.g., "2025-10-15T14:00:00.000Z")
 - **Scraper Parsing**: German formats with `dayjs` in `Europe/Berlin` timezone
+- **Time Presence Detection**: `parseDate()` returns `ParsedDate` with `hasTime` flag
+  - Detects time patterns (`\d{1,2}[:.]\d{2}`) to distinguish "no time stated" from "midnight"
+  - Events without time get `startTimeKnown: false` (display as "TBA" in frontend)
+  - Prevents confusion between "starts at midnight" vs "time not specified"
 - **Filter Behavior**: `endDate` is inclusive (set to 23:59:59.999 of that day)
 
 ### Testing
@@ -320,22 +416,90 @@ Earth radius: 6378.1 km (for radians conversion)
 
 ### Adding a New Scraper Source
 
-1. Create parser function in `src/scraper/scrape-protests.ts`:
+**New Architecture (Internationalization-Ready):**
+
+The scraper uses a registry-based system for easy addition of new sources across countries.
+
+#### For a New Source in an Existing Country (e.g., Germany)
+
+1. Create parser file in `src/scraper/sources/<country>/`:
 ```typescript
-export async function parseNewSource(): Promise<ProtestEvent[]> {
+// src/scraper/sources/germany/hamburg.ts
+import { ProtestEvent } from '@/scraper/scrape-protests.js';
+import { LOCALES } from '@/scraper/config/locales.js';
+import { parseDate } from '@/scraper/utils/date-parser.js';
+import { parseGermanAttendees } from '@/scraper/utils/attendee-parser.js';
+
+export async function parseHamburgPolice(): Promise<ProtestEvent[]> {
+  const locale = LOCALES['DE'];
   const events: ProtestEvent[] = [];
+
   // Fetch and parse HTML/JSON
-  // Use parseGermanDate() for dates
-  // Use parseAttendees() for attendee counts
+  // Use parseDate(dateStr, locale) for dates
+  // Use parseGermanAttendees(text, locale) for attendee counts
+
   return events;
 }
 ```
 
-2. Add to `sources` array in **both** files:
-   - `src/scraper/scrape-protests.ts` (line ~933)
-   - `src/scraper/import-to-db.ts` (line ~45)
+2. Add export to country index (`src/scraper/sources/germany/index.ts`):
+```typescript
+export { parseHamburgPolice } from './hamburg.js';
+```
 
-3. Test with `yarn scrape` before database import
+3. Add to registry (`src/scraper/sources/registry.ts`):
+```typescript
+import { parseHamburgPolice } from './germany/index.js';
+
+export const SOURCES: ScraperSource[] = [
+  // ... existing sources
+  {
+    id: 'hamburg-police',
+    name: 'Hamburg Police',
+    country: 'DE',
+    city: 'Hamburg',
+    parser: parseHamburgPolice,
+    enabled: true,
+    description: 'Official assembly registry from Hamburg Police',
+  },
+];
+```
+
+#### For a New Country (e.g., France)
+
+1. Create country directory: `src/scraper/sources/france/`
+
+2. Create parser file:
+```typescript
+// src/scraper/sources/france/paris.ts
+import { ProtestEvent } from '@/scraper/scrape-protests.js';
+import { LOCALES } from '@/scraper/config/locales.js';
+import { parseDate } from '@/scraper/utils/date-parser.js';
+import { parseFrenchAttendees } from '@/scraper/utils/attendee-parser.js';
+
+export async function parseParisPolice(): Promise<ProtestEvent[]> {
+  const locale = LOCALES['FR'];  // Uses French config from config/locales.ts
+  const events: ProtestEvent[] = [];
+
+  // Use locale-aware utilities
+  const date = parseDate(dateStr, locale);  // Handles French date formats
+  const attendees = parseFrenchAttendees(text, locale);
+
+  return events;
+}
+```
+
+3. Create country index (`src/scraper/sources/france/index.ts`)
+
+4. Add to registry with country code 'FR'
+
+5. Test with `yarn scrape` before database import
+
+**Key Benefits:**
+- No hardcoded German-specific logic
+- Automatic pickup by both `scrape-protests.ts` and `import-to-db.ts`
+- Locale-aware date/number parsing
+- Clear organization by country
 
 ### Adding a New API Filter
 

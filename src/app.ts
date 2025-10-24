@@ -1,12 +1,12 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { errorHandler } from './middleware/errorHandler.js';
-import authRoutes from './routes/auth.js';
-import protestRoutes from './routes/protests.js';
-import exportRoutes from './routes/export.js';
-import adminUsersRoutes from './routes/admin-users.js';
-import contactRoutes from './routes/contact.js';
+import { errorHandler } from '@/middleware/errorHandler.js';
+import authRoutes from '@/routes/auth.js';
+import protestRoutes from '@/routes/protests.js';
+import exportRoutes from '@/routes/export.js';
+import adminUsersRoutes from '@/routes/admin-users.js';
+import contactRoutes from '@/routes/contact.js';
 
 export function createApp(): Application {
   const app: Application = express();

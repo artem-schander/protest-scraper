@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { connectToDatabase, closeConnection, getDatabase } from '../db/connection.js';
-import { UserRole } from '../types/user.js';
+import { connectToDatabase, closeConnection, getDatabase } from '@/db/connection.js';
+import { UserRole } from '@/types/user.js';
 
 const program = new Command();
 

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, vi } from 'vitest';
-import { generateToken, verifyToken, verifyRefreshToken } from '../src/utils/jwt.js';
-import { UserRole } from '../src/types/user.js';
+import { generateToken, verifyToken, verifyRefreshToken } from '@/utils/jwt.js';
+import { UserRole } from '@/types/user.js';
 import jwt from 'jsonwebtoken';
 
 describe('JWT Utilities', () => {

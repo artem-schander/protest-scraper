@@ -1,5 +1,5 @@
 import jwt, { SignOptions } from 'jsonwebtoken';
-import { JWTPayload } from '../types/user.js';
+import { JWTPayload } from '@/types/user.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-this-in-production';
 const ACCESS_TOKEN_EXPIRES_IN = '15m'; // 15 minutes for access

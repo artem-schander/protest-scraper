@@ -3,12 +3,12 @@ import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient, Db } from 'mongodb';
 import crypto from 'crypto';
-import { createApp } from '../src/app.js';
-import { hashPassword } from '../src/utils/password.js';
-import { UserRole } from '../src/types/user.js';
-import { Protest } from '../src/types/protest.js';
-import * as dbConnection from '../src/db/connection.js';
-import * as emailService from '../src/services/email.js';
+import { createApp } from '@/app.js';
+import { hashPassword } from '@/utils/password.js';
+import { UserRole } from '@/types/user.js';
+import { Protest } from '@/types/protest.js';
+import * as dbConnection from '@/db/connection.js';
+import * as emailService from '@/services/email.js';
 
 let mongoServer: MongoMemoryServer;
 let client: MongoClient;
@@ -364,10 +364,9 @@ describe('Auth API', () => {
   });
 
   describe('POST /api/auth/logout', () => {
-    let cookies: string[];
-
-    beforeEach(async () => {
-      // Create and login test user
+    it('should clear auth cookie on logout', async () => {
+      // Create test user
+      await db.collection('users').deleteOne({ email: 'logout-test@example.com' });
       await db.collection('users').insertOne({
         email: 'logout-test@example.com',
         password: await hashPassword('password123'),
@@ -377,15 +376,17 @@ describe('Auth API', () => {
         updatedAt: new Date(),
       });
 
+      // Login to get cookies
       const loginRes = await request(app).post('/api/auth/login').send({
         email: 'logout-test@example.com',
         password: 'password123',
       });
 
-      cookies = loginRes.headers['set-cookie'];
-    });
+      expect(loginRes.status).toBe(200);
+      const cookies = loginRes.headers['set-cookie'];
+      expect(cookies).toBeDefined();
 
-    it('should clear auth cookie on logout', async () => {
+      // Logout with cookies
       const res = await request(app)
         .post('/api/auth/logout')
         .set('Cookie', cookies);
@@ -408,9 +409,8 @@ describe('Auth API - Rate Limiting', () => {
   it('should rate limit registration attempts', async () => {
     const timestamp = Date.now();
 
-    // Note: Rate limit is 5 per 15 minutes
-    // Previous tests may have used some of the quota
-    // So we test that we eventually hit the rate limit
+    // Enable rate limiting for this test via header
+    // Note: Rate limit is 5 per 15 minutes (100 in tests but we enable via header)
     let rateLimited = false;
     let attempts = 0;
 
@@ -418,6 +418,7 @@ describe('Auth API - Rate Limiting', () => {
     while (!rateLimited && attempts < 10) {
       const res = await request(app)
         .post('/api/auth/register')
+        .set('x-test-rate-limit', 'true') // Enable rate limiting
         .send({
           email: `ratelimit-${timestamp}-${attempts}@example.com`,
           password: 'password123',
@@ -451,6 +452,7 @@ describe('Auth API - Rate Limiting', () => {
     while (!rateLimited && attempts < 20) {
       const res = await request(app)
         .post('/api/auth/login')
+        .set('x-test-rate-limit', 'true') // Enable rate limiting
         .send({
           email,
           password: attempts < 15 ? 'wrongpassword' : 'password123',
@@ -791,6 +793,9 @@ describe('Protests API', () => {
   beforeAll(async () => {
     // Wait for rate limit window to reset
     await new Promise(resolve => setTimeout(resolve, 2000));
+
+    // Clear users to avoid duplicate key errors from previous test suites
+    await db.collection('users').deleteMany({});
 
     // Create test users (all email verified for testing)
     const hashedPassword = await hashPassword('password123');

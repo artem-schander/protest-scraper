@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { getDatabase } from '../db/connection.js';
-import { Protest } from '../types/protest.js';
-import { protestsToCSV, protestsToJSON, protestsToICS } from '../utils/export.js';
-import { buildProtestFilter } from '../utils/filter-builder.js';
+import { getDatabase } from '@/db/connection.js';
+import { Protest } from '@/types/protest.js';
+import { protestsToCSV, protestsToJSON, protestsToICS } from '@/utils/export.js';
+import { buildProtestFilter } from '@/utils/filter-builder.js';
 
 const router = Router();
 

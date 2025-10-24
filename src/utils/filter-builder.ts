@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { ProtestQueryFilters } from '../types/protest.js';
+import { ProtestQueryFilters } from '@/types/protest.js';
 
 /**
  * Builds a MongoDB filter object from Express request query parameters.

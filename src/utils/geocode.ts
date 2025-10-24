@@ -1,7 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import path from 'path';
-import delay from "./delay.js";
+import delay from "@/utils/delay.js";
 
 export interface GeoCoordinates {
   lat: number;

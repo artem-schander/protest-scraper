@@ -3,13 +3,13 @@ import { rateLimit } from 'express-rate-limit';
 import crypto from 'crypto';
 import { readFileSync } from 'fs';
 import { Google, Apple } from 'arctic';
-import { getDatabase } from '../db/connection.js';
-import { User, UserRole, UserLoginInput, UserRegistrationInput } from '../types/user.js';
-import { hashPassword, comparePassword } from '../utils/password.js';
-import { generateToken, verifyRefreshToken } from '../utils/jwt.js';
-import { sendVerificationEmail, sendWelcomeEmail, isEmailConfigured } from '../services/email.js';
-import { authenticate, AuthRequest } from '../middleware/auth.js';
-import { generateVerificationCode, hashVerificationCode, VERIFICATION_CODE_EXPIRY_MINUTES } from '../utils/verification.js';
+import { getDatabase } from '@/db/connection.js';
+import { User, UserRole, UserLoginInput, UserRegistrationInput } from '@/types/user.js';
+import { hashPassword, comparePassword } from '@/utils/password.js';
+import { generateToken, verifyRefreshToken } from '@/utils/jwt.js';
+import { sendVerificationEmail, sendWelcomeEmail, isEmailConfigured } from '@/services/email.js';
+import { authenticate, AuthRequest } from '@/middleware/auth.js';
+import { generateVerificationCode, hashVerificationCode, VERIFICATION_CODE_EXPIRY_MINUTES } from '@/utils/verification.js';
 
 const router = Router();
 
@@ -43,19 +43,48 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 
 const registerLimiter = rateLimit({
   windowMs: isTestEnv ? 1000 : 15 * 60 * 1000, // 1 second in tests, 15 minutes in production
-  max: isTestEnv ? 8 : 5, // 8 in tests (allows rate limit test + some margin), 5 in production
+  max: (req) => {
+    // When testing rate limits specifically, use low limit
+    if (isTestEnv && req.headers['x-test-rate-limit'] === 'true') {
+      return 5;
+    }
+    // Default: high limit in tests (won't be hit due to skip), normal in production
+    return isTestEnv ? 100 : 5;
+  },
   message: { error: 'Too many accounts created from this IP, please try again after 15 minutes' },
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   skipSuccessfulRequests: false, // Count all requests, not just failed ones
+  skip: (req) => {
+    // Skip rate limiting for non-rate-limit tests
+    // Rate limit tests will use a specific header to enable rate limiting
+    if (isTestEnv && req.headers['x-test-rate-limit'] !== 'true') {
+      return true;
+    }
+    return false;
+  },
 });
 
 const loginLimiter = rateLimit({
   windowMs: isTestEnv ? 1000 : 15 * 60 * 1000, // 1 second in tests, 15 minutes in production
-  max: isTestEnv ? 12 : 10, // 12 in tests (allows rate limit test + some margin), 10 in production
+  max: (req) => {
+    // When testing rate limits specifically, use low limit
+    if (isTestEnv && req.headers['x-test-rate-limit'] === 'true') {
+      return 10;
+    }
+    // Default: high limit in tests (won't be hit due to skip), normal in production
+    return isTestEnv ? 100 : 10;
+  },
   message: { error: 'Too many login attempts from this IP, please try again after 15 minutes' },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => {
+    // Skip rate limiting for non-rate-limit tests
+    if (isTestEnv && req.headers['x-test-rate-limit'] !== 'true') {
+      return true;
+    }
+    return false;
+  },
 });
 
 // Initialize Google OAuth (if configured)

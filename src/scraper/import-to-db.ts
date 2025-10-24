@@ -11,18 +11,15 @@ import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
 import { program } from 'commander';
-import { connectToDatabase, closeConnection } from '../db/connection.js';
-import { Protest, GeoLocation } from '../types/protest.js';
-import type { GeoCoordinates } from '../utils/geocode.js';
+import { connectToDatabase, closeConnection } from '@/db/connection.js';
+import { Protest, GeoLocation } from '@/types/protest.js';
+import type { GeoCoordinates } from '@/utils/geocode.js';
 import {
-  parseBerlin,
-  parseDresden,
-  parseFriedenskooperative,
-  parseDemokrateam,
   dedupe,
   withinNextDays,
   ProtestEvent,
-} from './scrape-protests.js';
+} from '@/scraper/scrape-protests.js';
+import { getEnabledSources } from '@/scraper/sources/registry.js';
 
 // Initialize dayjs plugins
 dayjs.extend(customParseFormat);
@@ -42,23 +39,18 @@ async function importProtests(days: number): Promise<void> {
   const protests = db.collection<Protest>('protests');
 
   console.error('[scrape] Fetching sources...');
-  const sources = [
-    parseBerlin,
-    parseDresden,
-    parseFriedenskooperative,
-    parseDemokrateam,
-  ];
+  const sources = getEnabledSources();
 
   const all: ProtestEvent[] = [];
 
-  for (const fn of sources) {
+  for (const source of sources) {
     try {
-      const events = await fn();
-      console.error(`[${fn.name}] ${events.length} events found`);
+      const events = await source.parser(days);
+      console.error(`[${source.name}] ${events.length} events found`);
       all.push(...events);
     } catch (e) {
       const error = e as Error;
-      console.error(`[${fn.name}] failed:`, error.message);
+      console.error(`[${source.name}] failed:`, error.message);
     }
   }
 
@@ -148,7 +140,9 @@ async function importProtests(days: number): Promise<void> {
         country: event.country,
         title: event.title,
         start: event.start ? new Date(event.start) : null,
+        startTimeKnown: event.startTimeKnown,
         end: event.end ? new Date(event.end) : null,
+        endTimeKnown: event.endTimeKnown,
         language: event.language,
         location: event.location,
         originalLocation: event.originalLocation,

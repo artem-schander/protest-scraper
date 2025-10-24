@@ -12,7 +12,9 @@ export interface Protest {
   country?: string | null; // ISO 3166-1 alpha-2 country code (e.g., "DE", "US")
   title: string;
   start: Date | null;
+  startTimeKnown?: boolean; // False when source doesn't specify time (defaults to 00:00)
   end: Date | null;
+  endTimeKnown?: boolean; // False when source doesn't specify end time
   language?: string | null; // e.g., "de-DE"
   location: string | null;
   originalLocation?: string | null; // Original location from source (before normalization)

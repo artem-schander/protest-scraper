@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { createEvents } from 'ics';
-import { Protest } from '../types/protest.js';
+import { Protest } from '@/types/protest.js';
 
 export interface ExportFilters {
   city?: string;
