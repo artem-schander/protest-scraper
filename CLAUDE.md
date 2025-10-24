@@ -26,13 +26,15 @@ yarn install                      # Install dependencies (use yarn, not npm)
 yarn dev                          # Start dev server with watch mode
 
 # Building
-yarn build                        # Compile TypeScript to dist/
+yarn build                        # Compile TypeScript to dist/ and resolve path aliases
 
 # Testing
 yarn test                         # Run all tests once
 yarn test:watch                   # Run tests in watch mode
 npx vitest test/api.test.ts       # Run specific test file
 ```
+
+**Build Process:** The build uses `tsc` to compile TypeScript, then `tsc-alias` to replace path aliases (`@/` → relative paths) so Node.js can run the compiled code. Dev mode uses `tsx` which handles aliases natively.
 
 ### Scraper Operations
 ```bash
