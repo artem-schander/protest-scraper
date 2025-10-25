@@ -24,18 +24,25 @@ describe('buildProtestFilter', () => {
       expect(filter.start.$gte).toBeInstanceOf(Date);
     });
 
-    it('should default to verified=true', () => {
+    it('should default to show verified events OR scraper-imported events', () => {
       const req = mockRequest({});
       const filter = buildProtestFilter(req);
 
-      expect(filter.verified).toBe(true);
+      // Default behavior: show verified events OR scraper-imported (no createdBy)
+      expect(filter.$or).toBeDefined();
+      expect(filter.$or).toEqual([
+        { verified: true },
+        { createdBy: { $exists: false } }
+      ]);
     });
 
     it('should respect defaultVerified option', () => {
       const req = mockRequest({});
       const filter = buildProtestFilter(req, { defaultVerified: false });
 
+      // When defaultVerified: false, filter for unverified manually-submitted events
       expect(filter.verified).toBe(false);
+      expect(filter.createdBy).toEqual({ $exists: true });
     });
 
     it('should not set verified when defaultVerified is undefined', () => {
@@ -303,22 +310,33 @@ describe('buildProtestFilter', () => {
       expect(filter.$or).toEqual([
         { source: { $exists: false } },
         { source: null },
-        { source: '' }
+        { source: '' },
+        { source: 'Manual Submission' }
       ]);
     });
 
-    it('should not add $or filter when manualOnly is false', () => {
+    it('should not add manualOnly $or filter when manualOnly is false', () => {
       const req = mockRequest({ manualOnly: 'false' });
       const filter = buildProtestFilter(req);
 
-      expect(filter).not.toHaveProperty('$or');
+      // Should still have $or for verified filter (default behavior)
+      expect(filter.$or).toBeDefined();
+      expect(filter.$or).toEqual([
+        { verified: true },
+        { createdBy: { $exists: false } }
+      ]);
     });
 
-    it('should not add $or filter when manualOnly is not provided', () => {
+    it('should add $or filter for verified logic by default', () => {
       const req = mockRequest({});
       const filter = buildProtestFilter(req);
 
-      expect(filter).not.toHaveProperty('$or');
+      // Default behavior includes $or for showing verified OR scraper-imported events
+      expect(filter.$or).toBeDefined();
+      expect(filter.$or).toEqual([
+        { verified: true },
+        { createdBy: { $exists: false } }
+      ]);
     });
 
     it('should combine manualOnly with verified filter', () => {
@@ -330,7 +348,8 @@ describe('buildProtestFilter', () => {
       expect(filter.$or).toEqual([
         { source: { $exists: false } },
         { source: null },
-        { source: '' }
+        { source: '' },
+        { source: 'Manual Submission' }
       ]);
     });
   });

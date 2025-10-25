@@ -125,10 +125,28 @@ export function buildProtestFilter(
   }
 
   // Verified filter
+  // IMPORTANT: Moderation queue should only show manually submitted events
+  // - verified=false → Only manually created unverified events (for moderation queue)
+  // - verified=true or default → All verified events OR all scraper-imported events
   if (verified !== undefined && typeof verified === 'string') {
-    filter.verified = verified === 'true';
-  } else if (options.defaultVerified !== undefined) {
-    filter.verified = options.defaultVerified;
+    if (verified === 'false') {
+      // Moderation queue: Only manually submitted unverified events
+      filter.verified = false;
+      filter.createdBy = { $exists: true };
+    } else {
+      // Show verified events (both manual and scraper-imported)
+      filter.verified = true;
+    }
+  } else if (options.defaultVerified === true) {
+    // Public view: Show all verified events OR all scraper-imported events (even if unverified)
+    filter.$or = [
+      { verified: true },
+      { createdBy: { $exists: false } }, // Scraper-imported events (always visible)
+    ];
+  } else if (options.defaultVerified === false) {
+    // Explicitly requesting unverified (rare case, same as verified=false)
+    filter.verified = false;
+    filter.createdBy = { $exists: true };
   }
 
   // Manual-only filter (events without a source field - user-created, not scraped)
@@ -136,7 +154,8 @@ export function buildProtestFilter(
     filter.$or = [
       { source: { $exists: false } },
       { source: null },
-      { source: '' }
+      { source: '' },
+      { source: 'Manual Submission' }
     ];
   }
 

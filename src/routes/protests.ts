@@ -5,6 +5,7 @@ import { Protest, ProtestInput, ProtestQueryFilters, ProtestUpdateInput } from '
 import { UserRole } from '@/types/user.js';
 import { authenticate, authorize, AuthRequest } from '@/middleware/auth.js';
 import { buildProtestFilter } from '@/utils/filter-builder.js';
+import { getModerationWebSocket } from '@/services/moderation-websocket-instance.js';
 
 const router = Router();
 
@@ -163,6 +164,14 @@ router.post('/', authenticate, async (req: AuthRequest, res: Response): Promise<
     };
 
     const result = await protests.insertOne(newProtest as Protest);
+
+    // Broadcast new event to moderators if it requires verification
+    if (!verified) {
+      const ws = getModerationWebSocket();
+      if (ws) {
+        ws.broadcastEventCreate(result.insertedId.toString(), req.user?.userId || 'unknown');
+      }
+    }
 
     res.status(201).json({
       message: verified

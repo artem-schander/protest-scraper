@@ -1,6 +1,9 @@
 import 'dotenv/config';
+import { WebSocketServer } from 'ws';
 import { connectToDatabase, closeConnection } from '@/db/connection.js';
 import { createApp } from '@/app.js';
+import { ModerationWebSocketService } from '@/services/moderation-websocket.js';
+import { setModerationWebSocket } from '@/services/moderation-websocket-instance.js';
 
 const app = createApp();
 const PORT = process.env.PORT || 3000;
@@ -14,6 +17,17 @@ async function startServer(): Promise<void> {
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`📍 API: http://localhost:${PORT}`);
     });
+
+    // Create WebSocket server on same port as HTTP server
+    const wss = new WebSocketServer({
+      server,
+      path: '/ws/moderation'
+    });
+
+    // Initialize moderation WebSocket service
+    const moderationWs = new ModerationWebSocketService(wss);
+    setModerationWebSocket(moderationWs); // Set singleton instance
+    console.log(`🔌 WebSocket server running on ws://localhost:${PORT}/ws/moderation`);
 
     server.on('error', (error: NodeJS.ErrnoException) => {
       if (error.code === 'EADDRINUSE') {

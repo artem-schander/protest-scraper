@@ -157,7 +157,8 @@ src/
 │   ├── robots.ts               # robots.txt compliance checking
 │   └── delay.ts                # Rate limiting helper
 ├── services/
-│   └── email.ts                # Email verification (nodemailer)
+│   ├── email.ts                # Email verification (nodemailer)
+│   └── moderation-websocket.ts # WebSocket server for real-time moderation
 ├── db/
 │   └── connection.ts           # MongoDB client & indexes
 ├── types/                      # TypeScript interfaces
@@ -223,6 +224,54 @@ Source Parser (berlin.ts)
 5. Database import checks for existing events by `url + start`
 6. Skips if `manuallyEdited: true` or `deleted: true`
 
+**CRITICAL: Dresden Source Status Handling**
+
+Dresden events have a two-tier status system that must be handled correctly:
+
+1. **Status "beschieden"** (approved/granted by authorities):
+   - `verified: true` → Automatically visible, never in moderation queue
+   - Official approval from Dresden city authorities
+
+2. **Status "angemeldet"** (registered but not yet approved):
+   - `verified: false` → Still publicly visible, never in moderation queue
+   - Event is registered with authorities but pending approval
+   - When Dresden re-publishes with "beschieden", scraper updates to `verified: true`
+
+3. **Other statuses** (rejected/cancelled):
+   - If event already exists in database → marked as `deleted: true`
+   - If new event → skipped (not imported)
+
+**Implementation:**
+- `src/scraper/sources/germany/dresden.ts` - `mapDresdenStatus()` function
+- Returns `{ verified, shouldDelete }` based on status
+- Import logic in `import-to-db.ts` handles `shouldDelete` flag
+
+**CRITICAL: Moderation Queue vs Public View Filtering**
+
+The system distinguishes between scraper-imported and manually submitted events:
+
+**Key Fields:**
+- `createdBy` - User ID who created the event (only set for manually submitted events)
+- `verified` - Boolean flag for verification status
+
+**Filtering Logic (`src/utils/filter-builder.ts`):**
+
+1. **Moderation Queue** (`verified=false`):
+   - Shows ONLY manually submitted unverified events
+   - Filter: `{ verified: false, createdBy: { $exists: true } }`
+   - Scraper-imported events NEVER appear here (even if `verified: false`)
+
+2. **Public View** (default or `verified=true`):
+   - Shows all verified events OR all scraper-imported events
+   - Filter: `{ $or: [{ verified: true }, { createdBy: { $exists: false } }] }`
+   - Includes unverified scraper events (like Dresden "angemeldet")
+
+**Why This Design:**
+- Scraper-imported events are from official sources → always trustworthy
+- User-submitted events require manual moderation
+- Dresden "angemeldet" events are publicly visible but not yet verified
+- Only user-submitted events clog the moderation queue
+
 **API Request Flow:**
 1. Request → Express router
 2. `authenticate` middleware validates JWT (protected routes only)
@@ -238,11 +287,23 @@ Source Parser (berlin.ts)
 - **MODERATOR**: Submit auto-verified protests, edit any protest
 - **ADMIN**: Full permissions (create, edit, delete)
 
-**JWT Implementation:**
-- Payload: `{ userId, email, role }`
-- Generated in `src/utils/jwt.ts` using `jsonwebtoken`
-- Validated via `authenticate` middleware in `src/middleware/auth.ts`
-- Default expiry: 7 days (configurable via `JWT_EXPIRES_IN`)
+**JWT Token Architecture:**
+- **Access Token Expiry**: 15 minutes (hardcoded in `src/utils/jwt.ts`)
+- **Refresh Window**: 30 days (tokens can be refreshed within this period)
+- **Payload**: `{ userId, email, role, refreshUntil }` where `refreshUntil` is a Unix timestamp
+- **Implementation**:
+  - Generated via `generateToken(payload)` in `src/utils/jwt.ts` using `jsonwebtoken`
+  - Stored in HTTP-only cookies (`auth-token`) for XSS protection
+  - Validated via `authenticate` middleware in `src/middleware/auth.ts`
+  - Refresh handled by `verifyRefreshToken()` which ignores expiration but checks `refreshUntil` claim
+- **Refresh Flow**:
+  1. Access token expires after 15 minutes (JWT standard `exp` claim)
+  2. Frontend receives 401 error on next API request
+  3. `apiRequest()` in frontend automatically calls `POST /api/auth/refresh`
+  4. Backend checks if current time < `refreshUntil` (30 days from issue)
+  5. If valid, issues new 15-minute token with same `refreshUntil`
+  6. Frontend retries original request with new token (from cookie)
+  7. If refresh fails (past 30 days), user is logged out
 
 **Email Verification:**
 - Registration issues a 6-character short code (not a link). The plain code is sent via `sendVerificationEmail(to, code)` and only a SHA-256 hash is stored in MongoDB (`verificationCodeHash`, `verificationCodeExpires`).
@@ -263,6 +324,54 @@ Source Parser (berlin.ts)
 - 24-hour token expiry
 - Gracefully degrades when email config missing (dev mode)
 - Welcome email sent after verification
+
+### WebSocket Real-Time Moderation
+
+**Architecture:**
+- WebSocket server runs on `/ws/moderation` endpoint
+- Cookie-based authentication (reads JWT from `auth-token` HTTP-only cookie)
+- Only MODERATOR and ADMIN roles can connect
+- Singleton service (`ModerationWebSocketService` in `src/services/moderation-websocket.ts`)
+
+**Event Locking System:**
+Prevents concurrent editing by multiple moderators:
+- When a moderator opens an event for editing, it becomes "locked"
+- Server tracks locks in-memory: `Map<eventId, userId>`
+- All other connected moderators receive `event_locked` notification
+- Lock automatically releases when:
+  - Moderator closes the edit modal (`unview_event` message)
+  - WebSocket connection closes (browser tab closed)
+  - Moderator disconnects
+
+**Message Types:**
+
+*Client → Server:*
+- `view_event` - Lock event for editing
+- `unview_event` - Release lock
+- `event_updated` - Notify others of update
+- `event_deleted` - Notify others of deletion
+- `request_locks` - Request current lock state (on page mount)
+- `ping` - Keep connection alive
+
+*Server → Client:*
+- `event_locked` - Event locked by another moderator (includes `{ userId, email }`)
+- `event_unlocked` - Event is now available
+- `event_updated` - Event was updated, reload data
+- `event_deleted` - Event was deleted, remove from list
+- `event_created` - New event submitted, update badge count
+- `pong` - Ping response
+
+**Implementation Details:**
+- Each connection gets unique `clientId`: `{userId}-{timestamp}`
+- Locks are per-client, not per-user (same user in different browsers = different clients)
+- `broadcastExcept(clientId)` excludes the sender from broadcasts
+- `sendCurrentLocks()` sends existing locks to newly connected clients
+- Server logs connections/disconnections with moderator email
+
+**Integration Points:**
+- `POST /api/protests` broadcasts `event_created` when users submit events
+- Frontend connects via singleton `ModerationWebSocketClient` in Header component
+- Moderation page registers event handlers and requests locks on mount
 
 ### Location Data Architecture
 

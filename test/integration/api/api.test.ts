@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
 import request from 'supertest';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db, ObjectId } from 'mongodb';
 import crypto from 'crypto';
 import { createApp } from '@/app.js';
 import { hashPassword } from '@/utils/password.js';
@@ -996,9 +996,9 @@ describe('Protests API', () => {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
-        // Unverified protest
+        // Unverified manually-submitted protest (has createdBy to distinguish from scraped)
         {
-          source: 'user-submission',
+          source: 'Manual Submission',
           city: 'Dresden',
           country: 'DE',
           language: 'de-DE',
@@ -1009,6 +1009,7 @@ describe('Protests API', () => {
           url: 'https://example.com/dresden1',
           attendees: 200,
           verified: false,
+          createdBy: new ObjectId().toString(), // Mark as manually submitted
           createdAt: new Date(),
           updatedAt: new Date(),
         },
