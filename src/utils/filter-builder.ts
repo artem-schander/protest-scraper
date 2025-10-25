@@ -25,6 +25,7 @@ export function buildProtestFilter(
     startDate,
     endDate,
     verified,
+    manualOnly,
     lat,
     lon,
     radius,
@@ -128,6 +129,15 @@ export function buildProtestFilter(
     filter.verified = verified === 'true';
   } else if (options.defaultVerified !== undefined) {
     filter.verified = options.defaultVerified;
+  }
+
+  // Manual-only filter (events without a source field - user-created, not scraped)
+  if (manualOnly !== undefined && typeof manualOnly === 'string' && manualOnly === 'true') {
+    filter.$or = [
+      { source: { $exists: false } },
+      { source: null },
+      { source: '' }
+    ];
   }
 
   return filter;

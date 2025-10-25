@@ -842,7 +842,7 @@ The scraper includes:
 - [x] Geolocation search ("protests near me" feature)
 - [x] Automatic geocoding of city names to coordinates
 - [x] **Automatic cleanup of old protests (TTL index - 2 weeks after event)**
-- [x] Comprehensive API test suite with 100 passing tests
+- [x] Comprehensive API test suite
 
 #### Deployment & DevOps
 - [x] Docker Compose setup with MongoDB

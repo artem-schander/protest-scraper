@@ -294,6 +294,47 @@ describe('buildProtestFilter', () => {
     });
   });
 
+  describe('manualOnly filter', () => {
+    it('should filter for events without a source field', () => {
+      const req = mockRequest({ manualOnly: 'true' });
+      const filter = buildProtestFilter(req);
+
+      expect(filter.$or).toBeDefined();
+      expect(filter.$or).toEqual([
+        { source: { $exists: false } },
+        { source: null },
+        { source: '' }
+      ]);
+    });
+
+    it('should not add $or filter when manualOnly is false', () => {
+      const req = mockRequest({ manualOnly: 'false' });
+      const filter = buildProtestFilter(req);
+
+      expect(filter).not.toHaveProperty('$or');
+    });
+
+    it('should not add $or filter when manualOnly is not provided', () => {
+      const req = mockRequest({});
+      const filter = buildProtestFilter(req);
+
+      expect(filter).not.toHaveProperty('$or');
+    });
+
+    it('should combine manualOnly with verified filter', () => {
+      const req = mockRequest({ manualOnly: 'true', verified: 'false' });
+      const filter = buildProtestFilter(req);
+
+      expect(filter.verified).toBe(false);
+      expect(filter.$or).toBeDefined();
+      expect(filter.$or).toEqual([
+        { source: { $exists: false } },
+        { source: null },
+        { source: '' }
+      ]);
+    });
+  });
+
   describe('combined filters', () => {
     it('should combine multiple filters', () => {
       const req = mockRequest({

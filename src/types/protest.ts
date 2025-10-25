@@ -68,6 +68,7 @@ export interface ProtestQueryFilters {
   startDate?: string; // ISO 8601 date string (e.g., "2025-10-15") - filter start >= this date
   endDate?: string; // ISO 8601 date string (e.g., "2025-10-30") - filter start <= this date
   verified?: string; // boolean as string (query param is string)
+  manualOnly?: string; // boolean as string - filter for manually created events only (no source field)
   limit?: string; // query param is always string
   skip?: string; // query param is always string
   lat?: string; // latitude for geolocation search (query param is string)
