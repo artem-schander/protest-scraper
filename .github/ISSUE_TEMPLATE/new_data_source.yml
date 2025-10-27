@@ -1,0 +1,134 @@
+name: New Data Source
+description: Suggest a new protest data source to scrape
+title: "[Source]: "
+labels: ["enhancement", "data-source"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new data source! This helps expand our coverage.
+
+  - type: input
+    id: source-name
+    attributes:
+      label: Source Name
+      description: Name of the organization or website
+      placeholder: e.g., Hamburg Police, Munich City Government
+    validations:
+      required: true
+
+  - type: input
+    id: url
+    attributes:
+      label: Source URL
+      description: Link to the data source
+      placeholder: https://example.com/protests
+    validations:
+      required: true
+
+  - type: dropdown
+    id: country
+    attributes:
+      label: Country
+      description: Which country is this source for?
+      options:
+        - Germany (DE)
+        - Austria (AT)
+        - Switzerland (CH)
+        - France (FR)
+        - Netherlands (NL)
+        - Belgium (BE)
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: input
+    id: city
+    attributes:
+      label: City/Region
+      description: Which city or region does this source cover?
+      placeholder: e.g., Hamburg, Bavaria, nationwide
+    validations:
+      required: true
+
+  - type: dropdown
+    id: format
+    attributes:
+      label: Data Format
+      description: What format is the data in?
+      options:
+        - HTML table
+        - HTML list
+        - JSON API
+        - XML/RSS feed
+        - PDF
+        - Calendar (ICS)
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: authority
+    attributes:
+      label: Source Type
+      description: What type of organization is this?
+      options:
+        - Government/Police (official)
+        - Activist organization
+        - News outlet
+        - Event aggregator
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample-data
+    attributes:
+      label: Sample Data
+      description: If possible, paste a sample of the data or HTML structure
+      render: html
+      placeholder: Paste HTML, JSON, or describe the structure
+
+  - type: dropdown
+    id: robots-txt
+    attributes:
+      label: robots.txt Check
+      description: Have you checked if the source allows automated scraping?
+      options:
+        - "Yes - Scraping is allowed"
+        - "Yes - Scraping is restricted"
+        - "No robots.txt found"
+        - "Haven't checked yet"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: Update Frequency
+      description: How often does this source update?
+      options:
+        - Daily
+        - Weekly
+        - As events are registered
+        - Unknown
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: implementation
+    attributes:
+      label: Implementation
+      description: Can you help implement this scraper?
+      options:
+        - label: I can implement this scraper myself
+        - label: I can provide technical details and examples
+        - label: I can test the scraper once implemented
+        - label: I just want to suggest the source
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any other relevant information about this source
+      placeholder: Special requirements, authentication needed, historical coverage, etc.

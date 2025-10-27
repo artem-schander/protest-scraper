@@ -3,7 +3,7 @@
 [![Tests](https://github.com/artem-schander/protest-scraper/actions/workflows/test.yml/badge.svg)](https://github.com/artem-schander/protest-scraper/actions/workflows/test.yml)
 [![E2E Tests](https://github.com/artem-schander/protest-scraper/actions/workflows/e2e.yml/badge.svg)](https://github.com/artem-schander/protest-scraper/actions/workflows/e2e.yml)
 [![codecov](https://codecov.io/gh/artem-schander/protest-scraper/branch/main/graph/badge.svg)](https://codecov.io/gh/artem-schander/protest-scraper)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.18.1-brightgreen)](https://nodejs.org/)
 
 **A collaborative open-source listing service to collect and share upcoming protests and demonstrations.**
@@ -11,6 +11,13 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 
 > **✅ Fully Functional**
 > The scraper component and REST API are fully implemented. You can deploy the service using Docker Compose. See the [Roadmap](#-roadmap--progress) for future enhancements.
+
+## 📚 Documentation
+
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to this project
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** - Community guidelines and standards
+- **[API Documentation](#-api-overview)** - REST API endpoints and usage
+- **[Issue Templates](.github/ISSUE_TEMPLATE/)** - Bug reports, feature requests, new data sources
 
 ---
 
@@ -863,8 +870,8 @@ The scraper includes:
 - [x] Roadmap checklist
 - [x] API endpoint documentation with curl examples
 - [x] Authentication flow documentation
-- [ ] Contributing guidelines
-- [ ] Code of conduct
+- [x] Contributing guidelines
+- [x] Code of conduct
 
 ### 📋 Feature Priority
 
@@ -890,14 +897,43 @@ The scraper includes:
 
 ## 🤝 Contributing
 
-Pull requests are welcome!
-Please open an issue first to discuss significant changes.
+We welcome contributions from the community! Whether you're fixing bugs, adding features, or suggesting new data sources, your help is appreciated.
 
-For scraper contributions:
-- Add new sources to `src/scraper/scrape-protests.ts`
-- Follow existing parser patterns
-- Include tests for date parsing edge cases
-- Update this README's roadmap
+### How to Contribute
+
+1. **Read the [Contributing Guide](CONTRIBUTING.md)** - Detailed guidelines for contributors
+2. **Check [open issues](https://github.com/artem-schander/protest-scraper/issues)** - Look for `good first issue` or `help wanted` labels
+3. **Follow the [Code of Conduct](CODE_OF_CONDUCT.md)** - Be respectful and constructive
+4. **Use issue templates** - Bug reports, feature requests, or new data sources
+
+### Quick Start for Contributors
+
+```bash
+# Fork and clone the repository
+git clone https://github.com/YOUR_USERNAME/protest-scraper.git
+cd protest-scraper
+
+# Install dependencies
+yarn install
+
+# Start MongoDB
+docker compose up -d
+
+# Run tests
+yarn test
+yarn coverage
+
+# Start development server
+yarn dev
+```
+
+### Adding New Data Sources
+
+We're always looking to expand coverage! If you know of an official protest registry:
+
+1. Open an issue using the **New Data Source** template
+2. Check the [Contributing Guide](CONTRIBUTING.md#adding-new-scrapers) for implementation details
+3. Each scraper needs both unit tests (mocked) and E2E tests (live API)
 
 ---
 
