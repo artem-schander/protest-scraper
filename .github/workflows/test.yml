@@ -48,14 +48,15 @@ jobs:
         run: yarn coverage
         continue-on-error: true
 
-      - name: Upload coverage to Codecov (optional)
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         if: always()
-        continue-on-error: true
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/coverage-final.json
-          flags: unittests
+          flags: unittests,integration
           name: codecov-umbrella
+          fail_ci_if_error: false
 
   # This job ensures the workflow fails if tests fail
   # Prevents webhooks/deployments from triggering

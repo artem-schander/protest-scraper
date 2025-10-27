@@ -1,5 +1,11 @@
 # 🪧 Protest Scraper API
 
+[![Tests](https://github.com/artem-schander/protest-scraper/actions/workflows/test.yml/badge.svg)](https://github.com/artem-schander/protest-scraper/actions/workflows/test.yml)
+[![E2E Tests](https://github.com/artem-schander/protest-scraper/actions/workflows/e2e.yml/badge.svg)](https://github.com/artem-schander/protest-scraper/actions/workflows/e2e.yml)
+[![codecov](https://codecov.io/gh/artem-schander/protest-scraper/branch/main/graph/badge.svg)](https://codecov.io/gh/artem-schander/protest-scraper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.18.1-brightgreen)](https://nodejs.org/)
+
 **A collaborative open-source listing service to collect and share upcoming protests and demonstrations.**
 Built with **Node.js**, **Express**, and **MongoDB**, designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
 
@@ -36,7 +42,7 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 ## 🧰 Setup
 
 ### Prerequisites
-- Node.js ≥ 18
+- Node.js ≥ 20.18.1
 - Docker & Docker Compose
 
 ### Installation

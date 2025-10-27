@@ -20,7 +20,7 @@
     "test:e2e": "vitest run test/e2e",
     "test:all": "vitest run",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run test/unit test/integration --coverage"
   },
   "keywords": [
     "protest",
