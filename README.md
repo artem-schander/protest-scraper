@@ -6,7 +6,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D20.18.1-brightgreen)](https://nodejs.org/)
 
-**🌐 Production Service:** [API](https://scraper.protest-listing.com/api) | [Web App](https://protest-listing.com)
+**🌐 Production Service:** [API](https://scraper.protest-listing.com) | [Web App](https://protest-listing.com)
 
 **A collaborative open-source listing service to collect and share upcoming protests and demonstrations.**
 Built with **Node.js**, **Express**, and **MongoDB**, designed to support both **automatic scraping** and **manual user submissions** via JWT-secured REST API.
