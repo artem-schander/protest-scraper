@@ -5,22 +5,22 @@ on:
     branches:
       - main
     paths:
-      - 'scraper/**'
+      - 'src/**'
+      - 'test/**'
+      - 'package.json'
+      - 'yarn.lock'
       - '.github/workflows/test.yml'
   pull_request:
     branches:
       - main
     paths:
-      - 'scraper/**'
+      - 'src/**'
+      - 'test/**'
 
 jobs:
   test:
     name: Run Unit and Integration Tests
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: scraper
 
     steps:
       - name: Checkout code
@@ -31,7 +31,6 @@ jobs:
         with:
           node-version: '18'
           cache: 'yarn'
-          cache-dependency-path: scraper/yarn.lock
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -54,7 +53,7 @@ jobs:
         if: always()
         continue-on-error: true
         with:
-          files: ./scraper/coverage/coverage-final.json
+          files: ./coverage/coverage-final.json
           flags: unittests
           name: codecov-umbrella
 
@@ -84,7 +83,7 @@ jobs:
       - name: Send webhook notification
         run: |
           if [ -n "${{ secrets.DEPLOYMENT_WEBHOOK_URL }}" ]; then
-            curl -X POST "${{ secrets.DEPLOYMENT_WEBHOOK_URL }}" \
+            curl -k -X POST "${{ secrets.DEPLOYMENT_WEBHOOK_URL }}" \
               -H "Content-Type: application/json" \
               -d '{
                 "event": "tests_passed",
