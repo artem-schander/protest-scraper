@@ -118,17 +118,47 @@ jobs:
           retention-days: 30
           if-no-files-found: ignore
 
-  # Send notification on failure (optional - requires Slack/Discord webhook)
+  # Send notification on failure
   notify:
     name: Send Notification
     runs-on: ubuntu-latest
     needs: e2e
     if: failure()
     steps:
-      - name: Send notification
+      - name: Send webhook notification
+        if: secrets.E2E_NOTIFICATION_WEBHOOK_URL != ''
         run: |
-          echo "⚠️ E2E tests failed - check GitHub issues for details"
-          # Optional: Add Slack/Discord webhook notification here
-          # curl -X POST -H 'Content-type: application/json' \
-          #   --data '{"text":"E2E tests failed!"}' \
-          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -k -X POST "${{ secrets.E2E_NOTIFICATION_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "event": "e2e_tests_failed",
+              "repository": "${{ github.repository }}",
+              "workflow": "${{ github.workflow }}",
+              "run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "timestamp": "${{ github.event.repository.updated_at }}"
+            }' || echo "Webhook notification failed (optional)"
+
+      - name: Send email notification
+        uses: dawidd6/action-send-mail@v3
+        if: always()
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "⚠️ E2E Tests Failed - ${{ github.repository }}"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
+          body: |
+            E2E Tests failed for ${{ github.repository }}
+
+            Workflow: ${{ github.workflow }}
+            Run ID: ${{ github.run_id }}
+            Triggered by: ${{ github.actor }}
+
+            View details: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            A GitHub issue has been automatically created or updated with details.
+          ignore_cert: true
+          convert_markdown: true
+        continue-on-error: true

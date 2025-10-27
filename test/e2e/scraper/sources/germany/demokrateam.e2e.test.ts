@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseDemokraTEAM } from '@/scraper/sources/germany/demokrateam.js';
+import { parseDemokrateam } from '@/scraper/sources/germany/demokrateam.js';
 import type { ProtestEvent } from '@/scraper/scrape-protests.js';
 
 /**
@@ -17,7 +17,7 @@ import type { ProtestEvent } from '@/scraper/scrape-protests.js';
  */
 describe('DemokraTEAM Parser - E2E (Real API)', () => {
   it('should successfully fetch and parse real events from DemokraTEAM', async () => {
-    const events: ProtestEvent[] = await parseDemokraTEAM(90);
+    const events: ProtestEvent[] = await parseDemokrateam(90);
 
     // Should return an array (may be empty if no events in next 90 days)
     expect(Array.isArray(events)).toBe(true);
@@ -58,7 +58,7 @@ describe('DemokraTEAM Parser - E2E (Real API)', () => {
   }, 45000); // 45 second timeout - DemokraTEAM queries 3 months forward
 
   it('should parse events with valid locations', async () => {
-    const events: ProtestEvent[] = await parseDemokraTEAM(90);
+    const events: ProtestEvent[] = await parseDemokrateam(90);
 
     if (events.length > 0) {
       // Count events by city
@@ -88,7 +88,7 @@ describe('DemokraTEAM Parser - E2E (Real API)', () => {
   }, 45000);
 
   it('should extract attendee information when available', async () => {
-    const events: ProtestEvent[] = await parseDemokraTEAM(90);
+    const events: ProtestEvent[] = await parseDemokrateam(90);
 
     if (events.length > 0) {
       const eventsWithAttendees: ProtestEvent[] = events.filter((e: ProtestEvent) => e.attendees !== null && e.attendees! > 0);
@@ -113,7 +113,7 @@ describe('DemokraTEAM Parser - E2E (Real API)', () => {
   it('should handle robots.txt compliance', async () => {
     // DemokraTEAM has specific robots.txt rules
     // Parser should respect them (tested by not throwing errors)
-    const events: ProtestEvent[] = await parseDemokraTEAM(90);
+    const events: ProtestEvent[] = await parseDemokrateam(90);
 
     // If we get here without errors, robots.txt compliance is working
     expect(Array.isArray(events)).toBe(true);
