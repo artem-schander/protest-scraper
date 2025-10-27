@@ -1,0 +1,36 @@
+title: "[Data Source Discussion]: "
+labels: ["data-source", "discussion"]
+body: |
+  ## Data Source Overview
+
+  **Source Name:**
+  **URL:**
+  **Country/Region:**
+  **Coverage:** (City, State, National)
+
+  ## Why discuss this source?
+
+  <!-- Is this a potential addition? A problematic source? A suggestion for improvement? -->
+
+  ## Questions or Concerns
+
+  <!-- What would you like to discuss about this data source? -->
+
+  ## Relevant Information
+
+  - robots.txt status:
+  - Data format:
+  - Update frequency:
+  - Known issues:
+
+  ## Implementation thoughts
+
+  <!-- If you have ideas about how to implement this scraper, share them here -->
+
+  ## Additional context
+
+  <!-- Links, examples, or any other relevant information -->
+
+  ---
+
+  **Note:** If you're ready to formally propose this as a new data source, please [open an issue](https://github.com/artem-schander/protest-scraper/issues/new/choose) using the "New Data Source" template instead.

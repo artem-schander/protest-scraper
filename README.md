@@ -12,6 +12,9 @@ Built with **Node.js**, **Express**, and **MongoDB**, designed to support both *
 > **✅ Fully Functional**
 > The scraper component and REST API are fully implemented. You can deploy the service using Docker Compose. See the [Roadmap](#-roadmap--progress) for future enhancements.
 
+> **🎨 Frontend Available**
+> A fully-featured [SvelteKit frontend](https://github.com/artem-schander/protest-scraper-frontend) is available with map-based filtering, i18n (EN/DE), and calendar exports.
+
 ## 📚 Documentation
 
 - **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to this project
@@ -910,7 +913,7 @@ We welcome contributions from the community! Whether you're fixing bugs, adding 
 
 ```bash
 # Fork and clone the repository
-git clone https://github.com/YOUR_USERNAME/protest-scraper.git
+git clone https://github.com/artem-schander/protest-scraper.git
 cd protest-scraper
 
 # Install dependencies

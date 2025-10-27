@@ -1,0 +1,21 @@
+title: "[Question]: "
+labels: ["question"]
+body: |
+  ## What's your question?
+
+  <!-- Ask your question clearly and concisely -->
+
+  ## What have you tried?
+
+  <!-- Describe any steps you've already taken to solve this -->
+
+  ## Environment (if relevant)
+
+  - Node.js version:
+  - OS:
+  - Database: (MongoDB version or Atlas)
+  - Deployment: (Docker/Local/Cloud)
+
+  ## Additional context
+
+  <!-- Any error messages, logs, or screenshots that might help -->

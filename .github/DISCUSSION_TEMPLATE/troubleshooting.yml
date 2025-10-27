@@ -1,0 +1,46 @@
+title: "[Help]: "
+labels: ["help wanted"]
+body: |
+  ## What's not working?
+
+  <!-- Describe the issue you're experiencing -->
+
+  ## Steps to reproduce
+
+  1.
+  2.
+  3.
+
+  ## Expected behavior
+
+  <!-- What did you expect to happen? -->
+
+  ## Actual behavior
+
+  <!-- What actually happened? -->
+
+  ## Error messages or logs
+
+  ```
+  Paste error messages or relevant log output here
+  ```
+
+  ## Environment
+
+  - Node.js version:
+  - OS:
+  - Database: (MongoDB version or Atlas)
+  - Deployment method: (Docker/Docker Compose/Native/Cloud)
+  - API base URL:
+
+  ## Configuration
+
+  <!-- Share relevant parts of your .env or config (hide secrets!) -->
+
+  ## What have you tried?
+
+  <!-- List troubleshooting steps you've already taken -->
+
+  ## Additional context
+
+  <!-- Screenshots, network logs, or anything else that might help -->
