@@ -73,3 +73,29 @@ jobs:
             exit 1
           fi
           echo "✅ All tests passed"
+
+  # Webhook trigger - only runs if ALL tests pass
+  webhook:
+    name: Trigger Deployment Webhook
+    runs-on: ubuntu-latest
+    needs: gate  # Depends on gate passing
+    if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Send webhook notification
+        run: |
+          if [ -n "${{ secrets.DEPLOYMENT_WEBHOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.DEPLOYMENT_WEBHOOK_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "event": "tests_passed",
+                "repository": "${{ github.repository }}",
+                "branch": "${{ github.ref_name }}",
+                "commit": "${{ github.sha }}",
+                "commit_message": "${{ github.event.head_commit.message }}",
+                "author": "${{ github.event.head_commit.author.name }}",
+                "workflow_run": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              }'
+            echo "✅ Webhook sent successfully"
+          else
+            echo "ℹ️ DEPLOYMENT_WEBHOOK_URL not configured - skipping webhook"
+          fi

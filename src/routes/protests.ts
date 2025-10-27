@@ -206,12 +206,54 @@ router.put(
       const db = getDatabase();
       const protests = db.collection<Protest>('protests');
 
+      // First, get the existing protest to track field changes
+      const existing = await protests.findOne({ _id: new ObjectId(id) });
+
+      if (!existing) {
+        res.status(404).json({ error: 'Protest not found' });
+        return;
+      }
+
+      // Track which fields are being edited
+      const editedFields = new Set(existing.editedFields || []);
+
+      if (updates.title !== undefined && updates.title !== existing.title) {
+        editedFields.add('title');
+      }
+      if (updates.location !== undefined && updates.location !== existing.location) {
+        editedFields.add('location');
+      }
+      if (updates.start !== undefined) {
+        editedFields.add('start');
+      }
+      if (updates.end !== undefined) {
+        editedFields.add('end');
+      }
+      if (updates.attendees !== undefined && updates.attendees !== existing.attendees) {
+        editedFields.add('attendees');
+      }
+      if (updates.city !== undefined && updates.city !== existing.city) {
+        editedFields.add('location'); // City is tied to location
+      }
+      if (updates.country !== undefined && updates.country !== existing.country) {
+        editedFields.add('location'); // Country is tied to location
+      }
+      if (updates.language !== undefined && updates.language !== existing.language) {
+        editedFields.add('language');
+      }
+
       const updateData: any = {
         ...updates,
-        manuallyEdited: true, // Mark as manually edited to prevent scraper overwrites
-        editedBy: req.user?.userId, // Track who edited
+        editedFields: Array.from(editedFields),
+        manuallyEdited: editedFields.size > 0 || updates.fullyManual === true,
+        editedBy: req.user?.userId,
         updatedAt: new Date(),
       };
+
+      // Allow moderators to set fullyManual flag
+      if (updates.fullyManual !== undefined) {
+        updateData.fullyManual = updates.fullyManual;
+      }
 
       if (updates.start !== undefined) {
         const parsedStart =

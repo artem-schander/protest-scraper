@@ -455,10 +455,83 @@ All sources registered in `sources/registry.ts` with metadata (country, city, de
 - `dedupe()`: Removes duplicates by `title.toLowerCase() + start + city + source`
 - `withinNextDays()`: Filters events within date range
 
-**Conflict Prevention:**
+**Selective Update System:**
+
+The scraper uses a sophisticated field-level tracking system to balance automated updates with manual editorial control.
+
+**Three-Tier Protection Levels:**
+
+1. **Always Update (Source Authority):**
+   - `verified` - Status changes from source must propagate
+   - `deleted` - Deletion/cancellation from source must be respected
+   - These fields update even on manually edited events
+
+2. **Selective Update (Content Protection):**
+   - `title`, `location`, `start`, `end`, `attendees`, `categories`, `city`, `country`, `language`
+   - Protected once manually edited via `editedFields` array
+   - Scraper only updates fields NOT in `editedFields`
+
+3. **Never Update (Editorial Metadata):**
+   - `createdBy`, `editedBy`, `createdAt`, `manuallyEdited`, `editedFields`, `fullyManual`
+   - Preserved forever, never overwritten by scraper
+
+**Field-Level Tracking:**
+
+When moderator updates an event via `PUT /api/protests/:id`, the endpoint compares old vs new values and tracks changed fields:
+```typescript
+const editedFields = new Set(existing.editedFields || []);
+if (updates.title !== undefined && updates.title !== existing.title) {
+  editedFields.add('title');
+}
+// ... similar for location, start, end, attendees, categories, etc.
+```
+
+**Import Logic:**
+
+When scraper re-imports existing event in `import-to-db.ts`:
+```typescript
+// Skip if fully manual (complete disconnect)
+if (existing?.fullyManual) {
+  skipped++;
+  continue;
+}
+
+// Build selective update object
+const updateFields: Partial<Protest> = {
+  verified: event.verified ?? true,  // Always update
+  updatedAt: new Date(),
+};
+
+const editedFields = existing.editedFields || [];
+
+// Only update fields NOT in editedFields
+if (!editedFields.includes('title')) {
+  updateFields.title = event.title;
+}
+if (!editedFields.includes('location')) {
+  updateFields.location = event.location;
+}
+// ... etc.
+
+// Preserve editorial metadata
+updateFields.createdBy = existing.createdBy;
+updateFields.editedBy = existing.editedBy;
+updateFields.editedFields = existing.editedFields;
+updateFields.manuallyEdited = existing.manuallyEdited;
+updateFields.fullyManual = existing.fullyManual;
+```
+
+**Full Manual Disconnect:**
+
+Moderators can set `fullyManual: true` to completely disconnect an event from the scraper:
+- Ignores ALL updates (including status and deletion)
+- Use when event data is unreliable or permanently corrected
+- Set via `PUT /api/protests/:id` with `fullyManual: true` in payload
+
+**Conflict Detection:**
 - Import checks existing by `url + start`
-- Skips update if `manuallyEdited: true` (set when moderator edits via PUT)
-- Skips update if `deleted: true` (soft delete prevents re-import)
+- Skips if `deleted: true` (soft delete prevents re-import, unless event comes back from source)
+- Updates selectively based on `editedFields` tracking
 
 ### API Query System
 

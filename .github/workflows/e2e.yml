@@ -36,22 +36,18 @@ jobs:
 
       - name: Run E2E tests
         id: e2e
-        run: |
-          echo "🚀 Running E2E tests against live APIs..."
-          yarn test:e2e 2>&1 | tee e2e-results.log
+        run: yarn test:e2e
         continue-on-error: true
 
       - name: Check E2E results
         id: check
         run: |
-          if grep -q "Test Files.*failed" e2e-results.log; then
+          if [ "${{ steps.e2e.outcome }}" == "failure" ]; then
             echo "status=failed" >> $GITHUB_OUTPUT
             echo "❌ E2E tests failed - external APIs may have changed"
-            exit 0
           else
             echo "status=success" >> $GITHUB_OUTPUT
             echo "✅ E2E tests passed"
-            exit 0
           fi
 
       - name: Create issue on E2E failure
@@ -88,12 +84,11 @@ jobs:
             ---
             *This issue was automatically created by the E2E test workflow.*`;
 
-            // Check if an issue already exists
+            // Check if an issue already exists (search by title only, ignore labels)
             const issues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
               state: 'open',
-              labels: ['e2e-failure', 'automated'],
             });
 
             const existingIssue = issues.data.find(issue =>
@@ -106,10 +101,10 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: existingIssue.number,
-                body: `## New Failure: ${date}\n\n${body}`,
+                body: `## New Failure: ${date}\n\nWorkflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`,
               });
             } else {
-              // Create new issue
+              // Create new issue (labels will be created automatically if they don't exist)
               await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -119,13 +114,14 @@ jobs:
               });
             }
 
-      - name: Upload E2E results
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-results-${{ github.run_number }}
-          path: scraper/e2e-results.log
+          name: e2e-test-results-${{ github.run_number }}
+          path: scraper/coverage/
           retention-days: 30
+          if-no-files-found: ignore
 
   # Send notification on failure (optional - requires Slack/Discord webhook)
   notify:

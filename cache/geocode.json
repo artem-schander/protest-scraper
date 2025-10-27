@@ -1,0 +1,1027 @@
+{
+  "10179 Berlin, Jannowitzbrücke": {
+    "lat": 52.5142146,
+    "lon": 13.4194925,
+    "address": "Holzmarktstraße, 10179 Berlin"
+  },
+  "13353 Berlin, Nordufer 20": {
+    "lat": 52.5395724,
+    "lon": 13.3468259,
+    "address": "Nordufer 20, 13353 Berlin"
+  },
+  "12435 Berlin, Am Treptower Park": {
+    "lat": 52.4838532,
+    "lon": 13.4692519,
+    "address": "Am Treptower Park, 12435 Berlin"
+  },
+  "Duisburg, Rathaus": {
+    "lat": 51.4344753,
+    "lon": 6.7619269,
+    "address": "Schwanenstraße, 47051 Duisburg, Nordrhein-Westfalen"
+  },
+  "13086 Berlin, Antonplatz 1": {
+    "lat": 52.5487495,
+    "lon": 13.4506766,
+    "address": "Langhansstraße 1, 13086 Berlin"
+  },
+  "10178 Berlin, Alexanderplatz": {
+    "lat": 52.5219814,
+    "lon": 13.4136358,
+    "address": "10178 Berlin"
+  },
+  "10117 Berlin, Pariser Platz": {
+    "lat": 52.5163514,
+    "lon": 13.3786908,
+    "address": "10117 Berlin"
+  },
+  "10117 Berlin, Friedrichstr. 176-179": {
+    "lat": 52.5134146,
+    "lon": 13.3884869,
+    "address": "Friedrichstraße 176–179, 10117 Berlin"
+  },
+  "13086 Berlin, Gustav-Adolf-Str. 2": {
+    "lat": 52.5519035,
+    "lon": 13.4311632,
+    "address": "Gustav-Adolf-Straße 2, 13086 Berlin"
+  },
+  "Domplatte, Köln,  Domkloster 4,  50667 Köln": {
+    "lat": 50.938361,
+    "lon": 6.959974,
+    "address": "Köln, Nordrhein-Westfalen"
+  },
+  "Darmstadt, Luisenplatz": {
+    "lat": 49.8728175,
+    "lon": 8.6506269,
+    "address": "Luisenplatz, 64283 Darmstadt, Hessen"
+  },
+  "Detmold, Marktplatz": {
+    "lat": 51.9352836,
+    "lon": 8.8789914,
+    "address": "Marktplatz, 32756 Detmold, Nordrhein-Westfalen Kreis Lippe"
+  },
+  "Leipzig, Marktplatz": {
+    "lat": 51.3405529,
+    "lon": 12.3746831,
+    "address": "04109 Leipzig, Sachsen"
+  },
+  "Chemnitz, Roter Turm": {
+    "lat": 50.8341999,
+    "lon": 12.9215047,
+    "address": "Straße der Nationen 5, 09111 Chemnitz, Sachsen"
+  },
+  "14169 Berlin, Teltower Damm": {
+    "lat": 52.432666,
+    "lon": 13.2592442,
+    "address": "Teltower Damm, 14169 Berlin"
+  },
+  "Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "10557 Berlin, Willy-Brandt-Str. 1": {
+    "lat": 52.5201616,
+    "lon": 13.3691247,
+    "address": "Willy-Brandt-Straße 1, 10557 Berlin"
+  },
+  "10785 Berlin, Potsdamer Platz": {
+    "lat": 52.5098014,
+    "lon": 13.3755898,
+    "address": "Potsdamer Platz, 10785 Berlin"
+  },
+  "Dresden, Bautzner Landstraße": {
+    "lat": 51.0616089,
+    "lon": 13.8555132,
+    "address": "Bautzner Landstraße, 01324 Dresden, Sachsen"
+  },
+  "Gelnhausen, Main-Kinzig-Forum": {
+    "lat": 50.2006702,
+    "lon": 9.1975377,
+    "address": "Barbarossastraße 24, 63571 Gelnhausen, Hessen Main-Kinzig-Kreis"
+  },
+  "Ravensburg, Marienplatz": {
+    "lat": 47.781317,
+    "lon": 9.6137002,
+    "address": "88212 Ravensburg, Baden-Württemberg Landkreis Ravensburg"
+  },
+  "Rostock, Neuer Markt": {
+    "lat": 54.0886038,
+    "lon": 12.1401166,
+    "address": "Neuer Markt, 18055 Rostock, Mecklenburg-Vorpommern"
+  },
+  "Gera, Theatervorplatz": {
+    "lat": 50.8765528,
+    "lon": 12.0832674,
+    "address": "Gera, Thüringen"
+  },
+  "Görlitz, Platz der Friedlichen Revolution": {
+    "lat": 51.1521287,
+    "lon": 14.9872854,
+    "address": "02826 Görlitz, Sachsen Görlitz"
+  },
+  "Arnstadt, Marktplatz": {
+    "lat": 50.8349097,
+    "lon": 10.9461479,
+    "address": "99310 Arnstadt, Thüringen Ilm-Kreis"
+  },
+  "Bassum, Rathaus": {
+    "lat": 52.848048,
+    "lon": 8.7272987,
+    "address": "Alte Poststraße, 27211 Bassum, Niedersachsen Landkreis Diepholz"
+  },
+  "Dresden, Kulturpalast": {
+    "lat": 51.0509304,
+    "lon": 13.7383838,
+    "address": "Schloßstraße 2, 01067 Dresden, Sachsen"
+  },
+  "Dresden, Wilsdruffer Straße": {
+    "lat": 51.0505559,
+    "lon": 13.7367839,
+    "address": "Wilsdruffer Straße, 01067 Dresden, Sachsen"
+  },
+  "Dresden, Jorge-Gomondai-Platz": {
+    "lat": 51.0623117,
+    "lon": 13.7455972,
+    "address": "Jorge-Gomondai-Platz, 01097 Dresden, Sachsen"
+  },
+  "Dresden": {
+    "lat": 51.0493286,
+    "lon": 13.7381437,
+    "address": "Dresden, Sachsen"
+  },
+  "10117 Berlin, Platz der Märzrevolution": {
+    "lat": 52.5185497,
+    "lon": 13.3951831,
+    "address": "10117 Berlin"
+  },
+  "Betzdorf, Rathaus": {
+    "lat": 50.7484087,
+    "lon": 7.819575,
+    "address": "Rathausplatz, 57580 Gebhardshain, Rheinland-Pfalz Landkreis Altenkirchen (Westerwald)"
+  },
+  "10785 Berlin, Tiergartenstr. 18": {
+    "lat": 52.5093937,
+    "lon": 13.3616109,
+    "address": "Tiergartenstraße 18, 10785 Berlin"
+  },
+  "10243 Berlin, Uber Platz": {
+    "lat": 52.5055537,
+    "lon": 13.4434752,
+    "address": "Uber Platz, 10243 Berlin"
+  },
+  "10243 Berlin, Uber Platz 2": {
+    "lat": 52.5055537,
+    "lon": 13.4434752,
+    "address": "Uber Platz, 10243 Berlin"
+  },
+  "Dresden, Widgardstraße": {
+    "lat": 51.0493286,
+    "lon": 13.7381437,
+    "address": "Dresden, Sachsen"
+  },
+  "Dresden, Sächsische Staatskanzlei": {
+    "lat": 51.0570741,
+    "lon": 13.7482921,
+    "address": "Wigardstraße, 01097 Dresden, Sachsen"
+  },
+  "10245 Berlin, Rotherstr. 11": {
+    "lat": 52.5043415,
+    "lon": 13.4507893,
+    "address": "Rotherstraße 11, 10245 Berlin"
+  },
+  "12555 Berlin, Luisenhain": {
+    "lat": 52.4448684,
+    "lon": 13.5728015,
+    "address": "Müggelheimer Straße, 12555 Berlin"
+  },
+  "Hof, Kugelbrunnen": {
+    "lat": 50.3219015,
+    "lon": 11.9178807,
+    "address": "Hof, Bayern"
+  },
+  "12163 Berlin, Schloßstr. 33": {
+    "lat": 52.4578768,
+    "lon": 13.3206288,
+    "address": "Schloßstraße 33-36, 12163 Berlin"
+  },
+  "10785 Berlin, Klingelhöferstr. 8": {
+    "lat": 52.5064975,
+    "lon": 13.3512578,
+    "address": "Klingelhöferstraße 8, 10785 Berlin"
+  },
+  "Frankfurt am Main, Bockenheimer Warte": {
+    "lat": 50.1192275,
+    "lon": 8.6534649,
+    "address": "Bockenheimer Warte, 60325 Frankfurt am Main, Hessen"
+  },
+  "Rosenheim, Max-Josefs-Platz": {
+    "lat": 47.8558323,
+    "lon": 12.1273205,
+    "address": "Max-Josefs-Platz, 83022 Rosenheim, Bayern"
+  },
+  "Marktplatz, Osterholz-Scharmbeck,  Marktplatz,  27711 Osterholz-Scharmbeck": {
+    "lat": 53.2280218,
+    "lon": 8.786968,
+    "address": "Marktplatz 10, 27711 Osterholz-Scharmbeck, Niedersachsen Landkreis Osterholz"
+  },
+  "13509 Berlin, Kehrwieder 1": {
+    "lat": 52.5933052,
+    "lon": 13.2992549,
+    "address": "Kehrwieder 1, 13509 Berlin"
+  },
+  "Celle, Markt": {
+    "lat": 52.6251972,
+    "lon": 10.081163,
+    "address": "Markt, 29221 Celle, Niedersachsen Landkreis Celle"
+  },
+  "10117 Berlin, Werderscher Markt 1": {
+    "lat": 52.5139807,
+    "lon": 13.3998494,
+    "address": "Werderscher Markt 1, 10117 Berlin"
+  },
+  "Oderturm, Frankfurt/Oder,  Logenstr. 8,  15230 Frankfurt/Oder": {
+    "lat": 52.3412273,
+    "lon": 14.549452,
+    "address": "Frankfurt (Oder), Brandenburg"
+  },
+  "10623 Berlin, Steinplatz": {
+    "lat": 52.5089745,
+    "lon": 13.3253841,
+    "address": "Steinplatz, 10623 Berlin"
+  },
+  "Chlodwigplatz, Köln,  Chlodwigplatz,  50678 Köln": {
+    "lat": 50.921349,
+    "lon": 6.9596465,
+    "address": "Chlodwigplatz, 50678 Köln, Nordrhein-Westfalen"
+  },
+  "Innenstadt Ulm,  89073 Ulm": {
+    "lat": 48.3961317,
+    "lon": 9.9934084,
+    "address": "Unter der Metzig, 89073 Ulm, Baden-Württemberg"
+  },
+  "Innenstadt Dortmund,  44135 Dortmund": {
+    "lat": 51.4924922,
+    "lon": 7.4518549,
+    "address": "Strobelallee 50, 44139 Dortmund, Nordrhein-Westfalen"
+  },
+  "Lüneburg, Marktplatz": {
+    "lat": 53.2502179,
+    "lon": 10.4082352,
+    "address": "Marktplatz, 21335 Lüneburg, Niedersachsen Lüneburg"
+  },
+  "Alfter, Rathaus": {
+    "lat": 50.7214794,
+    "lon": 7.0258876,
+    "address": "Am Rathaus, 53347 Alfter, Nordrhein-Westfalen Rhein-Sieg-Kreis"
+  },
+  "Wismar, Marktplatz": {
+    "lat": 53.8909832,
+    "lon": 11.4647932,
+    "address": "Wismar, Mecklenburg-Vorpommern Nordwestmecklenburg"
+  },
+  "Erfurt, Angerdreieck": {
+    "lat": 50.9777974,
+    "lon": 11.0287364,
+    "address": "Erfurt, Thüringen"
+  },
+  "Kassel, Rathaus": {
+    "lat": 51.3122485,
+    "lon": 9.4920716,
+    "address": "Obere Königsstraße, 34117 Kassel, Hessen"
+  },
+  "Ludwigsburg, Arsenalplatz": {
+    "lat": 48.8952683,
+    "lon": 9.1888437,
+    "address": "71638 Ludwigsburg, Baden-Württemberg Landkreis Ludwigsburg"
+  },
+  "Mölln, Bahnhof": {
+    "lat": 53.5857018,
+    "lon": 13.0838867,
+    "address": "Bahnhofstraße, 17091 Klein Helle, Mecklenburg-Vorpommern Mecklenburgische Seenplatte"
+  },
+  "10117 Berlin, Glinkastr. 5": {
+    "lat": 52.5113237,
+    "lon": 13.3863193,
+    "address": "Glinkastraße 5, 10117 Berlin"
+  },
+  "10585 Berlin, Wilmersdorfer Str.": {
+    "lat": 52.5066749,
+    "lon": 13.3066372,
+    "address": "Kantstraße, 10627 Berlin"
+  },
+  "12101 Berlin, Tempelhofer Damm 99": {
+    "lat": 52.4717731,
+    "lon": 13.3860135,
+    "address": "Tempelhofer Damm 99, 12101 Berlin"
+  },
+  "Schlossplatz Stuttgart,  Schlossplatz,  70173 Stuttgart": {
+    "lat": 48.7781282,
+    "lon": 9.1762705,
+    "address": "Kleiner Schloßplatz, 70173 Stuttgart, Baden-Württemberg"
+  },
+  "12099 Berlin, Ordensmeisterstr. 12": {
+    "lat": 52.457362,
+    "lon": 13.3915745,
+    "address": "Ordensmeisterstraße 12, 12099 Berlin"
+  },
+  "10967 Berlin, Hermannplatz 1": {
+    "lat": 52.4864686,
+    "lon": 13.4247561,
+    "address": "Hermannplatz 1, 10967 Berlin"
+  },
+  "12589 Berlin, Püttbergeweg 143": {
+    "lat": 52.4417,
+    "lon": 13.7097064,
+    "address": "Püttbergeweg 143, 12589 Berlin"
+  },
+  "10557 Berlin, Platz der Republik 1": {
+    "lat": 52.5185941,
+    "lon": 13.3762818,
+    "address": "1, 10557 Berlin"
+  },
+  "Südermarkt, Flensburg,  Südermarkt,  24937 Flensburg": {
+    "lat": 54.7825672,
+    "lon": 9.4363336,
+    "address": "Südermarkt, 24937 Flensburg, Schleswig-Holstein"
+  },
+  "Dresden, Alaunpark": {
+    "lat": 51.0708616,
+    "lon": 13.75621,
+    "address": "01099 Dresden, Sachsen"
+  },
+  "Celle, Schäferbrunnen": {
+    "lat": 52.6214661,
+    "lon": 10.0665601,
+    "address": "Arndstraße, 29221 Celle, Niedersachsen Landkreis Celle"
+  },
+  "10961 Berlin, Blücherplatz 1": {
+    "lat": 52.4965672,
+    "lon": 13.3924936,
+    "address": "Blücherplatz 1, 10961 Berlin"
+  },
+  "10999 Berlin, Fraenkelufer 10": {
+    "lat": 52.4960226,
+    "lon": 13.416844,
+    "address": "Fraenkelufer 10-12, 10999 Berlin"
+  },
+  "10997 Berlin, Görlitzer Str. 1": {
+    "lat": 52.4983938,
+    "lon": 13.4336934,
+    "address": "Görlitzer Straße 1, 10997 Berlin"
+  },
+  "Marktplatz, Schorndorf,  Marktplatz,  73614 Schorndorf": {
+    "lat": 48.8061913,
+    "lon": 9.5271032,
+    "address": "Marktplatz, 73614 Schorndorf, Baden-Württemberg Rems-Murr-Kreis"
+  },
+  "Hungen, Marktplatz": {
+    "lat": 50.4751792,
+    "lon": 8.9009757,
+    "address": "Marktplatz, 35410 Hungen, Hessen Landkreis Gießen"
+  },
+  "Husum, THEO Einkaufszentrum": {
+    "lat": 54.4854137,
+    "lon": 9.0537941,
+    "address": "25813 Husum, Schleswig-Holstein Kreis Nordfriesland"
+  },
+  "13597 Berlin, Markt 1": {
+    "lat": 52.5372575,
+    "lon": 13.2038801,
+    "address": "Markt 1;1A, 13597 Berlin"
+  },
+  "10967 Berlin, Hermannplatz": {
+    "lat": 52.4862857,
+    "lon": 13.4245531,
+    "address": "Karl-Marx-Straße, 10967 Berlin"
+  },
+  "Lütjenburg, Rathaus": {
+    "lat": 54.2925874,
+    "lon": 10.5880553,
+    "address": "Oberstraße 7, 24321 Lütjenburg, Schleswig-Holstein Kreis Plön"
+  },
+  "Hitzacker, am Butt": {
+    "lat": 53.1513876,
+    "lon": 11.0467012,
+    "address": "Am Markt, 29456 Hitzacker (Elbe), Niedersachsen Lüchow-Dannenberg"
+  },
+  "Ahrensburg, Rondeel": {
+    "lat": 53.6731041,
+    "lon": 10.2391709,
+    "address": "Rondeel, 22926 Ahrensburg, Schleswig-Holstein Kreis Stormarn"
+  },
+  "Oldenburg, Lefferseck": {
+    "lat": 53.1419602,
+    "lon": 8.2136624,
+    "address": "26122 Oldenburg, Niedersachsen"
+  },
+  "Kaiserslautern, Bushaltestelle Vogelweher Straße": {
+    "lat": 49.4173978,
+    "lon": 7.7000129,
+    "address": "Burgherrenstraße, 67661 Kaiserslautern, Rheinland-Pfalz"
+  },
+  "10117 Berlin, Pariser Platz 1": {
+    "lat": 52.5162699,
+    "lon": 13.3777034,
+    "address": "Pariser Platz 1, 10117 Berlin"
+  },
+  "Dresden, Prager Straße": {
+    "lat": 51.0447158,
+    "lon": 13.7358131,
+    "address": "Prager Straße, 01069 Dresden, Sachsen"
+  },
+  "10999 Berlin, Kottbusser Tor": {
+    "lat": 52.4989853,
+    "lon": 13.4183107,
+    "address": "Kottbusser Tor, 10999 Berlin"
+  },
+  "Leer, Denkmalplatz": {
+    "lat": 53.2050928,
+    "lon": 7.459464,
+    "address": "Niedersachsen Landkreis Leer"
+  },
+  "13349 Berlin": {
+    "lat": 52.5572937,
+    "lon": 13.3494565,
+    "address": "13349 Berlin"
+  },
+  "Görlitz, Lutherplatz": {
+    "lat": 51.151978,
+    "lon": 14.9776806,
+    "address": "Lutherplatz, 02826 Görlitz, Sachsen Görlitz"
+  },
+  "Elmshorn, Alter Markt": {
+    "lat": 53.753342,
+    "lon": 9.6532237,
+    "address": "Alter Markt, 25335 Elmshorn, Schleswig-Holstein Kreis Pinneberg"
+  },
+  "10178 Berlin, Lustgarten": {
+    "lat": 52.5178907,
+    "lon": 13.399106,
+    "address": "Schloßplatz, 10178 Berlin"
+  },
+  "Emden, Neuer Markt": {
+    "lat": 53.367866,
+    "lon": 7.203167,
+    "address": "26721 Emden, Niedersachsen"
+  },
+  "Zwickau, Hauptbahnhof": {
+    "lat": 50.7151605,
+    "lon": 12.4766808,
+    "address": "Am Bahnhof, 08056 Zwickau, Sachsen Zwickau"
+  },
+  "13355 Berlin, Bernauer Str. 63": {
+    "lat": 52.5409538,
+    "lon": 13.4027196,
+    "address": "Bernauer Straße 63, 13355 Berlin"
+  },
+  "Köln, Rudolfplatz": {
+    "lat": 50.9363122,
+    "lon": 6.9396547,
+    "address": "Rudolfplatz, 50674 Köln, Nordrhein-Westfalen"
+  },
+  "Oldenburg, Bahnhofsplatz": {
+    "lat": 53.1435073,
+    "lon": 8.2217812,
+    "address": "Bahnhofsplatz, 26122 Oldenburg, Niedersachsen"
+  },
+  "10117 Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "address": "Bebelplatz, 10117 Berlin"
+  },
+  "Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "address": "Bebelplatz, 10117 Berlin"
+  },
+  "Speyer, Geschirrplätzel": {
+    "lat": 49.3174951,
+    "lon": 8.4392308,
+    "address": "Geschirrplätzel, 67346 Speyer, Rheinland-Pfalz"
+  },
+  "13129 Berlin, Alt-Blankenburg 12": {
+    "lat": 52.5924276,
+    "lon": 13.4522911,
+    "address": "Alt-Blankenburg 12, 13129 Berlin"
+  },
+  "10117 Berlin, Luisenstr. 58": {
+    "lat": 52.525685,
+    "lon": 13.3792502,
+    "address": "Luisenstraße 58, 10117 Berlin"
+  },
+  "10557 Berlin, Moabiter Brücke": {
+    "lat": 52.5216409,
+    "lon": 13.348294,
+    "address": "Kirchstraße, 10557 Berlin"
+  },
+  "Remscheid, Markt": {
+    "lat": 51.1797955,
+    "lon": 7.1943781,
+    "address": "42853 Remscheid, Nordrhein-Westfalen"
+  },
+  "10117 Berlin, Niederkirchnerstr. 5": {
+    "lat": 52.5078666,
+    "lon": 13.3815043,
+    "address": "Niederkirchnerstraße 5, 10117 Berlin"
+  },
+  "12587 Berlin, Bölschestr. 126": {
+    "lat": 52.4486538,
+    "lon": 13.6241391,
+    "address": "Bölschestraße 126, 12587 Berlin"
+  },
+  "13086 Berlin, Amalienstr. 6": {
+    "lat": 52.5553077,
+    "lon": 13.4577282,
+    "address": "Amalienstraße 6, 13086 Berlin"
+  },
+  "Bitterfeld-Wolfen, Marktplatz": {
+    "lat": 51.6425032,
+    "lon": 12.3076334,
+    "address": "Bitterfeld-Wolfen, Sachsen-Anhalt Anhalt-Bitterfeld"
+  },
+  "12559 Berlin, Alt-Müggelheim 22": {
+    "lat": 52.4116669,
+    "lon": 13.6629606,
+    "address": "Alt-Müggelheim 22, 12559 Berlin"
+  },
+  "10178 Berlin, Rathausstr. 1": {
+    "lat": 52.5202114,
+    "lon": 13.4120877,
+    "address": "Rathausstraße 1, 10178 Berlin"
+  },
+  "12587 Berlin, Bölschestr.": {
+    "lat": 52.4567146,
+    "lon": 13.6254334,
+    "address": "Bölschestraße, 12587 Berlin"
+  },
+  "10787 Berlin, An d. Urania 17": {
+    "lat": 52.5012401,
+    "lon": 13.3480623,
+    "address": "An der Urania 17, 10787 Berlin"
+  },
+  "10117 Berlin, Wilhelmstr. 54": {
+    "lat": 52.5138313,
+    "lon": 13.3828262,
+    "address": "Wilhelmstraße 54, 10117 Berlin"
+  },
+  "10117 Berlin, Behrenstr. 42": {
+    "lat": 52.5159089,
+    "lon": 13.3911578,
+    "address": "Behrenstraße 42, 10117 Berlin"
+  },
+  "Hattingen, Rathaus": {
+    "lat": 51.4009031,
+    "lon": 7.1844804,
+    "address": "Rathausplatz 1, 45525 Hattingen, Nordrhein-Westfalen Ennepe-Ruhr-Kreis"
+  },
+  "Kronenplatz, Bietigheim-Bissingen,  Kronenplatz,  74321 Bietigheim-Bissingen": {
+    "lat": 48.9493243,
+    "lon": 9.1364229,
+    "address": "74321 Bietigheim-Bissingen, Baden-Württemberg Landkreis Ludwigsburg"
+  },
+  "10243 Berlin, Mildred-Harnack-Str. 10": {
+    "lat": 52.5069577,
+    "lon": 13.4409024,
+    "address": "Mildred-Harnack-Straße 10, 10243 Berlin"
+  },
+  "10249 Berlin, Richard-Sorge-Str.": {
+    "lat": 52.5250942,
+    "lon": 13.4439161,
+    "address": "Richard-Sorge-Straße, 10249 Berlin"
+  },
+  "10557 Berlin, Paul-Löbe-Allee/ Friedrich-Ebert-Platz 1": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "10178 Berlin, Alexanderplatz 1": {
+    "lat": 52.5215059,
+    "lon": 13.4123809,
+    "address": "Alexanderplatz 1, 10178 Berlin"
+  },
+  "14193 Berlin, Am Bahnhof Grunewald 1": {
+    "lat": 52.487923,
+    "lon": 13.2629132,
+    "address": "Am Bahnhof Grunewald 1, 14193 Berlin"
+  },
+  "Marktplatz, Rottenburg,  Marktplatz,  72108 Rottenburg": {
+    "lat": 48.4770856,
+    "lon": 8.9334641,
+    "address": "Marktplatz, 72108 Rottenburg, Baden-Württemberg Landkreis Tübingen"
+  },
+  "Düren, Rathaus": {
+    "lat": 50.8032895,
+    "lon": 6.4820607,
+    "address": "Kaiserplatz 2-4, 52349 Düren, Nordrhein-Westfalen Kreis Düren"
+  },
+  "Brandenburg an der Havel, Hauptbahnhof": {
+    "lat": 52.4008975,
+    "lon": 12.5661813,
+    "address": "Am Hauptbahnhof, 14776 Brandenburg an der Havel, Brandenburg"
+  },
+  "Rindermarkt, München,  Rindermarkt,  80331 München": {
+    "lat": 48.1361687,
+    "lon": 11.5747511,
+    "address": "Rindermarkt, 80331 München, Bayern"
+  },
+  "10789 Berlin, Wittenbergplatz": {
+    "lat": 52.5017976,
+    "lon": 13.3430005,
+    "address": "Wittenbergplatz, 10789 Berlin"
+  },
+  "10249 Berlin, Ernst-Zinna-Weg 1": {
+    "lat": 52.5241818,
+    "lon": 13.4366097,
+    "address": "Ernst-Zinna-Weg 1, 10249 Berlin"
+  },
+  "13355 Berlin, Bernauer Str.": {
+    "lat": 52.5391285,
+    "lon": 13.3991201,
+    "address": "Bernauer Straße, 13355 Berlin"
+  },
+  "10557 Berlin, Paul-Löbe-Allee 1": {
+    "lat": 52.5191897,
+    "lon": 13.3761089,
+    "address": "Paul-Löbe-Allee 1, 10557 Berlin"
+  },
+  "Dresden, An der Kreuzkirche": {
+    "lat": 51.0486074,
+    "lon": 13.7397653,
+    "address": "An der Kreuzkirche, 01067 Dresden, Sachsen"
+  },
+  "10551 Berlin": {
+    "lat": 52.5309135,
+    "lon": 13.3364472,
+    "address": "10551 Berlin"
+  },
+  "10623 Berlin, Wegelystr. 1": {
+    "lat": 52.515029,
+    "lon": 13.3329589,
+    "address": "Wegelystraße 1, 10623 Berlin"
+  },
+  "Brandenburger Tor, Berlin,  Platz des 18. März,  10117 Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "14053 Berlin, Olympischer Platz 1": {
+    "lat": 52.5152552,
+    "lon": 13.2458452,
+    "address": "14053 Berlin"
+  },
+  "10115 Berlin, Große Hamburger Str. 24": {
+    "lat": 52.5239906,
+    "lon": 13.3996782,
+    "address": "Große Hamburger Straße 24, 10115 Berlin"
+  },
+  "Welzheim, Hermann-Schlotterbeck-Platz": {
+    "lat": 48.8773798,
+    "lon": 9.6344311,
+    "address": "Hermann-Schlotterbeck-Platz, 73642 Welzheim, Baden-Württemberg Rems-Murr-Kreis"
+  },
+  "12359 Berlin, Onkel-Herse-Str. 34": {
+    "lat": 52.4480175,
+    "lon": 13.4516528,
+    "address": "Onkel-Herse-Straße 34, 12359 Berlin"
+  },
+  "10999 Berlin, Oranienplatz": {
+    "lat": 52.5022391,
+    "lon": 13.4157144,
+    "address": "10999 Berlin"
+  },
+  "Hamburg, Jüthornstraße 49": {
+    "lat": 53.5669042,
+    "lon": 10.0752257,
+    "address": "Jüthornstraße 49, 22043 Hamburg"
+  },
+  "10245 Berlin, Boxhagener Platz": {
+    "lat": 52.5108076,
+    "lon": 13.459703,
+    "address": "10245 Berlin"
+  },
+  "13465 Berlin, Zeltinger Platz 18": {
+    "lat": 52.6339841,
+    "lon": 13.2919957,
+    "address": "Zeltinger Platz 18, 13465 Berlin"
+  },
+  "Berlin, Krugstege / Dorfkirche Blankenburg": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "Fuchseck, Ellwangen,  73479 Ellwangen": {
+    "lat": 48.9611362,
+    "lon": 10.1307158,
+    "address": "Schmiedstraße, 73479 Rotenbach, Baden-Württemberg Ostalbkreis"
+  },
+  "10115 Berlin, Große Hamburger Str. 27": {
+    "lat": 52.5248933,
+    "lon": 13.3995471,
+    "address": "Große Hamburger Straße 27, 10115 Berlin"
+  },
+  "10557 Berlin, Willy-Brandt-Straße 1": {
+    "lat": 52.5201616,
+    "lon": 13.3691247,
+    "address": "Willy-Brandt-Straße 1, 10557 Berlin"
+  },
+  "12587 Berlin, Bölschestr. 100": {
+    "lat": 52.4523921,
+    "lon": 13.624615,
+    "address": "Bölschestraße 100, 12587 Berlin"
+  },
+  "10178 Berlin, Am Lustgarten": {
+    "lat": 52.5191384,
+    "lon": 13.4001379,
+    "address": "Am Lustgarten, 10178 Berlin"
+  },
+  "10117 Berlin, Gendarmenmarkt": {
+    "lat": 52.5135698,
+    "lon": 13.392297,
+    "address": "10117 Berlin"
+  },
+  "10551 Berlin, Wiclefstr. 32": {
+    "lat": 52.5313623,
+    "lon": 13.3296189,
+    "address": "Wiclefstraße 32, 10551 Berlin"
+  },
+  "12163 Berlin, Schloßstr.": {
+    "lat": 52.461481,
+    "lon": 13.3250946,
+    "address": "Joachim-Tiburtius-Brücke, 12163 Berlin"
+  },
+  "10825 Berlin, John-F.-Kennedy-Platz": {
+    "lat": 52.4849023,
+    "lon": 13.3446382,
+    "address": "10825 Berlin"
+  },
+  "10551 Berlin, Bremer Str.": {
+    "lat": 52.528412,
+    "lon": 13.3381047,
+    "address": "Bremer Straße, 10551 Berlin"
+  },
+  "Hauptkirche Sankt Petri, Hamburg,  Bei der Petrikirche 2,  20095 Hamburg": {
+    "lat": 53.550341,
+    "lon": 10.000654,
+    "address": "Hamburg"
+  },
+  "Marktbrunnen, Aalen,  Marktplatz 4,  73430 Aalen": {
+    "lat": 48.8375607,
+    "lon": 10.0929593,
+    "address": "Aalen, Baden-Württemberg Ostalbkreis"
+  },
+  "10711 Berlin, Joachim-Friedrich-Str. 29": {
+    "lat": 52.5010517,
+    "lon": 13.2968431,
+    "address": "Joachim-Friedrich-Straße 29, 10711 Berlin"
+  },
+  "10243 Berlin, Mühlenstr. 71": {
+    "lat": 52.565697,
+    "lon": 13.4065424,
+    "address": "Mühlenstraße 71, 13187 Berlin"
+  },
+  "Karlsplatz, Stuttgart,  Karlsplatz,  70173 Stuttgart": {
+    "lat": 48.7765007,
+    "lon": 9.1808137,
+    "address": "Karlsplatz, 70173 Stuttgart, Baden-Württemberg"
+  },
+  "Odeonsplatz, München,  Odeonsplatz,  80539 München": {
+    "lat": 48.1430381,
+    "lon": 11.577616,
+    "address": "Odeonsplatz, 80539 München, Bayern"
+  },
+  "Erlangen, Hugenottenplatz": {
+    "lat": 49.5966663,
+    "lon": 11.0047652,
+    "address": "Hugenottenplatz, 91054 Erlangen, Bayern Erlangen"
+  },
+  "10367 Berlin, Roederplatz": {
+    "lat": 52.5270134,
+    "lon": 13.4803252,
+    "address": "10367 Berlin"
+  },
+  "Ev. Kirche \"Zum Guten Hirten\" Altötting,  84503 Altötting": {
+    "lat": 48.2268085,
+    "lon": 12.6757914,
+    "address": "84503 Altötting, Bayern Landkreis Altötting"
+  },
+  "Chemnitz, Bahnhof Chemnitz  Schönau": {
+    "lat": 50.8323531,
+    "lon": 12.918914,
+    "address": "Chemnitz, Sachsen"
+  },
+  "Regensburg, Dachauplatz": {
+    "lat": 49.0176978,
+    "lon": 12.101366,
+    "address": "Dachauplatz, 93047 Regensburg, Bayern"
+  },
+  "Weimar, Theaterplatz": {
+    "lat": 50.9798143,
+    "lon": 11.3257779,
+    "address": "99423 Weimar, Thüringen"
+  },
+  "Schwerte, Rathaus": {
+    "lat": 51.4404409,
+    "lon": 7.5700207,
+    "address": "Brückstraße 14, 58239 Schwerte, Nordrhein-Westfalen Kreis Unna"
+  },
+  "Lünen, Rathaus: Licht_blau": {
+    "lat": 51.6142482,
+    "lon": 7.5228088,
+    "address": "Lünen, Nordrhein-Westfalen Kreis Unna"
+  },
+  "Hamburg, Stephansplatz": {
+    "lat": 53.557928,
+    "lon": 9.9890879,
+    "address": "Stephansplatz, 20354 Hamburg"
+  },
+  "Nordenham, Marktplatz": {
+    "lat": 53.4858593,
+    "lon": 8.4831263,
+    "address": "Marktplatz, 26954 Nordenham, Niedersachsen Landkreis Wesermarsch"
+  },
+  "Groß-Umstadt, Rathaus": {
+    "lat": 49.8687421,
+    "lon": 8.9288627,
+    "address": "Markt 1, 64823 Groß-Umstadt, Hessen Landkreis Darmstadt-Dieburg"
+  },
+  "Köln, Breslauer Platz": {
+    "lat": 50.9439777,
+    "lon": 6.9588908,
+    "address": "Breslauer Platz, 50667 Köln, Nordrhein-Westfalen"
+  },
+  "Hamburg, Jüthornstrasse 104": {
+    "lat": 53.5681439,
+    "lon": 10.0848393,
+    "address": "Jüthornstraße 104, 22043 Hamburg"
+  },
+  "Cuxhaven, zwischen Fährhafen und Kugelbrake": {
+    "lat": 53.86878,
+    "lon": 8.698286,
+    "address": "Cuxhaven, Niedersachsen Landkreis Cuxhaven"
+  },
+  "Achern, Am Markt": {
+    "lat": 48.6279612,
+    "lon": 8.0713657,
+    "address": "Am Markt, 77855 Oberachern, Baden-Württemberg Ortenaukreis"
+  },
+  "10178 Berlin, Karl-Liebknecht-Str. 1": {
+    "lat": 52.51944,
+    "lon": 13.4022381,
+    "address": "Karl-Liebknecht-Straße 1, 10178 Berlin"
+  },
+  "Kiel, Hauptbahnhof": {
+    "lat": 54.3151405,
+    "lon": 10.1311993,
+    "address": "Sophienblatt, 24114 Kiel, Schleswig-Holstein"
+  },
+  "10117 Berlin": {
+    "lat": 52.5175184,
+    "lon": 13.3877686,
+    "address": "10117 Berlin"
+  },
+  "10557 Berlin, Platz der Republik": {
+    "lat": 52.5186753,
+    "lon": 13.3731249,
+    "address": "10557 Berlin"
+  },
+  "Martinsplatz, Bonn,  Martinsplatz,  53111 Bonn": {
+    "lat": 50.732874,
+    "lon": 7.1002024,
+    "address": "Martinsplatz 2a, 53113 Bonn, Nordrhein-Westfalen"
+  },
+  "10967 Berlin": {
+    "lat": 52.4896057,
+    "lon": 13.4164085,
+    "address": "10967 Berlin"
+  },
+  "Innenstadt Horb,   Horb": {
+    "lat": 48.4447943,
+    "lon": 8.6914794,
+    "address": "Horb am Neckar, Baden-Württemberg Landkreis Freudenstadt"
+  },
+  "12623 Berlin, Ullrichplatz": {
+    "lat": 52.4796249,
+    "lon": 13.604299,
+    "address": "12623 Berlin"
+  },
+  "13437 Berlin, Eichborndamm": {
+    "lat": 52.5776294,
+    "lon": 13.3166204,
+    "address": "Humannstraße, 13403 Berlin"
+  },
+  "14055 Berlin, Messedamm 26": {
+    "lat": 52.5001203,
+    "lon": 13.2707936,
+    "address": "Messedamm 26, 14055 Berlin"
+  },
+  "10963 Berlin, Möckernstr. 10": {
+    "lat": 52.5016063,
+    "lon": 13.3811909,
+    "address": "Möckernstraße 10, 10963 Berlin"
+  },
+  "Gärtnerplatz, München,  Gärtnerplatz,  80469 München": {
+    "lat": 48.1315021,
+    "lon": 11.575793,
+    "address": "Gärtnerplatz, 80469 München, Bayern"
+  },
+  "Gießen, Ort tba": {
+    "lat": 50.5808795,
+    "lon": 8.6938161,
+    "address": "Gießen, Hessen Landkreis Gießen"
+  },
+  "12437 Berlin, Baumschulenstr. 79": {
+    "lat": 52.464828,
+    "lon": 13.4844263,
+    "address": "Baumschulenstraße 79-81, 12437 Berlin"
+  },
+  "10785 Berlin, Tiergartenstr. 15": {
+    "lat": 52.5092875,
+    "lon": 13.3627188,
+    "address": "Tiergartenstraße 15, 10785 Berlin"
+  },
+  "10119 Berlin, Schönhauser Allee 10": {
+    "lat": 52.5303329,
+    "lon": 13.4115551,
+    "address": "Schönhauser Allee 10, 10119 Berlin"
+  },
+  "10559 Berlin, Turmstr. 91": {
+    "lat": 52.5259742,
+    "lon": 13.3540779,
+    "address": "Turmstraße 91, 10559 Berlin"
+  },
+  "10179 Berlin, Märkisches Ufer 54": {
+    "lat": 52.5136105,
+    "lon": 13.4168021,
+    "address": "Märkisches Ufer 54, 10179 Berlin"
+  },
+  "10551 Berlin, Siemensstr. 20": {
+    "lat": 52.5329902,
+    "lon": 13.3356065,
+    "address": "Siemensstraße 20, 10551 Berlin"
+  },
+  "Bühl, Rathausplatz": {
+    "lat": 48.4828583,
+    "lon": 8.9969185,
+    "address": "Bühler Rathausplatz, 72072 Bühl, Baden-Württemberg Landkreis Tübingen"
+  },
+  "10365 Berlin, Schulze-Boysen-Str. 12": {
+    "lat": 52.5108832,
+    "lon": 13.4807497,
+    "address": "Schulze-Boysen-Straße 12, 10365 Berlin"
+  },
+  "10117 Berlin, Platz des 18. März": {
+    "lat": 52.5163704,
+    "lon": 13.3772972,
+    "address": "10117 Berlin"
+  },
+  "10785 Berlin, Straße des 17. Juni 31": {
+    "lat": 52.5142737,
+    "lon": 13.3641638,
+    "address": "Straße des 17. Juni 31, 10785 Berlin"
+  },
+  "10365 Berlin, Gudrunstr. 20": {
+    "lat": 52.5150725,
+    "lon": 13.5093641,
+    "address": "Gudrunstraße 20, 10315 Berlin"
+  },
+  "10365 Berlin, Gudrunstr.": {
+    "lat": 52.5123734,
+    "lon": 13.5000536,
+    "address": "Gudrunstraße, 10365 Berlin"
+  },
+  "12351 Berlin, Rudower Str.": {
+    "lat": 52.4400066,
+    "lon": 13.4590716,
+    "address": "Rudower Straße, 12351 Berlin"
+  },
+  "12435 Berlin, Treptower Park": {
+    "lat": 52.4938491,
+    "lon": 13.4618296,
+    "address": "Bernhard-Langwaldt-Weg, 12435 Berlin"
+  },
+  "10997 Berlin, Mariannenplatz": {
+    "lat": 52.5035914,
+    "lon": 13.425348,
+    "address": "10997 Berlin"
+  },
+  "10557 Berlin, Straße des 17. Juni": {
+    "lat": 52.5157873,
+    "lon": 13.3692376,
+    "address": "Straße des 17. Juni, 10557 Berlin"
+  },
+  "13125 Berlin, Wiltbergstr.": {
+    "lat": 52.6364129,
+    "lon": 13.4930917,
+    "address": "Wiltbergstraße, 13125 Berlin"
+  },
+  "10437 Berlin, Mauerpark": {
+    "lat": 52.5447508,
+    "lon": 13.4015371,
+    "address": "Schwedter Straße, 10437 Berlin"
+  },
+  "10785 Berlin, Straße des 17. Juni": {
+    "lat": 52.5150919,
+    "lon": 13.3601863,
+    "address": "Straße des 17. Juni, 10785 Berlin"
+  }
+}

@@ -124,7 +124,14 @@ async function importProtests(days: number): Promise<void> {
         start: event.start ? new Date(event.start) : null,
       });
 
+      // Skip if fully manual (complete disconnect from scraper)
+      if (existing?.fullyManual) {
+        skipped++;
+        continue;
+      }
+
       // Handle events marked for deletion (e.g., rejected/cancelled in source)
+      // Respect deletion even on manually edited events (but not if fullyManual)
       if (event.shouldDelete) {
         if (existing && !existing.deleted) {
           // Mark existing event as deleted
@@ -171,27 +178,73 @@ async function importProtests(days: number): Promise<void> {
         url: event.url,
         attendees: event.attendees,
         categories: event.categories, // Event categories (e.g., Demonstration, Vigil)
-        verified: event.verified ?? true, // Use event's verified status, default to true for backwards compatibility
+        verified: event.verified ?? false, // Use event's verified status, default to false (only show checkmark for explicitly verified events)
         createdAt: existing?.createdAt || new Date(),
         updatedAt: new Date(),
       };
 
       if (existing) {
-        // Skip if manually edited or soft-deleted to prevent overwriting manual changes
-        if (existing.manuallyEdited || existing.deleted) {
+        // Skip if soft-deleted (but not if manually edited - we'll do selective updates)
+        if (existing.deleted) {
           skipped++;
           continue;
         }
 
-        // Update existing (only if not manually modified)
+        // Build selective update object
+        const updateFields: Partial<Protest> = {
+          // Always update these fields (source authority)
+          verified: event.verified ?? false,
+          updatedAt: new Date(),
+        };
+
+        // Get list of fields that were manually edited
+        const editedFields = existing.editedFields || [];
+
+        // Conditionally update content fields only if not manually edited
+        if (!editedFields.includes('title')) {
+          updateFields.title = event.title;
+        }
+        if (!editedFields.includes('location')) {
+          updateFields.location = event.location;
+          updateFields.originalLocation = event.originalLocation;
+          updateFields.geoLocation = geoLocation; // Location implies coordinates
+        }
+        if (!editedFields.includes('start')) {
+          updateFields.start = event.start ? new Date(event.start) : null;
+          updateFields.startTimeKnown = event.startTimeKnown;
+        }
+        if (!editedFields.includes('end')) {
+          updateFields.end = event.end ? new Date(event.end) : null;
+          updateFields.endTimeKnown = event.endTimeKnown;
+        }
+        if (!editedFields.includes('attendees')) {
+          updateFields.attendees = event.attendees;
+        }
+        if (!editedFields.includes('categories')) {
+          updateFields.categories = event.categories;
+        }
+        // City and country are tied to location, so respect location edit
+        if (!editedFields.includes('location')) {
+          updateFields.city = event.city;
+          updateFields.country = event.country;
+        }
+        // Language is part of source data
+        if (!editedFields.includes('language')) {
+          updateFields.language = event.language;
+        }
+
+        // Always preserve these fields (never overwritten by scraper)
+        updateFields.createdAt = existing.createdAt;
+        updateFields.createdBy = existing.createdBy;
+        updateFields.editedBy = existing.editedBy;
+        updateFields.editedFields = existing.editedFields;
+        updateFields.manuallyEdited = existing.manuallyEdited;
+        updateFields.fullyManual = existing.fullyManual;
+
+        // Update existing with selective fields
         await protests.updateOne(
           { _id: existing._id },
-          {
-            $set: {
-              ...protestData,
-              createdAt: existing.createdAt, // Preserve original creation date
-            },
-          }
+          { $set: updateFields }
         );
         updated++;
       } else {

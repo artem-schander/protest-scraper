@@ -26,6 +26,8 @@ export interface Protest {
   createdBy?: string; // User ID who created (if manual submission)
   editedBy?: string; // User ID who last edited (if manually edited)
   manuallyEdited?: boolean; // Set to true when moderator/admin edits via API
+  editedFields?: string[]; // Array of field names that were manually edited (e.g., ["title", "location"])
+  fullyManual?: boolean; // Completely disconnects from scraper (ignores ALL updates including deletion)
   deleted?: boolean; // Soft delete flag - prevents scraper from re-importing
   createdAt: Date;
   updatedAt: Date;
@@ -56,6 +58,7 @@ export interface ProtestUpdateInput {
   url?: string;
   attendees?: number | null;
   verified?: boolean;
+  fullyManual?: boolean; // Allow moderators to disconnect event from scraper
 }
 
 export interface ProtestQueryFilters {
