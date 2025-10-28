@@ -12,6 +12,8 @@
     "scrape:prod": "node dist/scraper/scrape-protests.js",
     "import": "tsx src/scraper/import-to-db.ts",
     "import:prod": "node dist/scraper/import-to-db.js",
+    "cleanup-duplicates": "tsx src/scripts/cleanup-duplicates.ts",
+    "cleanup-duplicates:prod": "node dist/scripts/cleanup-duplicates.js",
     "set-role": "tsx src/scripts/set-user-role.ts",
     "set-role:prod": "node dist/scripts/set-user-role.js",
     "test": "vitest run test/unit test/integration",

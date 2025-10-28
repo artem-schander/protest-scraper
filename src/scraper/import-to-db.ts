@@ -118,10 +118,24 @@ async function importProtests(days: number): Promise<void> {
 
   for (const event of filtered) {
     try {
-      // Check if event already exists (by URL and start date)
+      // Check if event already exists with fuzzy date matching (±3 days)
+      // This handles rescheduled events while keeping recurring events separate
+      const startDate = event.start ? new Date(event.start) : null;
+      const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+      const threeDaysAgo = startDate ? new Date(startDate.getTime() - threeDaysMs) : null;
+      const threeDaysLater = startDate ? new Date(startDate.getTime() + threeDaysMs) : null;
+
       const existing = await protests.findOne({
         url: event.url,
-        start: event.start ? new Date(event.start) : null,
+        title: event.title, // Exact title match to avoid false positives
+        city: event.city,
+        source: event.source,
+        ...(startDate && {
+          start: {
+            $gte: threeDaysAgo,
+            $lte: threeDaysLater,
+          },
+        }),
       });
 
       // Skip if fully manual (complete disconnect from scraper)
