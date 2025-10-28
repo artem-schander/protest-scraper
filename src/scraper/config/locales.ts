@@ -193,6 +193,66 @@ export const LOCALES: Record<string, LocaleConfig> = {
   },
 
   /**
+   * Switzerland
+   * German-speaking region config (most protests are in German-speaking areas)
+   * Uses same German month names but with Swiss timezone
+   */
+  'CH': {
+    countryCode: 'CH',
+    timezone: 'Europe/Zurich',
+    language: 'de-CH',
+    monthNames: {
+      // Full month names (German)
+      'Januar': '01',
+      'Februar': '02',
+      'März': '03',
+      'April': '04',
+      'Mai': '05',
+      'Juni': '06',
+      'Juli': '07',
+      'August': '08',
+      'September': '09',
+      'Oktober': '10',
+      'November': '11',
+      'Dezember': '12',
+      // Abbreviated month names (3 letters)
+      'Jan': '01',
+      'Feb': '02',
+      'Mär': '03',
+      'Apr': '04',
+      'Jun': '06',
+      'Jul': '07',
+      'Aug': '08',
+      'Sep': '09',
+      'Sept': '09',
+      'Okt': '10',
+      'Nov': '11',
+      'Dez': '12',
+    },
+    dateFormats: [
+      'DD.MM.YYYY HH:mm',        // "23.10.2025 14:30"
+      'DD.MM.YYYY',               // "23.10.2025"
+      'DD.MM. HH:mm',             // "23.10. 14:30" (current year implied)
+      'D. M YYYY HH:mm',          // "1. 11 2025 15:00" (single digit day/month, after name replacement)
+      'DD. MM YYYY HH:mm',        // "23. 10 2025 14:30" (month names replaced)
+      'DD. MM HH:mm YYYY',        // "23. 10 14:30 2025"
+      'D. M YYYY',                // "1. 11 2025" (single digit, no time)
+      'DD. MM YYYY',              // "23. 10 2025"
+      'DD.MM.YY',                 // "23.10.25"
+    ],
+    numberFormats: {
+      approximately: [
+        /ca\.\s*(\d+)/i,          // "ca. 1000"
+        /etwa\s+(\d+)/i,          // "etwa 500"
+        /~\s*(\d+)/,              // "~ 200"
+        /ungefähr\s+(\d+)/i,      // "ungefähr 300"
+      ],
+      range: /(\d+)\s*[-–]\s*(\d+)/, // "1000-2000" or "1000 – 2000"
+      thousands: 'k',
+    },
+  },
+
+  /**
    * United States
    * Example configuration for future US sources
    */
