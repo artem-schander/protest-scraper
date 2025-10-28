@@ -85,9 +85,15 @@ yarn import -- --days 60       # Import protests for next 60 days
 
 This command:
 1. Scrapes protests from different sources
-2. Deduplicates events
+2. Deduplicates events using fuzzy date matching
 3. Imports them to MongoDB as verified protests
 4. Updates existing events (unless manually edited or deleted)
+
+**Fuzzy Date Matching:** Handles rescheduled vs recurring events:
+- Matches events by: `url` + `title` + `city` + `source` + start date **±3 days**
+- **Rescheduled events** (date changed by 1-3 days) → updates existing event
+- **Recurring events** (7+ days apart) → treated as separate events
+- Prevents duplicate entries when organizers change event times
 
 **Conflict Protection:** The scraper respects manual changes:
 - Events edited via API (PUT) are marked as `manuallyEdited: true` and won't be overwritten
@@ -100,6 +106,37 @@ This command:
 - Background cleanup runs automatically every 60 seconds
 
 **Legacy File Export:** The original scraper (`npm run scrape`) still creates CSV/JSON/ICS files if needed. See [Scraper Standalone Usage](#-scraper-standalone-usage) below.
+
+### Cleaning Up Duplicates
+
+If you have existing duplicates in your database (e.g., from sources changing event dates):
+
+```bash
+# Preview what would be deleted (safe, no changes)
+yarn cleanup-duplicates --dry-run
+
+# Remove duplicates and merge manual edits
+yarn cleanup-duplicates
+```
+
+**What it does:**
+- Finds duplicates using the same fuzzy date matching (±3 days)
+- Keeps the oldest event (by `createdAt`)
+- Merges manual edits from newer duplicates before deletion
+- Skips `deleted` and `fullyManual` events
+- Outputs detailed report with IDs, dates, and merge actions
+
+**Example output:**
+```
+[cleanup] Found 2 duplicates for:
+  Title: Climate March
+  Date: 2025-11-15T14:00:00.000Z
+  City: Berlin
+  → Duplicate ID: 507f1f77bcf86cd799439011
+    Created: 2025-11-02T10:00:00.000Z
+    Start: 2025-11-16T14:00:00.000Z
+    ✓ Deleted duplicate
+```
 
 ### Running Tests
 

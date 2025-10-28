@@ -68,6 +68,24 @@ yarn set-role -e user@example.com -r USER      # Demote back to regular user
 yarn set-role:prod -e user@example.com -r MODERATOR
 ```
 
+### Database Maintenance
+```bash
+# Cleanup duplicate events (uses fuzzy date matching)
+yarn cleanup-duplicates --dry-run  # Preview what would be deleted (safe)
+yarn cleanup-duplicates            # Remove duplicates and merge manual edits
+
+# Production
+yarn cleanup-duplicates:prod --dry-run
+yarn cleanup-duplicates:prod
+```
+
+**Duplicate Detection Logic:**
+- Same `url`, `title`, `city`, `source`
+- Start dates within **±3 days** of each other
+- Keeps oldest event (by `createdAt`)
+- Merges manual edits from newer duplicates before deletion
+- Skips `deleted: true` and `fullyManual: true` events
+
 ### Docker
 ```bash
 docker compose up -d --build      # Build and start all services
@@ -528,10 +546,15 @@ Moderators can set `fullyManual: true` to completely disconnect an event from th
 - Use when event data is unreliable or permanently corrected
 - Set via `PUT /api/protests/:id` with `fullyManual: true` in payload
 
-**Conflict Detection:**
-- Import checks existing by `url + start`
+**Conflict Detection (Fuzzy Date Matching):**
+- Import uses **fuzzy date matching** to detect duplicates
+- Matches by: `url` + `title` + `city` + `source` + start date within **±3 days**
+- This handles:
+  - ✅ **Rescheduled events** (date changed by 1-3 days) → updates existing event
+  - ✅ **Recurring events** (7+ days apart) → treated as separate events
 - Skips if `deleted: true` (soft delete prevents re-import, unless event comes back from source)
 - Updates selectively based on `editedFields` tracking
+- Run `yarn cleanup-duplicates` to remove existing duplicates in database
 
 ### API Query System
 
@@ -761,6 +784,44 @@ export async function parseParisPolice(): Promise<ProtestEvent[]> {
 2. Update indexes in `src/db/connection.ts` if adding indexed fields
 3. No migrations needed - MongoDB is schemaless
 4. Existing documents will coexist (add null checks for new optional fields)
+
+### Cleaning Up Duplicate Events
+
+When you discover duplicates in the database (often from date/time changes in sources):
+
+1. **Preview duplicates (safe, no changes):**
+   ```bash
+   yarn cleanup-duplicates --dry-run
+   ```
+
+2. **Review the output:**
+   - Shows duplicate groups with their IDs, titles, dates, cities
+   - Reports how many would be deleted
+   - Shows which duplicates have manual edits that would be merged
+
+3. **Run the cleanup:**
+   ```bash
+   yarn cleanup-duplicates
+   ```
+
+4. **What happens:**
+   - Finds duplicates using fuzzy date matching (±3 days)
+   - Keeps the oldest event (by `createdAt`)
+   - Merges manual edits from newer duplicates into the original
+   - Deletes newer duplicates
+   - Outputs JSON summary with counts
+
+5. **Production:**
+   ```bash
+   yarn cleanup-duplicates:prod --dry-run  # Always preview first!
+   yarn cleanup-duplicates:prod
+   ```
+
+**The script automatically:**
+- Skips `deleted: true` events
+- Skips `fullyManual: true` events
+- Preserves manual edits by merging `editedFields` before deletion
+- Uses the same fuzzy matching logic as the import script
 
 ## Environment Variables
 
