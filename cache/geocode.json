@@ -1023,5 +1023,85 @@
     "lat": 52.5150919,
     "lon": 13.3601863,
     "address": "Straße des 17. Juni, 10785 Berlin"
+  },
+  "Sendlinger-Tor-Platz, München,  Sendlinger Tor Platz,  80336 München": {
+    "lat": 48.1338939,
+    "lon": 11.5665555,
+    "address": "Sendlinger-Tor-Platz, 80336 München, Bayern"
+  },
+  "10785 Berlin, Potsdamer Platz 2": {
+    "lat": 52.5096744,
+    "lon": 13.3750169,
+    "address": "Potsdamer Platz 2, 10785 Berlin"
+  },
+  "10117 Berlin, Friedrichstr. 181": {
+    "lat": 52.5126012,
+    "lon": 13.3893178,
+    "address": "Friedrichstraße 181, 10117 Berlin"
+  },
+  "12207 Berlin, Jungfernstieg 4B": {
+    "lat": 52.4297974,
+    "lon": 13.3273153,
+    "address": "Jungfernstieg 4B, 12207 Berlin"
+  },
+  "Wildeshausen, Markt": {
+    "lat": 52.8974496,
+    "lon": 8.43555,
+    "address": "Bahnhofstraße, 27793 Wildeshausen, Niedersachsen Landkreis Oldenburg"
+  },
+  "13405 Berlin, Kurt-Schumacher-Platz": {
+    "lat": 52.5632274,
+    "lon": 13.327129,
+    "address": "Kurt-Schumacher-Damm, 13405 Berlin"
+  },
+  "Mettmann, Neanderthal Museum": {
+    "lat": 51.226768,
+    "lon": 6.951072,
+    "address": "Talstraße 300, 40822 Mettmann, Nordrhein-Westfalen Kreis Mettmann"
+  },
+  "10178 Berlin, Alexanderplatz 9": {
+    "lat": 52.5224174,
+    "lon": 13.4116775,
+    "address": "9, 10178 Berlin"
+  },
+  "10178 Berlin": {
+    "lat": 52.520286,
+    "lon": 13.4047307,
+    "address": "10178 Berlin"
+  },
+  "Nördlingen, Marktplatz": {
+    "lat": 48.8517025,
+    "lon": 10.488626,
+    "address": "Marktplatz, 86720 Baldingen, Bayern Landkreis Donau-Ries"
+  },
+  "13129 Berlin, Alt-Blankenburg 12A": {
+    "lat": 52.5928105,
+    "lon": 13.4526246,
+    "address": "Alt-Blankenburg 12A, 13129 Berlin"
+  },
+  "10829 Berlin, Bautzener Str./ Monumentenbrücke": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "10557 Berlin, Konrad-Adenauer-Str. 1": {
+    "lat": 52.5201476,
+    "lon": 13.3748004,
+    "address": "Konrad-Adenauer-Straße 1, 10557 Berlin"
+  },
+  "10999 Berlin, Oranienstr./ Mariannenstr.": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "10715 Berlin, Bundesallee 44": {
+    "lat": 52.4863414,
+    "lon": 13.3305318,
+    "address": "Bundesallee 44, 10715 Berlin"
+  },
+  "10365 Berlin, Stefan-Heym-Platz": {
+    "lat": 52.5138669,
+    "lon": 13.4780081,
+    "address": "10367 Berlin"
   }
 }

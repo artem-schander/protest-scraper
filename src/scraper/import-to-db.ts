@@ -178,7 +178,7 @@ async function importProtests(days: number): Promise<void> {
         url: event.url,
         attendees: event.attendees,
         categories: event.categories, // Event categories (e.g., Demonstration, Vigil)
-        verified: event.verified ?? false, // Use event's verified status, default to false (only show checkmark for explicitly verified events)
+        verified: event.verified ?? true, // Scraper events are from official sources, default to verified
         createdAt: existing?.createdAt || new Date(),
         updatedAt: new Date(),
       };
@@ -193,7 +193,7 @@ async function importProtests(days: number): Promise<void> {
         // Build selective update object
         const updateFields: Partial<Protest> = {
           // Always update these fields (source authority)
-          verified: event.verified ?? false,
+          verified: event.verified ?? true, // Scraper events are from official sources, default to verified
           updatedAt: new Date(),
         };
 
@@ -235,16 +235,25 @@ async function importProtests(days: number): Promise<void> {
 
         // Always preserve these fields (never overwritten by scraper)
         updateFields.createdAt = existing.createdAt;
-        updateFields.createdBy = existing.createdBy;
+        // Don't preserve createdBy - scraper events should not have this field
+        // (this ensures they show up in public view even if unverified)
         updateFields.editedBy = existing.editedBy;
         updateFields.editedFields = existing.editedFields;
         updateFields.manuallyEdited = existing.manuallyEdited;
         updateFields.fullyManual = existing.fullyManual;
 
         // Update existing with selective fields
+        const updateOperation: any = { $set: updateFields };
+
+        // Remove createdBy field from scraper-imported events
+        // (ensures they show in public view even if unverified)
+        if (existing.createdBy) {
+          updateOperation.$unset = { createdBy: '' };
+        }
+
         await protests.updateOne(
           { _id: existing._id },
-          { $set: updateFields }
+          updateOperation
         );
         updated++;
       } else {
