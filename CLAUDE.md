@@ -770,6 +770,136 @@ export async function parseParisPolice(): Promise<ProtestEvent[]> {
 - Locale-aware date/number parsing
 - Clear organization by country
 
+#### **CRITICAL: Test-Driven Development for All New Parsers**
+
+**⚠️ IMPORTANT:** Every new parser MUST include comprehensive tests BEFORE the parser is considered complete. This is a critical requirement and should NEVER be forgotten.
+
+**Test-Driven Development Workflow (Mandatory):**
+
+1. **Write Unit Tests First** (`test/unit/scraper/sources/<country>/<source>.test.ts`):
+   ```typescript
+   import { describe, it, expect } from 'vitest';
+   import { parseHamburgPolice } from '@/scraper/sources/germany/hamburg.js';
+
+   describe('Hamburg Police Parser (Unit)', () => {
+     const mockHTML = `
+       <!-- Sample HTML from the real source -->
+       <table>
+         <tr>
+           <td>01.11.2025</td>
+           <td>Demonstration</td>
+           <td>Hamburg</td>
+         </tr>
+       </table>
+     `;
+
+     it('should parse multiple events from HTML', async () => {
+       const events = await parseHamburgPolice(90, mockHTML);
+       expect(events.length).toBeGreaterThan(0);
+     });
+
+     it('should parse dates correctly', async () => {
+       const events = await parseHamburgPolice(90, mockHTML);
+       expect(events[0].start).toBeTruthy();
+       expect(new Date(events[0].start!).toString()).not.toBe('Invalid Date');
+     });
+
+     it('should set correct metadata fields', async () => {
+       const events = await parseHamburgPolice(90, mockHTML);
+       events.forEach(event => {
+         expect(event.source).toBe('expected-source-domain');
+         expect(event.country).toBe('DE');
+         expect(event.language).toBe('de-DE');
+       });
+     });
+
+     // Add more test cases for edge cases:
+     // - Empty HTML
+     // - Malformed data
+     // - Different date formats
+     // - Events without time
+     // - Special characters in titles
+     // - etc.
+   });
+   ```
+
+2. **Implement Parser** (make tests pass):
+   - Write minimal code to pass first test
+   - Refactor and add functionality incrementally
+   - Run `yarn test:unit` frequently
+   - Parser should accept optional `htmlContent` parameter for testing
+
+3. **Write E2E Tests** (`test/e2e/scraper/sources/<country>/<source>.e2e.test.ts`):
+   ```typescript
+   import { describe, it, expect } from 'vitest';
+   import { parseHamburgPolice } from '@/scraper/sources/germany/hamburg.js';
+
+   describe('Hamburg Police Parser - E2E (Real API)', () => {
+     it('should successfully fetch and parse real events', async () => {
+       const events = await parseHamburgPolice(90);
+
+       expect(Array.isArray(events)).toBe(true);
+
+       if (events.length > 0) {
+         console.log(`✓ Successfully parsed ${events.length} events`);
+
+         const firstEvent = events[0];
+         expect(firstEvent).toHaveProperty('source');
+         expect(firstEvent).toHaveProperty('title');
+         expect(firstEvent).toHaveProperty('start');
+         expect(firstEvent.start).toBeTruthy();
+
+         const date = new Date(firstEvent.start!);
+         expect(date.toString()).not.toBe('Invalid Date');
+       } else {
+         console.log('⚠ No events found (may be legitimate if calendar is empty)');
+       }
+     }, 30000); // 30 second timeout for network request
+
+     it('should parse valid dates and locations', async () => {
+       const events = await parseHamburgPolice(90);
+
+       if (events.length > 0) {
+         events.forEach(event => {
+           expect(event.start).toBeTruthy();
+           expect(event.city).toBeTruthy();
+
+           const date = new Date(event.start!);
+           expect(date.toString()).not.toBe('Invalid Date');
+         });
+       }
+     }, 30000);
+   });
+   ```
+
+4. **Run All Tests**:
+   ```bash
+   yarn test:unit      # Fast, mocked tests
+   yarn test:e2e       # Real API calls
+   yarn test:all       # Everything
+   ```
+
+**Why This Matters:**
+- **Unit tests** validate parsing logic in isolation (fast, deterministic)
+- **E2E tests** validate compatibility with real APIs (CI validation)
+- **TDD approach** catches edge cases early and prevents regressions
+- **Documentation** - tests serve as examples of expected behavior
+
+**Test Coverage Requirements:**
+- ✅ Multiple event parsing
+- ✅ Date/time parsing with various formats
+- ✅ Metadata validation (source, country, language, categories)
+- ✅ URL extraction
+- ✅ Edge cases (empty data, malformed HTML, special characters)
+- ✅ Real API fetching (E2E only)
+- ✅ Error handling (network failures, parsing errors)
+
+**Examples:**
+- See `test/unit/scraper/sources/switzerland/amnesty.test.ts` (14 unit tests)
+- See `test/e2e/scraper/sources/switzerland/amnesty.e2e.test.ts` (4 E2E tests)
+
+**⚠️ DO NOT consider a parser complete without both unit and E2E tests!**
+
 ### Adding a New API Filter
 
 1. Add field to `ProtestQueryFilters` in `src/types/protest.ts`

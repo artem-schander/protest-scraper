@@ -23,7 +23,6 @@ import {
   parseFriedenskooperative,
   parseDemokrateam,
 } from '@/scraper/sources/germany/index.js';
-import { parseAmnestySwiss } from '@/scraper/sources/switzerland/index.js';
 
 /**
  * Source metadata and parser function
@@ -94,17 +93,6 @@ export const SOURCES: ScraperSource[] = [
     parser: parseDemokrateam,
     enabled: true,
     description: 'Democracy and protest events across Germany',
-  },
-
-  // Switzerland
-  {
-    id: 'amnesty-swiss',
-    name: 'Amnesty International Switzerland',
-    country: 'CH',
-    city: null,
-    parser: parseAmnestySwiss,
-    enabled: true,
-    description: 'Protest calendar from Amnesty International Switzerland',
   },
 
   // Future sources will be added here:
