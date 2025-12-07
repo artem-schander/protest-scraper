@@ -23,6 +23,15 @@ import {
   parseFriedenskooperative,
   parseDemokrateam,
 } from '@/scraper/sources/germany/index.js';
+import {
+  parseAgendaMilitant,
+  parseDemosphereToulouse,
+  parseDemosphereLille,
+  parseDemosphereNice,
+  parseDemosphereRennes,
+  parseDemosphereStrasbourg,
+  parseDemosphereGironde,
+} from '@/scraper/sources/france/index.js';
 
 /**
  * Source metadata and parser function
@@ -94,6 +103,110 @@ export const SOURCES: ScraperSource[] = [
     enabled: true,
     description: 'Democracy and protest events across Germany',
   },
+
+  // France - Agenda Militant (Paris region)
+  {
+    id: 'agenda-militant',
+    name: 'Agenda Militant',
+    country: 'FR',
+    city: 'Paris',
+    parser: parseAgendaMilitant,
+    enabled: true,
+    description: 'Activist events in Paris/Île-de-France',
+  },
+
+  // France - Demosphere regional calendars
+  {
+    id: 'demosphere-toulouse',
+    name: 'Demosphere Toulouse',
+    country: 'FR',
+    city: 'Toulouse',
+    parser: parseDemosphereToulouse,
+    enabled: true,
+    description: 'Activist calendar for Toulouse region',
+  },
+  {
+    id: 'demosphere-lille',
+    name: 'Demosphere Lille',
+    country: 'FR',
+    city: 'Lille',
+    parser: parseDemosphereLille,
+    enabled: true,
+    description: 'Activist calendar for Lille region',
+  },
+  {
+    id: 'demosphere-nice',
+    name: 'Demosphere Nice',
+    country: 'FR',
+    city: 'Nice',
+    parser: parseDemosphereNice,
+    enabled: true,
+    description: 'Activist calendar for Nice/Côte d\'Azur region',
+  },
+  {
+    id: 'demosphere-rennes',
+    name: 'Demosphere Rennes',
+    country: 'FR',
+    city: 'Rennes',
+    parser: parseDemosphereRennes,
+    enabled: true,
+    description: 'Activist calendar for Rennes/Brittany region',
+  },
+  {
+    id: 'demosphere-strasbourg',
+    name: 'Demosphere Strasbourg',
+    country: 'FR',
+    city: 'Strasbourg',
+    parser: parseDemosphereStrasbourg,
+    enabled: true,
+    description: 'Activist calendar for Strasbourg/Alsace region',
+  },
+  {
+    id: 'demosphere-gironde',
+    name: 'Demosphere Gironde',
+    country: 'FR',
+    city: 'Bordeaux',
+    parser: parseDemosphereGironde,
+    enabled: true,
+    description: 'Activist calendar for Bordeaux/Gironde region',
+  },
+  // Disabled: These Demosphere regions have been shut down (redirect to demosphere.eu)
+  // {
+  //   id: 'demosphere-nantes',
+  //   name: 'Demosphere Nantes',
+  //   country: 'FR',
+  //   city: 'Nantes',
+  //   parser: parseDemosphereNantes,
+  //   enabled: false,
+  //   description: 'Activist calendar for Nantes region',
+  // },
+  // {
+  //   id: 'demosphere-lyon',
+  //   name: 'Demosphere Lyon',
+  //   country: 'FR',
+  //   city: 'Lyon',
+  //   parser: parseDemosphereLyon,
+  //   enabled: false,
+  //   description: 'Activist calendar for Lyon region',
+  // },
+  // {
+  //   id: 'demosphere-grenoble',
+  //   name: 'Demosphere Grenoble',
+  //   country: 'FR',
+  //   city: 'Grenoble',
+  //   parser: parseDemosphereGrenoble,
+  //   enabled: false,
+  //   description: 'Activist calendar for Grenoble region',
+  // },
+  // {
+  //   id: 'demosphere-montpellier',
+  //   name: 'Demosphere Montpellier',
+  //   country: 'FR',
+  //   city: 'Montpellier',
+  //   parser: parseDemosphereMontpellier,
+  //   enabled: false,
+  //   description: 'Activist calendar for Montpellier region',
+  // },
 
   // Future sources will be added here:
   // Austria example:

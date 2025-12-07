@@ -1,0 +1,1227 @@
+{
+  "Malakoff": {
+    "lat": 48.8211559,
+    "lon": 2.3019814,
+    "address": "92240 Malakoff, Île-de-France Hauts-de-Seine"
+  },
+  "Dresden": {
+    "lat": 51.0493286,
+    "lon": 13.7381437,
+    "address": "Dresden, Sachsen"
+  },
+  "Neudorf": {
+    "lat": 47.6054816,
+    "lon": 7.5696755,
+    "address": "68128 Village-Neuf, Grand Est Haut-Rhin"
+  },
+  "Meinau": {
+    "lat": 48.5529322,
+    "lon": 7.7523082,
+    "address": "67029 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "10559 Berlin, Turmstr. 91": {
+    "lat": 52.5259742,
+    "lon": 13.3540779,
+    "address": "Turmstraße 91, 10559 Berlin"
+  },
+  "Vitry-sur-Seine": {
+    "lat": 48.7876,
+    "lon": 2.39164,
+    "address": "94400 Vitry-sur-Seine, Île-de-France Val-de-Marne"
+  },
+  "Mulhouse": {
+    "lat": 47.7467233,
+    "lon": 7.3389937,
+    "address": "Mulhouse, Grand Est Haut-Rhin"
+  },
+  "Toulouse 31100": {
+    "lat": 43.5675736,
+    "lon": 1.3975057,
+    "address": "31100 Toulouse, Occitanie Haute-Garonne"
+  },
+  "10179 Berlin, Jannowitzbrücke": {
+    "lat": 52.5153554,
+    "lon": 13.4181732,
+    "address": "Alexanderstraße, 10179 Berlin"
+  },
+  "13353 Berlin, Nordufer 20": {
+    "lat": 52.5395724,
+    "lon": 13.3468259,
+    "address": "Nordufer 20, 13353 Berlin"
+  },
+  "Lille Fives": {
+    "lat": 50.6329807,
+    "lon": 3.0895061,
+    "address": "Rue Pierre Legrand 121, 59000 Lille, Hauts-de-France Nord"
+  },
+  "13086 Berlin, Antonplatz 1": {
+    "lat": 52.5487495,
+    "lon": 13.4506766,
+    "address": "Langhansstraße 1, 13086 Berlin"
+  },
+  "Paris 11e": {
+    "lat": 48.858416,
+    "lon": 2.379703,
+    "address": "75011 Paris, Île-de-France"
+  },
+  "Bordeaux": {
+    "lat": 44.841225,
+    "lon": -0.5800364,
+    "address": "Bordeaux, Nouvelle-Aquitaine Gironde"
+  },
+  "10117 Berlin, Friedrichstr. 176-179": {
+    "lat": 52.5134146,
+    "lon": 13.3884869,
+    "address": "Friedrichstraße 176–179, 10117 Berlin"
+  },
+  "Toulouse 31000": {
+    "lat": 43.6044303,
+    "lon": 1.4391951,
+    "address": "31000 Toulouse, Occitanie Haute-Garonne"
+  },
+  "Domplatte, Köln,  Domkloster 4,  50667 Köln": {
+    "lat": 50.938361,
+    "lon": 6.959974,
+    "address": "Köln, Nordrhein-Westfalen"
+  },
+  "Strasbourg Gare": {
+    "lat": 48.5852933,
+    "lon": 7.7339249,
+    "address": "Place de la Gare 20, 67000 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "10557 Berlin, Platz der Republik 1": {
+    "lat": 52.5185941,
+    "lon": 13.3762818,
+    "address": "1, 10557 Berlin"
+  },
+  "Detmold, Marktplatz": {
+    "lat": 51.9352836,
+    "lon": 8.8789914,
+    "address": "Marktplatz, 32756 Detmold, Nordrhein-Westfalen Kreis Lippe"
+  },
+  "Toulouse": {
+    "lat": 43.6044638,
+    "lon": 1.4442433,
+    "address": "Toulouse, Occitanie Haute-Garonne"
+  },
+  "12559 Berlin, Alt-Müggelheim 22": {
+    "lat": 52.4116669,
+    "lon": 13.6629606,
+    "address": "Alt-Müggelheim 22, 12559 Berlin"
+  },
+  "14169 Berlin, Teltower Damm": {
+    "lat": 52.4335097,
+    "lon": 13.259755,
+    "address": "Teltower Damm, 14169 Berlin"
+  },
+  "10178 Berlin, Alexanderplatz": {
+    "lat": 52.5219814,
+    "lon": 13.4136358,
+    "address": "10178 Berlin"
+  },
+  "Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "10785 Berlin, Potsdamer Platz": {
+    "lat": 52.5098014,
+    "lon": 13.3755898,
+    "address": "Potsdamer Platz, 10785 Berlin"
+  },
+  "10117 Berlin, Unter den Linden 7": {
+    "lat": 52.516703,
+    "lon": 13.3947383,
+    "address": "Unter den Linden 7, 10117 Berlin"
+  },
+  "Dresden, Neukircher Straße": {
+    "lat": 51.0593962,
+    "lon": 13.8510126,
+    "address": "Neukircher Straße, 01324 Dresden, Sachsen"
+  },
+  "Gelnhausen, Main-Kinzig-Forum": {
+    "lat": 50.2006702,
+    "lon": 9.1975377,
+    "address": "Barbarossastraße 24, 63571 Gelnhausen, Hessen Main-Kinzig-Kreis"
+  },
+  "Krutenau": {
+    "lat": 48.5796915,
+    "lon": 7.7567678,
+    "address": "67000 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Gera, Theatervorplatz": {
+    "lat": 50.8765528,
+    "lon": 12.0832674,
+    "address": "Gera, Thüringen"
+  },
+  "Görlitz, Platz der Friedlichen Revolution": {
+    "lat": 51.1521287,
+    "lon": 14.9872854,
+    "address": "02826 Görlitz, Sachsen Görlitz"
+  },
+  "Nürnberg, Königstraße 45": {
+    "lat": 49.4495846,
+    "lon": 11.0796081,
+    "address": "Königstraße 45, 90402 Nürnberg, Bayern"
+  },
+  "Rennes": {
+    "lat": 48.1113387,
+    "lon": -1.6800198,
+    "address": "Rennes, Bretagne Ille-et-Vilaine"
+  },
+  "Bassum, Rathaus": {
+    "lat": 52.848048,
+    "lon": 8.7272987,
+    "address": "Alte Poststraße, 27211 Bassum, Niedersachsen Landkreis Diepholz"
+  },
+  "12587 Berlin, Bölschestr. 100": {
+    "lat": 52.4523921,
+    "lon": 13.624615,
+    "address": "Bölschestraße 100, 12587 Berlin"
+  },
+  "Dresden, Dr.-Külz-Ring": {
+    "lat": 51.0469573,
+    "lon": 13.7344283,
+    "address": "Dr.-Külz-Ring, 01067 Dresden, Sachsen"
+  },
+  "Dresden, Jorge-Gomondai-Platz": {
+    "lat": 51.0623117,
+    "lon": 13.7455972,
+    "address": "Jorge-Gomondai-Platz, 01097 Dresden, Sachsen"
+  },
+  "Paris 9e": {
+    "lat": 48.876019,
+    "lon": 2.339962,
+    "address": "75009 Paris, Île-de-France"
+  },
+  "Toulouse 31300": {
+    "lat": 43.6036188,
+    "lon": 1.3886893,
+    "address": "31300 Toulouse, Occitanie Haute-Garonne"
+  },
+  "Nice": {
+    "lat": 43.7009358,
+    "lon": 7.2683912,
+    "address": "Nice, Provence-Alpes-Côte d'Azur Alpes-Maritimes"
+  },
+  "Antibes": {
+    "lat": 43.5812868,
+    "lon": 7.1262071,
+    "address": "Antibes, Provence-Alpes-Côte d'Azur Alpes-Maritimes"
+  },
+  "Betzdorf, Rathaus": {
+    "lat": 50.7484087,
+    "lon": 7.819575,
+    "address": "Rathausplatz, 57580 Gebhardshain, Rheinland-Pfalz Landkreis Altenkirchen (Westerwald)"
+  },
+  "Toulouse 31400": {
+    "lat": 43.5652405,
+    "lon": 1.4728899,
+    "address": "31400 Toulouse, Occitanie Haute-Garonne"
+  },
+  "10117 Berlin, Pariser Platz": {
+    "lat": 52.5163514,
+    "lon": 13.3786908,
+    "address": "10117 Berlin"
+  },
+  "Brandenburger Tor, Berlin,  Platz des 18. März,  10117 Berlin": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "13355 Berlin, Bernauer Str. 63": {
+    "lat": 52.5409538,
+    "lon": 13.4027196,
+    "address": "Bernauer Straße 63, 13355 Berlin"
+  },
+  "10117 Berlin, Friedrichstr. 176": {
+    "lat": 52.5136332,
+    "lon": 13.3891981,
+    "address": "Friedrichstraße 176, 10117 Berlin"
+  },
+  "Toulouse  31100": {
+    "lat": 43.5675736,
+    "lon": 1.3975057,
+    "address": "31100 Toulouse, Occitanie Haute-Garonne"
+  },
+  "12555 Berlin, Alt-Köpenick 21": {
+    "lat": 52.4454164,
+    "lon": 13.5752346,
+    "address": "Alt-Köpenick 21, 12555 Berlin"
+  },
+  "Paris 19e": {
+    "lat": 48.889343,
+    "lon": 2.38436,
+    "address": "75019 Paris, Île-de-France"
+  },
+  "12163 Berlin, Schloßstr. 33": {
+    "lat": 52.4578339,
+    "lon": 13.3200468,
+    "address": "Schloßstraße 33-36, 12163 Berlin"
+  },
+  "12163 Berlin, Schloßstr.": {
+    "lat": 52.461481,
+    "lon": 13.3250946,
+    "address": "Joachim-Tiburtius-Brücke, 12163 Berlin"
+  },
+  "Antoniterkirche, Köln,  Schildergasse 57,  50667 Köln": {
+    "lat": 50.938361,
+    "lon": 6.959974,
+    "address": "Köln, Nordrhein-Westfalen"
+  },
+  "10117 Berlin, Mauerstr. 11": {
+    "lat": 52.5099755,
+    "lon": 13.3882087,
+    "address": "Mauerstraße 11, 10117 Berlin"
+  },
+  "Gare": {
+    "lat": 49.6037237,
+    "lon": 6.1276729,
+    "address": "Luxembourg, Canton Luxembourg"
+  },
+  "Marktplatz, Osterholz-Scharmbeck,  Marktplatz,  27711 Osterholz-Scharmbeck": {
+    "lat": 53.2280218,
+    "lon": 8.786968,
+    "address": "Marktplatz 10, 27711 Osterholz-Scharmbeck, Niedersachsen Landkreis Osterholz"
+  },
+  "Paris 10e": {
+    "lat": 48.876225,
+    "lon": 2.3595209,
+    "address": "75010 Paris, Île-de-France"
+  },
+  "Villeneuve d'Ascq": {
+    "lat": 50.6193174,
+    "lon": 3.1314002,
+    "address": "Villeneuve-d'Ascq, Hauts-de-France Nord"
+  },
+  "Ivry-sur-Seine": {
+    "lat": 48.8122302,
+    "lon": 2.3872525,
+    "address": "94200 Ivry-sur-Seine, Île-de-France Val-de-Marne"
+  },
+  "Sainte-Colombe": {
+    "lat": 49.7975889,
+    "lon": 0.7589207,
+    "address": "76460 Sainte-Colombe, Normandie Seine-Maritime"
+  },
+  "Etoile Bourse": {
+    "lat": 48.5747662,
+    "lon": 7.7535083,
+    "address": "Rue de la Première Armée, 67000 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Montreuil": {
+    "lat": 50.4638918,
+    "lon": 1.7631125,
+    "address": "62170 Montreuil-sur-Mer, Hauts-de-France Pas-de-Calais"
+  },
+  "Selestat": {
+    "lat": 48.2594396,
+    "lon": 7.454217,
+    "address": "67600 Sélestat, Grand Est Bas-Rhin"
+  },
+  "Düsseldorf, Ort tba": {
+    "lat": 51.2254018,
+    "lon": 6.7763137,
+    "address": "Düsseldorf, Nordrhein-Westfalen"
+  },
+  "10557 Berlin, Willy-Brandt-Str. 1": {
+    "lat": 52.5201616,
+    "lon": 13.3691247,
+    "address": "Willy-Brandt-Straße 1, 10557 Berlin"
+  },
+  "10179 Berlin, Märkisches Ufer 54": {
+    "lat": 52.5136105,
+    "lon": 13.4168021,
+    "address": "Märkisches Ufer 54, 10179 Berlin"
+  },
+  "13509 Berlin, Kehrwieder 1": {
+    "lat": 52.5933052,
+    "lon": 13.2992549,
+    "address": "Kehrwieder 1, 13509 Berlin"
+  },
+  "Celle, Markt": {
+    "lat": 52.6243767,
+    "lon": 10.0816853,
+    "address": "Markt, 29221 Celle, Niedersachsen Landkreis Celle"
+  },
+  "10117 Berlin, Platz des 18. März": {
+    "lat": 52.5163704,
+    "lon": 13.3772972,
+    "address": "10117 Berlin"
+  },
+  "10117 Berlin, Hegelplatz 1": {
+    "lat": 52.5194791,
+    "lon": 13.3938098,
+    "address": "Hegelplatz 1, 10117 Berlin"
+  },
+  "14195 Berlin, Otto-von-Simson-Str. 26": {
+    "lat": 52.4528704,
+    "lon": 13.2888135,
+    "address": "Otto-von-Simson-Straße 26, 14195 Berlin"
+  },
+  "10623 Berlin, Hertzallee": {
+    "lat": 52.5087759,
+    "lon": 13.3336663,
+    "address": "Hertzallee, 10623 Berlin"
+  },
+  "Mainz, Helmut-Kohl-Platz": {
+    "lat": 50.0058795,
+    "lon": 8.2700059,
+    "address": "55116 Mainz, Rheinland-Pfalz"
+  },
+  "Lille": {
+    "lat": 50.6365654,
+    "lon": 3.0635282,
+    "address": "Lille, Hauts-de-France Nord"
+  },
+  "14195 Berlin, Podbielskiallee 65-67": {
+    "lat": 52.4660395,
+    "lon": 13.2949504,
+    "address": "Podbielskiallee, 14195 Berlin"
+  },
+  "12043 Berlin, Karl-Marx-Str. 83": {
+    "lat": 52.4813413,
+    "lon": 13.435103,
+    "address": "Karl-Marx-Straße 83, 12043 Berlin"
+  },
+  "Martinsplatz, Bonn,  Martinsplatz,  53111 Bonn": {
+    "lat": 50.732874,
+    "lon": 7.1002024,
+    "address": "Martinsplatz 2a, 53113 Bonn, Nordrhein-Westfalen"
+  },
+  "Holzmarkt, Jena,  Holzmarkt,  07747 Jena": {
+    "lat": 50.9264341,
+    "lon": 11.5857594,
+    "address": "Holzmarkt 1, 07743 Jena, Thüringen"
+  },
+  "10551 Berlin, Bremer Str.": {
+    "lat": 52.5287633,
+    "lon": 13.3381906,
+    "address": "Bremer Straße, 10551 Berlin"
+  },
+  "12043 Berlin, Donaustr. 29": {
+    "lat": 52.4816416,
+    "lon": 13.4366971,
+    "address": "Donaustraße 29, 12043 Berlin"
+  },
+  "10999 Berlin, Oranienplatz": {
+    "lat": 52.5022391,
+    "lon": 13.4157144,
+    "address": "10999 Berlin"
+  },
+  "Chlodwigplatz, Köln,  Chlodwigplatz,  50678 Köln": {
+    "lat": 50.9218252,
+    "lon": 6.9592777,
+    "address": "Chlodwigplatz, 50678 Köln, Nordrhein-Westfalen"
+  },
+  "Würzburg, Dominikanerplatz": {
+    "lat": 49.7964867,
+    "lon": 9.9308588,
+    "address": "Dominikanerplatz, 97070 Würzburg, Bayern Würzburg"
+  },
+  "Moselbrücke, Perl,  Moselbrücke,  66706 Perl": {
+    "lat": 49.5020118,
+    "lon": 6.4292476,
+    "address": "66706 Perl, Saarland Landkreis Merzig-Wadern"
+  },
+  "Marktplatz, Karlsruhe,  76133 Karlsruhe": {
+    "lat": 49.0089483,
+    "lon": 8.4038789,
+    "address": "76133 Karlsruhe, Baden-Württemberg"
+  },
+  "Marktbrunnen, Aalen,  Marktplatz 4,  73430 Aalen": {
+    "lat": 48.8375607,
+    "lon": 10.0929593,
+    "address": "Aalen, Baden-Württemberg Ostalbkreis"
+  },
+  "Innenstadt Ulm,  89073 Ulm": {
+    "lat": 48.3961317,
+    "lon": 9.9934084,
+    "address": "Unter der Metzig, 89073 Ulm, Baden-Württemberg"
+  },
+  "Deutsches Fußballmuseum, Dortmund,  Platz der Deutschen Einheit 1,  44137 Dortmund": {
+    "lat": 51.5142273,
+    "lon": 7.4652789,
+    "address": "Dortmund, Nordrhein-Westfalen"
+  },
+  "Hauptkirche Sankt Petri, Hamburg,  Bei der Petrikirche 2,  20095 Hamburg": {
+    "lat": 53.550341,
+    "lon": 10.000654,
+    "address": "Hamburg"
+  },
+  "Siegburg, Sparkasse S-Carré": {
+    "lat": 50.7928332,
+    "lon": 7.2070774,
+    "address": "53721 Siegburg, Nordrhein-Westfalen Rhein-Sieg-Kreis"
+  },
+  "Kiel, Vinetaplatz": {
+    "lat": 54.311544,
+    "lon": 10.1465813,
+    "address": "24143 Kiel, Schleswig-Holstein"
+  },
+  "Toulouse 31200": {
+    "lat": 43.6391219,
+    "lon": 1.4486548,
+    "address": "31200 Toulouse, Occitanie Haute-Garonne"
+  },
+  "Koenigshoffen": {
+    "lat": 48.5806908,
+    "lon": 7.7108814,
+    "address": "67200 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Fürstabt-Gerbert-Straße 15, 72160 Horb am Neckar": {
+    "lat": 48.4426318,
+    "lon": 8.6840569,
+    "address": "Fürstabt-Gerbert-Straße 15, 72160 Horb (Kernstadt), Baden-Württemberg Landkreis Freudenstadt"
+  },
+  "Lullusbrunnen, Bad Hersfeld,  Weinstr.,  36251 Bad Hersfeld": {
+    "lat": 50.8604177,
+    "lon": 9.6767709,
+    "address": "36251 Bad Hersfeld, Hessen Landkreis Hersfeld-Rotenburg"
+  },
+  "Nürnberg, Kornmarkt": {
+    "lat": 49.4489618,
+    "lon": 11.075348,
+    "address": "Kornmarkt, 90402 Nürnberg, Bayern"
+  },
+  "Aachen, Friedrich Wilhelm Platz": {
+    "lat": 50.7736417,
+    "lon": 6.0866429,
+    "address": "Friedrich-Wilhelm-Platz, 52062 Aachen, Nordrhein-Westfalen Städteregion Aachen"
+  },
+  "Paris 4e": {
+    "lat": 48.8562021,
+    "lon": 2.3556193,
+    "address": "75004 Paris, Île-de-France"
+  },
+  "Lille Moulins": {
+    "lat": 50.6196154,
+    "lon": 3.0647618,
+    "address": "59024 Lille, Hauts-de-France Nord"
+  },
+  "République": {
+    "lat": 48.8672142,
+    "lon": 2.3644036,
+    "address": "Place de la République, 75011 Paris, Île-de-France"
+  },
+  "Lille Centre": {
+    "lat": 50.6319486,
+    "lon": 3.0684873,
+    "address": "Lille, Hauts-de-France Nord"
+  },
+  "Paris 6e": {
+    "lat": 48.8504333,
+    "lon": 2.3329507,
+    "address": "75006 Paris, Île-de-France"
+  },
+  "En ligne": {
+    "lat": 48.8443062,
+    "lon": 2.5805881,
+    "address": "Boulevard Archimède, 77420 Champs-sur-Marne, Île-de-France Seine-et-Marne"
+  },
+  "10117 Berlin, Wilhelmstr. 54": {
+    "lat": 52.5138313,
+    "lon": 13.3828262,
+    "address": "Wilhelmstraße 54, 10117 Berlin"
+  },
+  "10117 Berlin, Glinkastr. 5": {
+    "lat": 52.5113237,
+    "lon": 13.3863193,
+    "address": "Glinkastraße 5, 10117 Berlin"
+  },
+  "10585 Berlin, Wilmersdorfer Str.": {
+    "lat": 52.5066749,
+    "lon": 13.3066372,
+    "address": "Kantstraße, 10627 Berlin"
+  },
+  "Rotebühlplatz, Stuttgart,  Rotebühlplatz,  70173 Stuttgart": {
+    "lat": 48.7744652,
+    "lon": 9.1727667,
+    "address": "Rotebühlplatz, 70173 Stuttgart, Baden-Württemberg"
+  },
+  "12101 Berlin, Tempelhofer Damm 99": {
+    "lat": 52.4717731,
+    "lon": 13.3860135,
+    "address": "Tempelhofer Damm 99, 12101 Berlin"
+  },
+  "12099 Berlin, Ordensmeisterstr. 12": {
+    "lat": 52.457362,
+    "lon": 13.3915745,
+    "address": "Ordensmeisterstraße 12, 12099 Berlin"
+  },
+  "12055 Berlin, Kirchhofstr.": {
+    "lat": 52.47245,
+    "lon": 13.4425854,
+    "address": "Kirchhofstraße, 12055 Berlin"
+  },
+  "Nanterre": {
+    "lat": 48.8924273,
+    "lon": 2.2071267,
+    "address": "92000 Nanterre, Île-de-France Hauts-de-Seine"
+  },
+  "Paris 5e": {
+    "lat": 48.8459728,
+    "lon": 2.3443504,
+    "address": "75005 Paris, Île-de-France"
+  },
+  "Hellemmes-Lille": {
+    "lat": 50.6274528,
+    "lon": 3.1092154,
+    "address": "59260 Lille, Hauts-de-France Nord"
+  },
+  "Campus Victoire": {
+    "lat": 44.8312782,
+    "lon": -0.5708167,
+    "address": "Rue Paul Broca, 33000 Bordeaux, Nouvelle-Aquitaine Gironde"
+  },
+  "Lille Vauban": {
+    "lat": 50.6215093,
+    "lon": 3.0197845,
+    "address": "A 25, 59120 Loos, Hauts-de-France Nord"
+  },
+  "Heidelberg, halle02": {
+    "lat": 49.4021824,
+    "lon": 8.6704571,
+    "address": "Zollhofgarten 2, 69115 Heidelberg, Baden-Württemberg"
+  },
+  "10557 Berlin, Kirchstr. 6": {
+    "lat": 52.5234461,
+    "lon": 13.3490252,
+    "address": "Kirchstraße 6, 10557 Berlin"
+  },
+  "14050 Berlin, Eschenallee 11": {
+    "lat": 52.5172812,
+    "lon": 13.2681145,
+    "address": "Eschenallee 11, 14050 Berlin"
+  },
+  "12051 Berlin, S-Bhf. Hermannstr.": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "Stachus, München,  Stachus,  80335 München": {
+    "lat": 48.1388123,
+    "lon": 11.565964,
+    "address": "Karlsplatz (Stachus) 11, 80335 München, Bayern"
+  },
+  "10117 Berlin": {
+    "lat": 52.5175184,
+    "lon": 13.3877686,
+    "address": "10117 Berlin"
+  },
+  "Prinzipalmarkt, Münster,  Prinzipalmarkt,  48143 Münster": {
+    "lat": 51.9625625,
+    "lon": 7.628211,
+    "address": "Prinzipalmarkt, 48143 Münster, Nordrhein-Westfalen"
+  },
+  "Erlangen, Hugenottenplatz": {
+    "lat": 49.5960935,
+    "lon": 11.0037929,
+    "address": "Hugenottenplatz, 91054 Erlangen, Bayern Erlangen"
+  },
+  "10961 Berlin, Blücherplatz 1": {
+    "lat": 52.4965672,
+    "lon": 13.3924936,
+    "address": "Blücherplatz 1, 10961 Berlin"
+  },
+  "10117 Berlin, Werderscher Markt 1": {
+    "lat": 52.5158853,
+    "lon": 13.3975006,
+    "address": "Werderscher Markt 1, 10117 Berlin"
+  },
+  "10999 Berlin, Fraenkelufer": {
+    "lat": 52.4962822,
+    "lon": 13.4189522,
+    "address": "Fraenkelufer, 10999 Berlin"
+  },
+  "10999 Berlin, Fraenkelufer 10": {
+    "lat": 52.4960226,
+    "lon": 13.416844,
+    "address": "Fraenkelufer 10-12, 10999 Berlin"
+  },
+  "Choisy-le-Roi": {
+    "lat": 48.7630238,
+    "lon": 2.4093664,
+    "address": "94600 Choisy-le-Roi, Île-de-France Val-de-Marne"
+  },
+  "Paris 14e": {
+    "lat": 48.8295585,
+    "lon": 2.323974,
+    "address": "75014 Paris, Île-de-France"
+  },
+  "Lens": {
+    "lat": 50.4291723,
+    "lon": 2.8319805,
+    "address": "62300 Lens, Hauts-de-France Pas-de-Calais"
+  },
+  "Paris 12e": {
+    "lat": 48.8396154,
+    "lon": 2.3957517,
+    "address": "75012 Paris, Île-de-France"
+  },
+  "Hautepierre": {
+    "lat": 48.5938176,
+    "lon": 7.7009764,
+    "address": "Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Cannes": {
+    "lat": 43.5515198,
+    "lon": 7.0134418,
+    "address": "Cannes, Provence-Alpes-Côte d'Azur Alpes-Maritimes"
+  },
+  "10967 Berlin, Hermannplatz": {
+    "lat": 52.4862857,
+    "lon": 13.4245531,
+    "address": "Karl-Marx-Straße, 10967 Berlin"
+  },
+  "Husum, THEO Einkaufszentrum": {
+    "lat": 54.4854137,
+    "lon": 9.0537941,
+    "address": "25813 Husum, Schleswig-Holstein Kreis Nordfriesland"
+  },
+  "10557 Berlin, Paul-Löbe-Allee 1": {
+    "lat": 52.5191897,
+    "lon": 13.3761089,
+    "address": "Paul-Löbe-Allee 1, 10557 Berlin"
+  },
+  "Innenstadt Mannheim,  68159 Mannheim": {
+    "lat": 49.4832445,
+    "lon": 8.4645749,
+    "address": "Bismarckstraße, 68161 Mannheim, Baden-Württemberg"
+  },
+  "Augustinertreppe, Marburg,  35037 Marburg": {
+    "lat": 50.8080342,
+    "lon": 8.7680014,
+    "address": "Augustinergasse, 35037 Marburg, Hessen Landkreis Marburg-Biedenkopf"
+  },
+  "Hitzacker, am Butt": {
+    "lat": 53.1513876,
+    "lon": 11.0467012,
+    "address": "Am Markt, 29456 Hitzacker (Elbe), Niedersachsen Lüchow-Dannenberg"
+  },
+  "Ahrensburg, Rondeel": {
+    "lat": 53.6730089,
+    "lon": 10.2390143,
+    "address": "Rondeel, 22926 Ahrensburg, Schleswig-Holstein Kreis Stormarn"
+  },
+  "Düren, Rathaus": {
+    "lat": 50.8032895,
+    "lon": 6.4820607,
+    "address": "Kaiserplatz 2-4, 52349 Düren, Nordrhein-Westfalen Kreis Düren"
+  },
+  "12524 Berlin, Schachtelhalmweg 83": {
+    "lat": 52.4227626,
+    "lon": 13.5518886,
+    "address": "Schachtelhalmweg 83, 12524 Berlin"
+  },
+  "10117 Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "address": "10117 Berlin"
+  },
+  "10999 Berlin, Kottbusser Tor": {
+    "lat": 52.4989853,
+    "lon": 13.4183107,
+    "address": "Kottbusser Tor, 10999 Berlin"
+  },
+  "Karlsruhe, Schlossplatz": {
+    "lat": 49.0122214,
+    "lon": 8.40416,
+    "address": "76131 Karlsruhe, Baden-Württemberg"
+  },
+  "10117 Berlin, Pariser Platz 1": {
+    "lat": 52.515864,
+    "lon": 13.3779939,
+    "address": "Pariser Platz 1, 10117 Berlin"
+  },
+  "Saarbrücken, Landwehrplatz": {
+    "lat": 49.2337728,
+    "lon": 7.0008525,
+    "address": "Landwehrplatz, 66111 Saarbrücken, Saarland Regionalverband Saarbrücken"
+  },
+  "Dresden, Neumarkt": {
+    "lat": 51.0513099,
+    "lon": 13.7407113,
+    "address": "Neumarkt, 01067 Dresden, Sachsen"
+  },
+  "Hamburg, Ort tba": {
+    "lat": 53.550341,
+    "lon": 10.000654,
+    "address": "Hamburg"
+  },
+  "Schwerin, Grunthalplatz": {
+    "lat": 53.6342293,
+    "lon": 11.4087384,
+    "address": "Grunthalplatz, 19053 Schwerin, Mecklenburg-Vorpommern"
+  },
+  "München, Geschwister-Scholl-Platz": {
+    "lat": 48.1507987,
+    "lon": 11.5806159,
+    "address": "Geschwister-Scholl-Platz, 80539 München, Bayern"
+  },
+  "Corps-Nuds": {
+    "lat": 47.9780235,
+    "lon": -1.5873694,
+    "address": "35150 Corps-Nuds, Bretagne Ille-et-Vilaine"
+  },
+  "Port du Rhin": {
+    "lat": 48.5717659,
+    "lon": 7.7930043,
+    "address": "67017 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Rivetoile": {
+    "lat": 48.5731114,
+    "lon": 7.762224,
+    "address": "Place Jeanne Helbling, 67100 Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Bègles": {
+    "lat": 44.8074559,
+    "lon": -0.5488542,
+    "address": "33130 Bègles, Nouvelle-Aquitaine Gironde"
+  },
+  "Nordhastedt, Zum alten Bahnhof": {
+    "lat": 54.169431,
+    "lon": 9.1801181,
+    "address": "Bahnhofstraße 10, 25785 Nordhastedt, Schleswig-Holstein Kreis Dithmarschen"
+  },
+  "Hilchenbach, Dammstraße": {
+    "lat": 50.9963761,
+    "lon": 8.1108544,
+    "address": "Dammstraße, 57271 Hilchenbach, Nordrhein-Westfalen Kreis Siegen-Wittgenstein"
+  },
+  "Weißenhorn, Stadthalle": {
+    "lat": 48.3041003,
+    "lon": 10.1567514,
+    "address": "Martin-Kuen-Straße 9, 89264 Weißenhorn, Bayern Landkreis Neu-Ulm"
+  },
+  "10243 Berlin, Warschauer Str.": {
+    "lat": 52.5063685,
+    "lon": 13.4501205,
+    "address": "Warschauer Straße 34, 10243 Berlin"
+  },
+  "10437 Berlin, Mauerpark": {
+    "lat": 52.5470756,
+    "lon": 13.4082736,
+    "address": "Gleimstraße, 10437 Berlin"
+  },
+  "10247 Berlin, Liebigstr. 34": {
+    "lat": 52.5180149,
+    "lon": 13.4570508,
+    "address": "Liebigstraße 34, 10247 Berlin"
+  },
+  "Berlin, Bebelplatz": {
+    "lat": 52.5164872,
+    "lon": 13.3938262,
+    "address": "10117 Berlin"
+  },
+  "13129 Berlin, Alt-Blankenburg 12": {
+    "lat": 52.5924276,
+    "lon": 13.4522911,
+    "address": "Alt-Blankenburg 12, 13129 Berlin"
+  },
+  "Dresden, Dr. -Külz- Ring": {
+    "lat": 51.0469573,
+    "lon": 13.7344283,
+    "address": "Dr.-Külz-Ring, 01067 Dresden, Sachsen"
+  },
+  "Reichshof, Denklinger Hof": {
+    "lat": 50.9147756,
+    "lon": 7.6554811,
+    "address": "Hauptstraße 25, 51580 Denklingen, Nordrhein-Westfalen Oberbergischer Kreis"
+  },
+  "Heilbronn, Bollwerksturm": {
+    "lat": 49.1458086,
+    "lon": 9.2178585,
+    "address": "Untere Neckarstraße 25, 74072 Heilbronn, Baden-Württemberg"
+  },
+  "Michelstadt, Dorfgemeinschaftshaus Steinbach": {
+    "lat": 49.68841,
+    "lon": 9.05647,
+    "address": "64720 Michelstadt, Hessen Odenwaldkreis"
+  },
+  "Panketal, Rathaus": {
+    "lat": 52.6598684,
+    "lon": 13.5328862,
+    "address": "Schönower Straße 105, 16341 Panketal, Brandenburg Barnim"
+  },
+  "Berlin, Kurt-Tucholsky-Bibliothek": {
+    "lat": 52.5328818,
+    "lon": 13.4321724,
+    "address": "Esmarchstraße 18, 10407 Berlin"
+  },
+  "Herzberg (Elster), Bürgerzentrum": {
+    "lat": 51.6903135,
+    "lon": 13.2319241,
+    "address": "Uferstraße 6, 04916 Herzberg (Elster), Brandenburg Elbe-Elster"
+  },
+  "Walzbachtal, Pizzeria Dolce Vita": {
+    "lat": 49.0234631,
+    "lon": 8.5951975,
+    "address": "75045 Walzbachtal, Baden-Württemberg Landkreis Karlsruhe"
+  },
+  "Essen, Nähe Parteizentrale Die Heimat": {
+    "lat": 51.4582235,
+    "lon": 7.0158171,
+    "address": "Essen, Nordrhein-Westfalen"
+  },
+  "München, Sebastian-Bauer-Straße": {
+    "lat": 48.0979556,
+    "lon": 11.6296241,
+    "address": "Sebastian-Bauer-Straße, 81737 München, Bayern"
+  },
+  "Berlin, Krugstege / Dorfkirche Blankenburg": {
+    "lat": 52.5173885,
+    "lon": 13.3951309,
+    "address": "Berlin"
+  },
+  "Bassum, Grundschule Mittelstraße": {
+    "lat": 52.8476031,
+    "lon": 8.7294244,
+    "address": "Mittelstraße 6, 27211 Bassum, Niedersachsen Landkreis Diepholz"
+  },
+  "Hamburg, Jüthornstrasse 104": {
+    "lat": 53.5681439,
+    "lon": 10.0848393,
+    "address": "Jüthornstraße 104, 22043 Hamburg"
+  },
+  "10559 Berlin, Wilsnacker Str. 4": {
+    "lat": 52.5255228,
+    "lon": 13.3519306,
+    "address": "Wilsnacker Straße 4, 10559 Berlin"
+  },
+  "10117 Berlin, Niederkirchnerstr. 5": {
+    "lat": 52.5078666,
+    "lon": 13.3815043,
+    "address": "Niederkirchnerstraße 5, 10117 Berlin"
+  },
+  "12435 Berlin, Am Treptower Park": {
+    "lat": 52.4859358,
+    "lon": 13.4661606,
+    "address": "Am Treptower Park, 12435 Berlin"
+  },
+  "10179 Berlin, Paula-Thiede-Ufer 10": {
+    "lat": 52.5088256,
+    "lon": 13.4278535,
+    "address": "Paula-Thiede-Ufer 10, 10179 Berlin"
+  },
+  "10999 Berlin, Adalbertstr. 97": {
+    "lat": 52.4999688,
+    "lon": 13.4178065,
+    "address": "Adalbertstraße 97, 10999 Berlin"
+  },
+  "13129 Berlin, Alt-Blankenburg 12A": {
+    "lat": 52.5928105,
+    "lon": 13.4526246,
+    "address": "Alt-Blankenburg 12A, 13129 Berlin"
+  },
+  "Dresden, Bautzner Landstraße": {
+    "lat": 51.0631331,
+    "lon": 13.8236787,
+    "address": "Bautzner Landstraße, 01324 Dresden, Sachsen"
+  },
+  "Dresden, Prager Straße": {
+    "lat": 51.0423732,
+    "lon": 13.7347784,
+    "address": "Prager Straße, 01069 Dresden, Sachsen"
+  },
+  "10789 Berlin, Wittenbergplatz": {
+    "lat": 52.5017976,
+    "lon": 13.3430005,
+    "address": "Wittenbergplatz, 10789 Berlin"
+  },
+  "10961 Berlin, U-Bhf. Gneisenaustr.": {
+    "lat": 52.4912895,
+    "lon": 13.3958247,
+    "address": "Gneisenaustraße, 10961 Berlin"
+  },
+  "Lutherkirche, Fellbach,  Kirchplatz 1,  70734 Fellbach": {
+    "lat": 48.8181556,
+    "lon": 9.278085,
+    "address": "Fellbach, Baden-Württemberg Rems-Murr-Kreis"
+  },
+  "Aubervilliers": {
+    "lat": 48.9146078,
+    "lon": 2.3821895,
+    "address": "93300 Aubervilliers, Île-de-France Seine-Saint-Denis"
+  },
+  "En visio": {
+    "lat": 51.4436892,
+    "lon": 3.5681795,
+    "address": "Glooiing, 4381 KC Vlissingen, Zeeland"
+  },
+  "Petite France": {
+    "lat": -21.0377219,
+    "lon": 55.3130862,
+    "address": "97423 Petite France, La Réunion"
+  },
+  "Strasbourg": {
+    "lat": 48.584614,
+    "lon": 7.7507127,
+    "address": "Strasbourg, Grand Est Bas-Rhin"
+  },
+  "Wacken": {
+    "lat": 54.0223299,
+    "lon": 9.375352,
+    "address": "25596 Wacken, Schleswig-Holstein Kreis Steinburg"
+  },
+  "Betton": {
+    "lat": 48.1817122,
+    "lon": -1.6414898,
+    "address": "35830 Betton, Bretagne Ille-et-Vilaine"
+  },
+  "10785 Berlin, Hiroshimastr. 18": {
+    "lat": 52.5079909,
+    "lon": 13.357361,
+    "address": "Hiroshimastraße 18;20, 10785 Berlin"
+  },
+  "Saint-Orens": {
+    "lat": 43.5519847,
+    "lon": 1.5339526,
+    "address": "31650 Saint-Orens-de-Gameville, Occitanie Haute-Garonne"
+  },
+  "Bühl, Rathausplatz": {
+    "lat": 48.4828583,
+    "lon": 8.9969185,
+    "address": "Bühler Rathausplatz, 72072 Bühl, Baden-Württemberg Landkreis Tübingen"
+  },
+  "Oldenburg, Lefferseck": {
+    "lat": 53.1419602,
+    "lon": 8.2136624,
+    "address": "26122 Oldenburg, Niedersachsen"
+  },
+  "Fußgängerzone, Rietstr., Villingen,  Rietstr.,  78050 Villingen-Schwenningen": {
+    "lat": 48.063152,
+    "lon": 8.4929618,
+    "address": "Villingen-Schwenningen, Baden-Württemberg Schwarzwald-Baar-Kreis"
+  },
+  "Köln, Breslauer Platz": {
+    "lat": 50.9439777,
+    "lon": 6.9588908,
+    "address": "Breslauer Platz, 50667 Köln, Nordrhein-Westfalen"
+  },
+  "Gärtnerplatz, München,  Gärtnerplatz,  80469 München": {
+    "lat": 48.1317049,
+    "lon": 11.5760274,
+    "address": "80469 München, Bayern"
+  },
+  "10178 Berlin, Rathausstr. 1": {
+    "lat": 52.5202114,
+    "lon": 13.4120877,
+    "address": "Rathausstraße 1, 10178 Berlin"
+  },
+  "10365 Berlin, Schulze-Boysen-Str. 12": {
+    "lat": 52.5108832,
+    "lon": 13.4807497,
+    "address": "Schulze-Boysen-Straße 12, 10365 Berlin"
+  },
+  "Mérignac": {
+    "lat": 44.842168,
+    "lon": -0.6469022,
+    "address": "33700 Mérignac, Nouvelle-Aquitaine Gironde"
+  },
+  "Vence": {
+    "lat": 43.7224167,
+    "lon": 7.1116845,
+    "address": "06140 Vence, Provence-Alpes-Côte d'Azur Alpes-Maritimes"
+  },
+  "10961 Berlin, Marheinekeplatz": {
+    "lat": 52.4891497,
+    "lon": 13.3943454,
+    "address": "Marheinekeplatz, 10961 Berlin"
+  },
+  "10245 Berlin, Grünberger Str. 71": {
+    "lat": 52.5114516,
+    "lon": 13.4593628,
+    "address": "Grünberger Straße 71, 10245 Berlin"
+  },
+  "10117 Berlin, Unter den Linden 63": {
+    "lat": 52.5161182,
+    "lon": 13.3836783,
+    "address": "Unter den Linden 63, 10117 Berlin"
+  },
+  "10785 Berlin, Straße des 17. Juni 31": {
+    "lat": 52.5142737,
+    "lon": 13.3641638,
+    "address": "Straße des 17. Juni 31, 10785 Berlin"
+  },
+  "10117 Berlin, Unter den Linden 76": {
+    "lat": 52.5168286,
+    "lon": 13.3810657,
+    "address": "Unter den Linden 76, 10117 Berlin"
+  },
+  "10435 Berlin, Schönhauser Allee": {
+    "lat": 52.534382,
+    "lon": 13.4125462,
+    "address": "Schönhauser Allee, 10435 Berlin"
+  },
+  "13597 Berlin, Markt 1": {
+    "lat": 52.5372575,
+    "lon": 13.2038801,
+    "address": "Markt 1;1A, 13597 Berlin"
+  },
+  "Lütjenburg, Rathaus": {
+    "lat": 54.2925874,
+    "lon": 10.5880553,
+    "address": "Oberstraße 7, 24321 Lütjenburg, Schleswig-Holstein Kreis Plön"
+  },
+  "Hungen, Marktplatz": {
+    "lat": 50.4751792,
+    "lon": 8.9009757,
+    "address": "Marktplatz, 35410 Hungen, Hessen Landkreis Gießen"
+  },
+  "Frouzins": {
+    "lat": 43.516101,
+    "lon": 1.3228991,
+    "address": "31270 Frouzins, Occitanie Haute-Garonne"
+  },
+  "12587 Berlin, Bölschestr.": {
+    "lat": 52.4491063,
+    "lon": 13.6245211,
+    "address": "Bölschestraße, 12587 Berlin"
+  },
+  "Schlossplatz, Karlsruhe-Durlach,  Schlossplatz,  76131 Karlsruhe": {
+    "lat": 49.0068705,
+    "lon": 8.4034195,
+    "address": "Karlsruhe, Baden-Württemberg"
+  },
+  "Esplanade": {
+    "lat": 22.563292,
+    "lon": 88.3503566,
+    "address": "700001 Kolkata, West Bengal"
+  },
+  "Schlossplatz Stuttgart,  Schlossplatz,  70173 Stuttgart": {
+    "lat": 48.7781282,
+    "lon": 9.1762705,
+    "address": "Kleiner Schloßplatz, 70173 Stuttgart, Baden-Württemberg"
+  },
+  "Viktualienmarkt, München,  Viktualienmarkt,  80331 München": {
+    "lat": 48.1351011,
+    "lon": 11.575005,
+    "address": "Viktualienmarkt, 80331 München, Bayern"
+  },
+  "10365 Berlin, Gudrunstr. 20": {
+    "lat": 52.5150725,
+    "lon": 13.5093641,
+    "address": "Gudrunstraße 20, 10315 Berlin"
+  },
+  "10365 Berlin, Rüdigerstr. 64": {
+    "lat": 52.5149155,
+    "lon": 13.5079976,
+    "address": "Rüdigerstraße 64, 10365 Berlin"
+  },
+  "10365 Berlin, Gudrunstr.": {
+    "lat": 52.5146765,
+    "lon": 13.5086139,
+    "address": "Gudrunstraße, 10365 Berlin"
+  },
+  "12165 Berlin, Schloßstr.": {
+    "lat": 52.461481,
+    "lon": 13.3250946,
+    "address": "Joachim-Tiburtius-Brücke, 12163 Berlin"
+  },
+  "10178 Berlin, Rosenthaler Str. 31": {
+    "lat": 52.5254036,
+    "lon": 13.4033559,
+    "address": "Rosenthaler Straße 31, 10178 Berlin"
+  },
+  "12101 Berlin, Tempelhofer Damm 100": {
+    "lat": 52.4725358,
+    "lon": 13.3853761,
+    "address": "Tempelhofer Damm 100, 12101 Berlin"
+  },
+  "Lille Bois Blanc": {
+    "lat": 50.6191764,
+    "lon": 3.1405776,
+    "address": "59491 Villeneuve-d'Ascq, Hauts-de-France Nord"
+  },
+  "12277 Berlin, Bruno-Möhring-Str. 7": {
+    "lat": 52.4245293,
+    "lon": 13.3709426,
+    "address": "Bruno-Möhring-Straße 7, 12277 Berlin"
+  },
+  "10115 Berlin, Invalidenpark": {
+    "lat": 52.5287768,
+    "lon": 13.3758282,
+    "address": "Scharnhorststraße, 10115 Berlin"
+  },
+  "Odeonsplatz, München,  Odeonsplatz,  80539 München": {
+    "lat": 48.1433429,
+    "lon": 11.5779246,
+    "address": "Odeonsplatz, 80539 München, Bayern"
+  },
+  "Kronenplatz, Bietigheim-Bissingen,  Kronenplatz,  74321 Bietigheim-Bissingen": {
+    "lat": 48.9493243,
+    "lon": 9.1364229,
+    "address": "74321 Bietigheim-Bissingen, Baden-Württemberg Landkreis Ludwigsburg"
+  },
+  "Paris 18e": {
+    "lat": 48.8900117,
+    "lon": 2.3464668,
+    "address": "75018 Paris, Île-de-France"
+  },
+  "12351 Berlin, Rudower Str.": {
+    "lat": 52.4394408,
+    "lon": 13.4598246,
+    "address": "Rudower Straße, 12351 Berlin"
+  },
+  "10317 Berlin, An der Mole 1": {
+    "lat": 52.5011545,
+    "lon": 13.469536,
+    "address": "An der Mole 1, 10317 Berlin"
+  },
+  "Innenstadt Münster,  48155 Münster": {
+    "lat": 51.9610432,
+    "lon": 7.6228093,
+    "address": "Johannisstraße, 48143 Münster, Nordrhein-Westfalen"
+  },
+  "Innenstadt Lübeck,  23552 Lübeck": {
+    "lat": 53.8688643,
+    "lon": 10.6895125,
+    "address": "Königstraße 27-31, 23552 Lübeck, Schleswig-Holstein"
+  },
+  "Innenstadt, Konstanz,  78462 Konstanz": {
+    "lat": 47.8532087,
+    "lon": 9.0124245,
+    "address": "Hägerweg 18, 78333 Stockach, Baden-Württemberg Landkreis Konstanz"
+  },
+  "Westhoffen": {
+    "lat": 48.6028986,
+    "lon": 7.440422,
+    "address": "67310 Westhoffen, Grand Est Bas-Rhin"
+  },
+  "12435 Berlin, Treptower Park": {
+    "lat": 52.4938491,
+    "lon": 13.4618296,
+    "address": "Bernhard-Langwaldt-Weg, 12435 Berlin"
+  },
+  "10997 Berlin, Mariannenplatz": {
+    "lat": 52.5035914,
+    "lon": 13.425348,
+    "address": "10997 Berlin"
+  },
+  "12435 Berlin, Schlesischer Busch": {
+    "lat": 52.4957163,
+    "lon": 13.450653,
+    "address": "Puschkinallee, 12435 Berlin"
+  },
+  "10557 Berlin, Platz der Republik": {
+    "lat": 52.5186753,
+    "lon": 13.3731249,
+    "address": "10557 Berlin"
+  },
+  "10557 Berlin, Straße des 17. Juni": {
+    "lat": 52.515154,
+    "lon": 13.3593203,
+    "address": "Straße des 17. Juni, 10557 Berlin"
+  },
+  "13125 Berlin, Wiltbergstr.": {
+    "lat": 52.6336727,
+    "lon": 13.4984617,
+    "address": "Wiltbergstraße, 13125 Berlin"
+  },
+  "10785 Berlin, Straße des 17. Juni": {
+    "lat": 52.5156943,
+    "lon": 13.3695413,
+    "address": "Straße des 17. Juni, 10785 Berlin"
+  }
+}

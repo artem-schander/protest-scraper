@@ -180,6 +180,12 @@ export const LOCALES: Record<string, LocaleConfig> = {
       'DD/MM/YYYY HH:mm',         // "23/10/2025 14:30"
       'DD/MM/YYYY',               // "23/10/2025"
       'DD-MM-YYYY',               // "23-10-2025"
+      'D MM YYYY HH:mm',          // "6 12 2025 15:30" (day month-number year time)
+      'D MM YYYY',                // "6 12 2025" (day month-number year)
+      'DD MM YYYY HH:mm',         // "06 12 2025 15:30"
+      'DD MM YYYY',               // "06 12 2025"
+      'YYYY-MM-DD HH:mm',         // ISO format common in APIs
+      'YYYY-MM-DD',               // ISO date only
     ],
     numberFormats: {
       approximately: [
