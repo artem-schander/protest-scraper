@@ -53,6 +53,8 @@ async function cleanupDuplicates(dryRun: boolean): Promise<CleanupResult> {
     if (processed.has(event._id.toString())) continue;
 
     // Find potential duplicates using fuzzy date matching
+    // NOTE: We DON'T require URL match because URLs can change (e.g., site renumbering)
+    // Duplicates are events with same title+city+source and start date within ±3 days
     const startDate = event.start;
     const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
     const threeDaysAgo = startDate ? new Date(startDate.getTime() - threeDaysMs) : null;
@@ -60,7 +62,6 @@ async function cleanupDuplicates(dryRun: boolean): Promise<CleanupResult> {
 
     const query: any = {
       _id: { $ne: event._id }, // Exclude current event
-      url: event.url,
       title: event.title,
       city: event.city,
       source: event.source,
@@ -96,12 +97,15 @@ async function cleanupDuplicates(dryRun: boolean): Promise<CleanupResult> {
 
         if (!dryRun) {
           try {
+            // Always update URL to the newest one (duplicate is newer, so use its URL)
+            const urlUpdate: any = { url: duplicate.url, updatedAt: new Date() };
+
             // Check if duplicate has manual edits we should preserve
             if (duplicate.manuallyEdited && duplicate.editedFields && duplicate.editedFields.length > 0) {
               console.error(`    ⚠️  Has manual edits (${duplicate.editedFields.join(', ')}), merging...`);
 
               // Merge edited fields into the original event
-              const updateFields: any = {};
+              const updateFields: any = { ...urlUpdate };
               const mergedEditedFields = new Set([...(event.editedFields || []), ...duplicate.editedFields]);
 
               for (const field of duplicate.editedFields) {
@@ -110,20 +114,23 @@ async function cleanupDuplicates(dryRun: boolean): Promise<CleanupResult> {
                 }
               }
 
-              if (Object.keys(updateFields).length > 0) {
-                await protests.updateOne(
-                  { _id: event._id },
-                  {
-                    $set: {
-                      ...updateFields,
-                      editedFields: Array.from(mergedEditedFields),
-                      manuallyEdited: true,
-                      updatedAt: new Date(),
-                    },
-                  }
-                );
-                console.error(`    ✓ Merged manual edits into original event`);
-              }
+              await protests.updateOne(
+                { _id: event._id },
+                {
+                  $set: {
+                    ...updateFields,
+                    editedFields: Array.from(mergedEditedFields),
+                    manuallyEdited: true,
+                  },
+                }
+              );
+              console.error(`    ✓ Merged manual edits into original event`);
+            } else {
+              // Just update the URL to the newest one
+              await protests.updateOne(
+                { _id: event._id },
+                { $set: urlUpdate }
+              );
             }
 
             // Delete the duplicate

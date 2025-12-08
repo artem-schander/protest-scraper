@@ -139,4 +139,45 @@ describe('parseAttendees', () => {
       expect(result).toBe(500); // Returns first match
     });
   });
+
+  describe('Time range exclusion', () => {
+    const locale = LOCALES['DE'];
+
+    it('should NOT parse time ranges with "Uhr" as attendees', () => {
+      const result = parseGermanAttendees('17-18 Uhr, Demo in Berlin', locale);
+      expect(result).toBeNull();
+    });
+
+    it('should NOT parse time ranges like "14-15 Uhr" as attendees', () => {
+      const result = parseGermanAttendees('Mahnwache 14-15 Uhr', locale);
+      expect(result).toBeNull();
+    });
+
+    it('should NOT parse small number ranges (likely time) as attendees', () => {
+      // Numbers <= 24 are likely time ranges
+      const result = parseGermanAttendees('Event starts 9-10, come join!', locale);
+      expect(result).toBeNull();
+    });
+
+    it('should still parse valid attendee ranges like 1000-2000', () => {
+      const result = parseGermanAttendees('Event mit 1000-2000 Teilnehmer', locale);
+      expect(result).toBe(2000);
+    });
+
+    it('should still parse attendee numbers when time is also present', () => {
+      const result = parseGermanAttendees('17-18 Uhr, ca. 500 Teilnehmer', locale);
+      expect(result).toBe(500);
+    });
+
+    it('should handle French time format "17-18h"', () => {
+      const localeFR = LOCALES['FR'];
+      const result = parseFrenchAttendees('Manifestation 17-18h', localeFR);
+      expect(result).toBeNull();
+    });
+
+    it('should handle mixed content with time and real attendees', () => {
+      const result = parseGermanAttendees('Kundgebung 10-12 Uhr mit etwa 300 Menschen', locale);
+      expect(result).toBe(300);
+    });
+  });
 });

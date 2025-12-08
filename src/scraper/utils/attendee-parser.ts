@@ -53,14 +53,28 @@ export function parseAttendees(
     }
   }
 
-  // Try range pattern (e.g., "1000-2000")
-  const rangeMatch = text.match(locale.numberFormats.range);
-  if (rangeMatch && rangeMatch[1] && rangeMatch[2]) {
-    const num1 = parseInt(rangeMatch[1].replace(/[.\s]/g, ''), 10);
-    const num2 = parseInt(rangeMatch[2].replace(/[.\s]/g, ''), 10);
-    if (!isNaN(num1) && !isNaN(num2)) {
-      // Return the maximum of the range
-      return Math.max(num1, num2);
+  // Try range pattern (e.g., "1000-2000") but NOT time ranges like "17-18 Uhr"
+  // Use a pattern that excludes time-related suffixes
+  const rangeWithContext = text.match(/(\d+)\s*[-–]\s*(\d+)(?:\s*(Uhr|h|heure|heures|o'clock|am|pm|:))?/gi);
+  if (rangeWithContext) {
+    for (const match of rangeWithContext) {
+      // Skip if this looks like a time range (ends with time indicator or numbers are <= 24)
+      if (/\s*(Uhr|h|heure|heures|o'clock|am|pm|:)\s*$/i.test(match)) {
+        continue;
+      }
+      const nums = match.match(/(\d+)\s*[-–]\s*(\d+)/);
+      if (nums && nums[1] && nums[2]) {
+        const num1 = parseInt(nums[1].replace(/[.\s]/g, ''), 10);
+        const num2 = parseInt(nums[2].replace(/[.\s]/g, ''), 10);
+        // Skip if both numbers are <= 24 (likely time range)
+        if (num1 <= 24 && num2 <= 24) {
+          continue;
+        }
+        if (!isNaN(num1) && !isNaN(num2)) {
+          // Return the maximum of the range
+          return Math.max(num1, num2);
+        }
+      }
     }
   }
 

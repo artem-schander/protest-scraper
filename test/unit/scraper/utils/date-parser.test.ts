@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 import timezone from 'dayjs/plugin/timezone.js';
 import utc from 'dayjs/plugin/utc.js';
-import { parseDate, withinNextDays } from '@/scraper/utils/date-parser.js';
+import { parseDate, parseTimeRange, withinNextDays } from '@/scraper/utils/date-parser.js';
 import { LOCALES } from '@/scraper/config/locales.js';
 
 // Initialize dayjs plugins
@@ -98,5 +98,109 @@ describe('withinNextDays', () => {
   it('should handle edge case at boundary', () => {
     const boundaryDate = baseDate.add(10, 'day').subtract(1, 'second').toISOString();
     expect(withinNextDays(boundaryDate, 10, baseDate)).toBe(true);
+  });
+});
+
+describe('parseTimeRange', () => {
+  describe('German format', () => {
+    it('should parse "17-18 Uhr"', () => {
+      const result = parseTimeRange('Event 17-18 Uhr in Berlin');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(17);
+      expect(result?.startMinute).toBe(0);
+      expect(result?.endHour).toBe(18);
+      expect(result?.endMinute).toBe(0);
+    });
+
+    it('should parse "14 - 16 Uhr" with spaces', () => {
+      const result = parseTimeRange('Demo 14 - 16 Uhr');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(14);
+      expect(result?.endHour).toBe(16);
+    });
+
+    it('should parse "9-10 Uhr" with single digits', () => {
+      const result = parseTimeRange('Mahnwache 9-10 Uhr');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(9);
+      expect(result?.endHour).toBe(10);
+    });
+
+    it('should parse "14.30-16.00 Uhr" with dot minutes', () => {
+      const result = parseTimeRange('Kundgebung 14.30-16.00');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(14);
+      expect(result?.startMinute).toBe(30);
+      expect(result?.endHour).toBe(16);
+      expect(result?.endMinute).toBe(0);
+    });
+  });
+
+  describe('Colon format', () => {
+    it('should parse "14:30-16:00"', () => {
+      const result = parseTimeRange('Event 14:30-16:00 today');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(14);
+      expect(result?.startMinute).toBe(30);
+      expect(result?.endHour).toBe(16);
+      expect(result?.endMinute).toBe(0);
+    });
+
+    it('should parse "09:00 - 11:30" with spaces', () => {
+      const result = parseTimeRange('Demo 09:00 - 11:30');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(9);
+      expect(result?.startMinute).toBe(0);
+      expect(result?.endHour).toBe(11);
+      expect(result?.endMinute).toBe(30);
+    });
+  });
+
+  describe('French format', () => {
+    it('should parse "17h-18h"', () => {
+      const result = parseTimeRange('Manifestation 17h-18h');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(17);
+      expect(result?.endHour).toBe(18);
+    });
+
+    it('should parse "14h30-16h00"', () => {
+      const result = parseTimeRange('Rassemblement 14h30-16h00');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(14);
+      expect(result?.startMinute).toBe(30);
+      expect(result?.endHour).toBe(16);
+      expect(result?.endMinute).toBe(0);
+    });
+  });
+
+  describe('Edge cases', () => {
+    it('should return null for empty string', () => {
+      expect(parseTimeRange('')).toBeNull();
+    });
+
+    it('should return null for text without time range', () => {
+      expect(parseTimeRange('Meeting tomorrow')).toBeNull();
+    });
+
+    it('should return null for single time (not a range)', () => {
+      expect(parseTimeRange('Event at 14:00')).toBeNull();
+    });
+
+    it('should handle en-dash (–) separator', () => {
+      const result = parseTimeRange('Event 17–18 Uhr');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(17);
+      expect(result?.endHour).toBe(18);
+    });
+
+    it('should extract from real Friedenskooperative description', () => {
+      const result = parseTimeRange('(jeden Mo.) Mahnwache / Aktion "Weiße Fahnen zeigen in Köln", 17-18 Uhr, Domforum');
+      expect(result).not.toBeNull();
+      expect(result?.startHour).toBe(17);
+      expect(result?.startMinute).toBe(0);
+      expect(result?.endHour).toBe(18);
+      expect(result?.endMinute).toBe(0);
+    });
   });
 });

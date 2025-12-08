@@ -115,6 +115,93 @@ export function parseDate(str: string, locale: LocaleConfig, returnDetails?: boo
 }
 
 /**
+ * Result from parsing a time range from text
+ */
+export interface ParsedTimeRange {
+  /** Start hour (0-23) */
+  startHour: number;
+  /** Start minute (0-59) */
+  startMinute: number;
+  /** End hour (0-23) */
+  endHour: number;
+  /** End minute (0-59) */
+  endMinute: number;
+}
+
+/**
+ * Extract time range from text like "17-18 Uhr", "14:00-16:30", "10h-12h"
+ *
+ * @param text - Text to search for time range
+ * @returns Parsed time range or null if not found
+ *
+ * @example
+ * parseTimeRange("Event 17-18 Uhr in Berlin")  // { startHour: 17, startMinute: 0, endHour: 18, endMinute: 0 }
+ * parseTimeRange("14:30-16:00 Demo")           // { startHour: 14, startMinute: 30, endHour: 16, endMinute: 0 }
+ * parseTimeRange("No time here")               // null
+ */
+export function parseTimeRange(text: string): ParsedTimeRange | null {
+  if (!text) return null;
+
+  // Pattern: "HH-HH Uhr" or "HH:MM-HH:MM" or "HHh-HHh" (French)
+  // Matches: "17-18 Uhr", "17:00-18:00", "14.30-16.00 Uhr", "10h-12h"
+  const patterns = [
+    // "17-18 Uhr" or "17 - 18 Uhr" (simple hour range with Uhr)
+    /(\d{1,2})\s*[-–]\s*(\d{1,2})\s*Uhr/i,
+    // "17:00-18:00" or "17:00 - 18:00" (with minutes, colon separator)
+    /(\d{1,2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/,
+    // "17.00-18.00" or "17.00 - 18.00" (with minutes, dot separator - German style)
+    /(\d{1,2})\.(\d{2})\s*[-–]\s*(\d{1,2})\.(\d{2})/,
+    // "17h-18h" or "17h - 18h" (French style)
+    /(\d{1,2})h\s*[-–]\s*(\d{1,2})h/i,
+    // "17h00-18h00" (French with minutes)
+    /(\d{1,2})h(\d{2})\s*[-–]\s*(\d{1,2})h(\d{2})/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+      // Check which pattern matched based on number of capture groups
+      if (match.length === 3) {
+        // Simple hour range (no minutes): "17-18 Uhr" or "17h-18h"
+        const startHour = parseInt(match[1], 10);
+        const endHour = parseInt(match[2], 10);
+        // Validate hours are reasonable (0-23)
+        if (startHour >= 0 && startHour <= 23 && endHour >= 0 && endHour <= 23) {
+          return {
+            startHour,
+            startMinute: 0,
+            endHour,
+            endMinute: 0,
+          };
+        }
+      } else if (match.length === 5) {
+        // Full time range with minutes
+        const startHour = parseInt(match[1], 10);
+        const startMinute = parseInt(match[2], 10);
+        const endHour = parseInt(match[3], 10);
+        const endMinute = parseInt(match[4], 10);
+        // Validate
+        if (
+          startHour >= 0 && startHour <= 23 &&
+          endHour >= 0 && endHour <= 23 &&
+          startMinute >= 0 && startMinute <= 59 &&
+          endMinute >= 0 && endMinute <= 59
+        ) {
+          return {
+            startHour,
+            startMinute,
+            endHour,
+            endMinute,
+          };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
  * Helper to check if a date is within the next N days
  *
  * @param dateStr - ISO date string

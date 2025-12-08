@@ -37,22 +37,16 @@ const HEADERS = {
 };
 
 /**
- * French month name mapping (lowercase)
+ * Build French month lookup from locale config
+ * Converts string month numbers ("01") to integers (1)
  */
-const FRENCH_MONTHS: Record<string, number> = {
-  'janvier': 1,
-  'février': 2,
-  'mars': 3,
-  'avril': 4,
-  'mai': 5,
-  'juin': 6,
-  'juillet': 7,
-  'août': 8,
-  'septembre': 9,
-  'octobre': 10,
-  'novembre': 11,
-  'décembre': 12,
-};
+function buildMonthLookup(locale: typeof LOCALES['FR']): Record<string, number> {
+  const lookup: Record<string, number> = {};
+  for (const [name, num] of Object.entries(locale.monthNames)) {
+    lookup[name.toLowerCase()] = parseInt(num, 10);
+  }
+  return lookup;
+}
 
 /**
  * Extract city from location string
@@ -113,6 +107,7 @@ function parsePageEvents(
 ): ProtestEvent[] {
   const $ = cheerio.load(html);
   const events: ProtestEvent[] = [];
+  const monthLookup = buildMonthLookup(locale);
 
   // Track current month/year/day as we parse table rows
   let currentMonth: number | null = null;
@@ -131,7 +126,7 @@ function parsePageEvents(
         // Parse month/year like "décembre 2025"
         const monthMatch = h1Text.match(/(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+(\d{4})/);
         if (monthMatch) {
-          currentMonth = FRENCH_MONTHS[monthMatch[1]];
+          currentMonth = monthLookup[monthMatch[1]];
           currentYear = parseInt(monthMatch[2], 10);
         }
       }

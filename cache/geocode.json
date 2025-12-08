@@ -1223,5 +1223,10 @@
     "lat": 52.5156943,
     "lon": 13.3695413,
     "address": "Straße des 17. Juni, 10785 Berlin"
+  },
+  "Schwerin, Ort tba": {
+    "lat": 53.6288297,
+    "lon": 11.4148038,
+    "address": "Schwerin, Mecklenburg-Vorpommern"
   }
 }

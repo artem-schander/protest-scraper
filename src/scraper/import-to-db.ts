@@ -120,23 +120,39 @@ async function importProtests(days: number): Promise<void> {
     try {
       // Check if event already exists with fuzzy date matching (±3 days)
       // This handles rescheduled events while keeping recurring events separate
+      // NOTE: We check by URL OR by (title+city+source+date) to handle URL changes
       const startDate = event.start ? new Date(event.start) : null;
       const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
       const threeDaysAgo = startDate ? new Date(startDate.getTime() - threeDaysMs) : null;
       const threeDaysLater = startDate ? new Date(startDate.getTime() + threeDaysMs) : null;
 
-      const existing = await protests.findOne({
+      // First try exact URL match (fastest)
+      let existing = await protests.findOne({
         url: event.url,
-        title: event.title, // Exact title match to avoid false positives
-        city: event.city,
         source: event.source,
-        ...(startDate && {
+      });
+
+      // If no URL match, try fuzzy matching by title+city+source+date
+      // This catches URL changes (e.g., site renumbering recurring events)
+      if (!existing && startDate) {
+        existing = await protests.findOne({
+          title: event.title,
+          city: event.city,
+          source: event.source,
           start: {
             $gte: threeDaysAgo,
             $lte: threeDaysLater,
           },
-        }),
-      });
+        });
+
+        // If found by fuzzy match, update the URL to the new one
+        if (existing) {
+          await protests.updateOne(
+            { _id: existing._id },
+            { $set: { url: event.url } }
+          );
+        }
+      }
 
       // Skip if fully manual (complete disconnect from scraper)
       if (existing?.fullyManual) {

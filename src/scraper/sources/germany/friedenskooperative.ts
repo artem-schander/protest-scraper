@@ -11,7 +11,7 @@ import * as cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import { ProtestEvent } from '@/scraper/scrape-protests.js';
 import { LOCALES } from '@/scraper/config/locales.js';
-import { parseDate } from '@/scraper/utils/date-parser.js';
+import { parseDate, parseTimeRange } from '@/scraper/utils/date-parser.js';
 import { parseGermanAttendees } from '@/scraper/utils/attendee-parser.js';
 import delay from '@/utils/delay.js';
 import { isAllowedByRobots } from '@/utils/robots.js';
@@ -173,11 +173,37 @@ export async function parseFriedenskooperative(days: number = 90): Promise<Prote
                 // Skip events outside the date range
                 if (startParsed.date.isAfter(maxDate)) return;
 
-                // Parse end date if exists
+                // Parse end date if exists from structured HTML
                 let endParsed = null;
                 if (endTimeStr) {
                   const fullEndDateStr = `${endTimeStr} ${year}`;
                   endParsed = parseDate(fullEndDateStr, locale, true);
+                }
+
+                // If no end time from HTML, try to extract from text (e.g., "17-18 Uhr")
+                if (!endParsed && startParsed) {
+                  const fullText = $row.text();
+                  const timeRange = parseTimeRange(fullText);
+                  if (timeRange) {
+                    // Create end date using parsed start date and end time from range
+                    const endDate = startParsed.date
+                      .hour(timeRange.endHour)
+                      .minute(timeRange.endMinute)
+                      .second(0);
+                    endParsed = {
+                      date: endDate,
+                      hasTime: true,
+                    };
+                    // Also update start time if the range provides it and differs from parsed
+                    // This handles cases where the HTML only shows the date without time
+                    if (!startParsed.hasTime || startParsed.date.hour() !== timeRange.startHour) {
+                      startParsed.date = startParsed.date
+                        .hour(timeRange.startHour)
+                        .minute(timeRange.startMinute)
+                        .second(0);
+                      startParsed.hasTime = true;
+                    }
+                  }
                 }
 
                 // Extract city from .date-column .city
